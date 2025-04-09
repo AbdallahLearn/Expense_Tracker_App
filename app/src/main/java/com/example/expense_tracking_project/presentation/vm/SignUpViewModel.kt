@@ -49,32 +49,6 @@ class SignUpViewModel : ViewModel() {
         return passwordPattern.matcher(password).matches()
     }
 
-    // Function to handle the login process
-    fun login(email: String, password: String) {
-
-        // Check if the email or password is empty
-        if (email.isEmpty() || password.isEmpty()) {
-            _authState.value = AuthState.Error("Email or password can't be empty")
-            return
-        }
-
-        // Set the state to Loading while the login is being processed
-        _authState.value = AuthState.Loading
-
-        // sign in with email and password using Firebase Authentication
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // If successful, set the state to Authenticated
-                    _authState.value = AuthState.Authenticated
-                } else {
-                    // If there's an error, show the error message
-                    _authState.value =
-                        AuthState.Error(task.exception?.message ?: "Something went wrong")
-                }
-            }
-    }
-
     // Function to handle the signup process
     fun signup(name: String, email: String, password: String, confirmPassword: String) {
 
@@ -120,18 +94,4 @@ class SignUpViewModel : ViewModel() {
             }
     }
 
-    // Function to sign out the user and set the state to Unauthenticated
-    fun signout() {
-        auth.signOut()
-        _authState.value = AuthState.Unauthenticated
-    }
-
-}
-
-// Sealed class to represent the authentication states
-sealed class AuthState {
-    object Authenticated : AuthState()  // User is authenticated
-    object Unauthenticated : AuthState()  // User is not authenticated
-    object Loading : AuthState()  // The process is loading (signup/login)
-    data class Error(val message: String) : AuthState()  // An error occurred with the message
 }
