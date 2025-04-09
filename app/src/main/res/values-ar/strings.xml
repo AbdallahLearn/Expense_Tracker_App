@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تتبع المصاريف</string>
+
+    <!-- Onboarding Titles -->
+    <string name="onboarding_title_1">تتبع ذكي للمصاريف</string>
+    <string name="onboarding_text_1">أضف، عدّل، وصنّف مصاريفك بسهولة. كن منظمًا ولا تفقد أثر أموالك.</string>
+
+    <string name="onboarding_title_2">رؤية مالية مرئية</string>
+    <string name="onboarding_text_2">تصوّر إنفاقك من خلال المخططات والرسوم البيانية. قارن بين الدخل والمصروفات لتخطيط مالي أفضل.</string>
+
+    <string name="onboarding_title_3">إدارة حساب آمنة</string>
+    <string name="onboarding_text_3">تصوّر إنفاقك من خلال المخططات والرسوم البيانية. قارن بين الدخل والمصروفات لتخطيط مالي أفضل.</string>
+
+    <!-- Buttons -->
+    <string name="get_started">ابدأ الآن</string>
+    <string name="sign_in_prompt">لديك حساب بالفعل؟ سجّل الدخول</string>
+</resources>

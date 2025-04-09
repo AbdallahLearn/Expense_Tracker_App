@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Expense_Tracking_Project</string>
+
+    <!-- Onboarding Titles -->
+    <string name="onboarding_title_1">Smart Expense Tracking</string>
+    <string name="onboarding_text_1">Add, edit, and categorize your expenses with ease. Stay organized and never lose track of where your money goes.</string>
+
+    <string name="onboarding_title_2">Visual Financial Insights</string>
+    <string name="onboarding_text_2">Visualize your spending with charts and graphs. Compare income and expenses for smarter budgeting.</string>
+
+    <string name="onboarding_title_3">Secure Account Management</string>
+    <string name="onboarding_text_3">Visualize your spending with charts and graphs. Compare income and expenses for smarter budgeting.</string>
+
+    <!-- Buttons -->
+    <string name="get_started">Get Started</string>
+    <string name="sign_in_prompt">Already have an account? Sign In</string>
 </resources>
