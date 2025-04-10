@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.MutableState
 
 data class FormField(
     val label: String,
@@ -46,16 +47,16 @@ fun DesignScreen(
     title: String = "",
     instruction: String = "",
     fields: List<FormField> = emptyList(),
+    fieldStates: List<MutableState<String>> = emptyList(),
+    passwordVisibilityStates: List<MutableState<Boolean>> = emptyList(),
     buttonText: String = "",
     onButtonClick: (List<FormField>) -> Unit,
     image: (@Composable () -> Unit)? = null
 ) {
-    val fieldStates = remember {
-        fields.map { mutableStateOf(it.value) }
-    }
+    fields.forEachIndexed { index, field ->
+        val textState = fieldStates[index]
+        val passwordVisible = passwordVisibilityStates.getOrNull(index) ?: remember { mutableStateOf(false) }
 
-    val passwordVisibilityStates = remember {
-        fields.map { mutableStateOf(false) }
     }
     Box(
         modifier = Modifier
@@ -87,7 +88,7 @@ fun DesignScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(top = 150.dp, start = 24.dp, end = 24.dp, bottom = 150.dp)
+                .padding(top = 150.dp, start = 24.dp, end = 24.dp, bottom = 30.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -148,7 +149,7 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(50.dp))
 
                 Button(
                     onClick = {
@@ -171,6 +172,7 @@ fun DesignScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
+
             }
         }
     }

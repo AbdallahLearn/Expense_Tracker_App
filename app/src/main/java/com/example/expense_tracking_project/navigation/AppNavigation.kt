@@ -10,6 +10,7 @@ import com.example.expense_tracking_project.presentation.ui.onBoardingScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.CheckEmailScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.Login
 import com.example.expense_tracking_project.presentation.ui.resetPassword.ResetPasswordScreen
+import com.example.expense_tracking_project.presentation.ui.resetPassword.Signup
 
 @Composable
 fun AppNavigation(
@@ -42,6 +43,9 @@ fun AppNavigation(
         }
         composable(Screen.log.route) {
             Login(navController)
+        }
+        composable(Screen.signup.route) {
+            Signup(navController)
         }
     }
 }

@@ -25,7 +25,7 @@ fun LoginScreen(navController: NavController) {
             Text(text = "Login and go to Home")
         }
         Button(onClick = {
-            navController.navigate(Screen.ResetPassword.route) {
+            navController.navigate(Screen.signup.route) {
                 // Remove the Login screen (and any screens above it) from the back stack
                 // So that pressing the back button won't take the user back to the login screen
                 popUpTo(Screen.Login.route) {
