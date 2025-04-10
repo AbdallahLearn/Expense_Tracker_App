@@ -13,15 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.tooling.preview.Preview
-
 import com.example.expense_tracking_project.navigation.AppNavigation
 import androidx.navigation.compose.rememberNavController
-import com.example.expense_tracking_project.navigation.AppNavigation
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.presentation.ui.onBoardingScreen
-
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,13 +24,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-
-            AppNavigation()
-        }
-    }
-}
-
-
             val showOnboarding = remember { mutableStateOf(true) }
             val navController = rememberNavController()
 

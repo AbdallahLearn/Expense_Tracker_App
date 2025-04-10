@@ -42,7 +42,7 @@ fun CheckEmailScreen(navController: NavController) {
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .height(250.dp)
+                    .height(200.dp)
                     .fillMaxWidth()
             )
         },

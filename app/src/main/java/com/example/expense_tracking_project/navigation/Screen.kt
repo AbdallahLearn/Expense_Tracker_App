@@ -7,11 +7,15 @@ sealed class Screen(val route:String) {
     object Onboarding:Screen("onboarding")
     //@Serializable
 
-    object Login: Screen("login")
+    object Login: Screen("loginMouck") //change the name to go simple login page to test the navigations between screen
     //@Serializable
     object Home:Screen("home")
 
     // Example with passing arguments using Kotlin serialization
     //@Serializable
     //data class UserProfile(val userId: Int) : Screen("userProfile/{userId}")
+
+    object ResetPassword : Screen("ResetPasswordScreen")
+    object CheckEmail : Screen("CheckEmailScreen")
+    object log : Screen("Login")
 }
