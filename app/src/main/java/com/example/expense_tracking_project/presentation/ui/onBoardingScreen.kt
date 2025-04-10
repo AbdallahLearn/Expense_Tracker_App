@@ -81,6 +81,7 @@
 //            color = MaterialTheme.colorScheme.primary,
 //            textAlign = TextAlign.Center
 //        )
+
 //        Spacer(modifier = Modifier.height(8.dp))
 //        Text(
 //            text = descriptions[page],
