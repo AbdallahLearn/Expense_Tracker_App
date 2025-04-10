@@ -2,14 +2,16 @@ package com.example.expense_tracking_project.navigation
 
 
 //Type-Safe Navigation: Passing and Receiving Arguments with CustomNavType
-sealed class Screen(val route:String) {
+sealed class Screen(val route: String) {
     //@Serializable
-    object Onboarding:Screen("onboarding")
+    object Onboarding : Screen("onboarding")
     //@Serializable
 
-    object Login: Screen("loginMouck") //change the name to go simple login page to test the navigations between screen
+    object Login :
+        Screen("loginMouck") //change the name to go simple login page to test the navigations between screen
+
     //@Serializable
-    object Home:Screen("home")
+    object Home : Screen("home")
 
     // Example with passing arguments using Kotlin serialization
     //@Serializable
@@ -17,6 +19,5 @@ sealed class Screen(val route:String) {
 
     object ResetPassword : Screen("ResetPasswordScreen")
     object CheckEmail : Screen("CheckEmailScreen")
-    object signup : Screen("Signup")
     object log : Screen("Login")
 }

@@ -1,4 +1,5 @@
 package com.example.expense_tracking_project.presentation.ui.resetPassword
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,9 +55,9 @@ fun DesignScreen(
     image: (@Composable () -> Unit)? = null
 ) {
     fields.forEachIndexed { index, field ->
-        val textState = fieldStates[index]
-        val passwordVisible = passwordVisibilityStates.getOrNull(index) ?: remember { mutableStateOf(false) }
-
+        val textState = fieldStates.getOrNull(index) ?: remember { mutableStateOf("") }
+        val passwordVisible =
+            passwordVisibilityStates.getOrNull(index) ?: remember { mutableStateOf(false) }
     }
     Box(
         modifier = Modifier

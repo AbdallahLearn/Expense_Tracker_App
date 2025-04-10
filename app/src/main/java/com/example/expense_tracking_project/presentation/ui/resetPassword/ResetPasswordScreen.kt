@@ -25,18 +25,20 @@ fun ResetPasswordScreen(navController: NavController) {
         title = "Reset Password",
         instruction = "Enter your Gmail to reset the password",
         fields = listOf(FormField("Email")),
-        fieldStates = listOf(emailState), // Pass state to DesignScreen
-        passwordVisibilityStates = listOf(remember { mutableStateOf(false) }), // just to match signature
+        fieldStates = listOf(emailState),
+        passwordVisibilityStates = listOf(remember { mutableStateOf(false) }),
         buttonText = "Send verification",
         onButtonClick = {
             val email = emailState.value.trim()
             if (email.isNotEmpty()) {
                 resetPassword(email) { success ->
                     if (success) {
-                        Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT)
+                            .show()
                         navController.navigate(Screen.CheckEmail.route)
                     } else {
-                        Toast.makeText(context, "Failed to send reset email", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Failed to send reset email", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } else {
@@ -45,6 +47,7 @@ fun ResetPasswordScreen(navController: NavController) {
         }
     )
 }
+
 
 @Composable
 fun CheckEmailScreen(navController: NavController) {
@@ -69,21 +72,30 @@ fun CheckEmailScreen(navController: NavController) {
 }
 
 @Composable
-fun Login(navController: NavController){
+fun Login(navController: NavController) {
+    val emailState = remember { mutableStateOf("") }
+    val passwordState = remember { mutableStateOf("") }
+    val passwordVisibilityState = remember { mutableStateOf(false) }
+
     DesignScreen(
         title = "Log in",
         instruction = "",
         fields = listOf(
             FormField("Email"),
-            FormField("Password", isPassword =true),
+            FormField("Password", isPassword = true)
+        ),
+        fieldStates = listOf(emailState, passwordState),
+        passwordVisibilityStates = listOf(
+            passwordVisibilityState,
+            passwordVisibilityState
         ),
         buttonText = "Send verification",
         onButtonClick = {
             navController.navigate(Screen.CheckEmail.route)
         }
     )
-
 }
+
 
 fun resetPassword(email: String, onResult: (Boolean) -> Unit) {
     FirebaseAuth.getInstance().sendPasswordResetEmail(email)
