@@ -14,4 +14,41 @@
     <!-- Buttons -->
     <string name="get_started">Get Started</string>
     <string name="sign_in_prompt">Already have an account? Sign In</string>
+
+    <!-- Login -->
+    <string name="login">Login</string>
+    <string name="login_prompt">Please enter your credentials to login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+
+    <!-- Sign Up -->
+    <string name="signup_prompt">Please fill in the details to create an account</string>
+    <string name="signup">Sign Up</string>
+    <string name="name">Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="already_have_account">Already have an account?</string>
+
+    <!-- Validation & Messages -->
+    <string name="email_required">Email is required</string>
+    <string name="please_fill_fields">Please fill all fields correctly</string>
+    <string name="invalid_email">Invalid email format</string>
+    <string name="password_required">Password is required</string>
+    <string name="password_min_length">Password must be at least 8 characters</string>
+    <string name="password_complexity">Password must be at least 8 characters, include one uppercase letter, one lowercase letter, one number, and one symbol</string>
+    <string name="name_required">Name is required</string>
+    <string name="confirm_password_required">Confirm Password is required</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="please_enter_valid_email">Please, enter a valid email</string>
+    <string name="fields_cannot_be_empty">Fields can\'t be empty</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="email_password_empty">Email or password can\'t be empty</string>
+    <string name="check_your_email">Check your mail</string>
+    <string name="recovery_email_sent">We have sent a password recovery to your email</string>
+    <string name="send_verification">Send verification</string>
+    <string name="enter_email_to_reset">Enter your Gmail to reset the password</string>
+    <string name="reset_password">Reset Password</string>
 </resources>
+

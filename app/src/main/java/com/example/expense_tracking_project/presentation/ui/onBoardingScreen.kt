@@ -1,7 +1,6 @@
 package com.example.expense_tracking_project.presentation.ui
 
-// <<<<<<< LYM(63-34)-DesignLoginAndSignInputWithValidInput
-// =======
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -26,11 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,12 +41,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
-import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
 
 
@@ -84,7 +77,7 @@ fun onBoardingScreen(
                 OnboardingPageV2(page = page, isTablet = isTablet, navController = navController, onFinish = onFinish)
             }
 
-            // Dot Indicators
+
 
         }
     }
@@ -186,13 +179,12 @@ fun OnboardingPageV2(
                     Button(
                         onClick = {
                             onFinish()
-                            navController.navigate(Screen.Login.route)
                         },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary, // background
-                            contentColor = Color.White                           // text color
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = Color.White
                         )
                     ) {
                         Text(text = stringResource(R.string.get_started))
@@ -202,4 +194,3 @@ fun OnboardingPageV2(
         }
     }
 }
-// >>>>>>> dev

@@ -7,35 +7,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
-
-
-
+import com.example.expense_tracking_project.navigation.Screen
 
 
 @Composable
-fun ResetPasswordScreen(navController: NavController){
+fun ResetPasswordScreen(navController: NavController) {
     DesignScreen(
-        title = "Reset Password",
-        instruction = "Enter your Gmail to reset the password",
+        title = stringResource(R.string.reset_password),
+        instruction = stringResource(R.string.enter_email_to_reset),
         fields = listOf(
-            FormField("Email"),
+            FormField(stringResource(R.string.email))
         ),
-        buttonText = "Send verification",
-        onButtonClick = {
-            navController.navigate(Screen.CheckEmail.route)
+        buttonText = stringResource(R.string.send_verification),
+        onButtonClick = { fields ->
+            val email = fields.firstOrNull()?.value ?: ""
+            if (email.isNotBlank()) {
+                navController.navigate(Screen.CheckEmail.route)
+            } else {
+                // Show error message if needed
+            }
         }
     )
-
 }
+
 @Composable
 fun CheckEmailScreen(navController: NavController) {
     DesignScreen(
-        title = "Check your mail",
-        instruction = "We have send a password recover to your email",
-        buttonText = "Open email app",
+        title = stringResource(R.string.check_your_email),
+        instruction = stringResource(R.string.recovery_email_sent),
+        buttonText = stringResource(R.string.login),
         image = {
             Image(
                 painter = painterResource(id = R.drawable.email),
@@ -47,24 +51,8 @@ fun CheckEmailScreen(navController: NavController) {
             )
         },
         onButtonClick = {
-            navController.navigate(Screen.log.route)//nav to log in
+            navController.navigate(Screen.Login.route)//nav to log in
         }
     )
 }
 
-@Composable
-fun Login(navController: NavController){
-    DesignScreen(
-        title = "Log in",
-        instruction = "",
-        fields = listOf(
-            FormField("Email"),
-            FormField("Password", isPassword =true),
-        ),
-        buttonText = "Send verification",
-        onButtonClick = {
-            navController.navigate(Screen.CheckEmail.route)
-        }
-    )
-
-}

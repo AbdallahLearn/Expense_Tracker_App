@@ -1,8 +1,10 @@
 package com.example.expense_tracking_project.presentation.ui.resetPassword
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,7 +34,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import com.example.expense_tracking_project.R
 
 data class FormField(
     val label: String,
@@ -40,7 +50,6 @@ data class FormField(
     val isPassword: Boolean = false
 
 )
-
 @Composable
 fun DesignScreen(
     title: String = "",
@@ -48,7 +57,10 @@ fun DesignScreen(
     fields: List<FormField> = emptyList(),
     buttonText: String = "",
     onButtonClick: (List<FormField>) -> Unit,
-    image: (@Composable () -> Unit)? = null
+    image: (@Composable () -> Unit)? = null,
+    rememberMeState: MutableState<Boolean>? = null,
+    onForgotPassword: (() -> Unit)? = null,
+    footerText: (@Composable () -> Unit)? = null
 ) {
     val fieldStates = remember {
         fields.map { mutableStateOf(it.value) }
@@ -57,6 +69,7 @@ fun DesignScreen(
     val passwordVisibilityStates = remember {
         fields.map { mutableStateOf(false) }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -77,7 +90,7 @@ fun DesignScreen(
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 80.dp)
+                modifier = Modifier.padding(top = 60.dp)
             )
         }
 
@@ -87,13 +100,13 @@ fun DesignScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(top = 150.dp, start = 24.dp, end = 24.dp, bottom = 150.dp)
+                .padding(top = 100.dp, start = 20.dp, end = 20.dp, bottom = 60.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White)
-                    .padding(24.dp),
+                    .padding(18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -122,10 +135,12 @@ fun DesignScreen(
                             .padding(bottom = 4.dp)
                             .align(Alignment.Start)
                     )
+
                     OutlinedTextField(
                         value = textState.value,
                         onValueChange = { textState.value = it },
                         singleLine = true,
+                        textStyle = TextStyle(color = Color.Black), // Black text
                         visualTransformation = if (field.isPassword && !passwordVisible.value)
                             PasswordVisualTransformation() else VisualTransformation.None,
                         trailingIcon = {
@@ -142,13 +157,57 @@ fun DesignScreen(
                                 }
                             }
                         },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF5C4DB7),   // Purple when focused
+                            unfocusedBorderColor = Color(0xFF5C4DB7), // Purple when not focused
+                            cursorColor = Color(0xFF5C4DB7),          // Purple cursor
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black
+                        ),
                         modifier = Modifier.fillMaxWidth()
                     )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
+
+                // Remember Me and Forgot Password
+                if (rememberMeState != null || onForgotPassword != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        rememberMeState?.let {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Checkbox(
+                                    checked = it.value,
+                                    onCheckedChange = { checked -> it.value = checked }
+                                )
+                                Text(
+                                    text = stringResource(R.string.remember_me),
+                                    color = Color.Gray,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+
+                        onForgotPassword?.let {
+                            Text(
+                                text =stringResource(R.string.forgot_password) ,
+                                color = Color(0xFF5C4DB7),
+                                fontSize = 14.sp,
+                                modifier = Modifier
+                                    .padding(top = 6.dp) // Adjust this to control vertical alignment
+                                    .clickable { it() }
+                            )
+                        }
+                    }
+
 
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 Button(
                     onClick = {
@@ -171,6 +230,10 @@ fun DesignScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                footerText?.invoke()
             }
         }
     }
