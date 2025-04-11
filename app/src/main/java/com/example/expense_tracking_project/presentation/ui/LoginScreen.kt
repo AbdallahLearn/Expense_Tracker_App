@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -20,14 +19,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.presentation.vm.AuthState
 import com.example.expense_tracking_project.presentation.vm.SignInViewModel
-import com.example.expense_tracking_project.presentation.vm.SignUpViewModel
 import com.example.expense_tracking_project.presentation.vm.ValidationInputViewModel
 
 
@@ -116,8 +113,6 @@ fun LoginScreen(navController : NavController,
                         value = email,
                         onValueChange = { viewModel.email = it
                             viewModel.validateEmail()},
-                        //label = { Text("Email") },
-                        //keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
                         isError = viewModel.emailError != null,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -138,7 +133,6 @@ fun LoginScreen(navController : NavController,
                         value = password,
                         onValueChange = {viewModel.password = it
                             viewModel.validatePassword()},
-                        //label = { Text("Password") },
                         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             IconButton(onClick = { showPassword = !showPassword }) {
@@ -192,15 +186,14 @@ fun LoginScreen(navController : NavController,
                     ) {
                         Button(
                             onClick = {
-                                 val isValid = emailError == null && passwordError == null
-                                 if (isValid){
-                                     signInViewModel.login(
-                                         email = viewModel.email,
-                                         password = viewModel.password
-                                     )
-                                 }
-                                // navigate to homepage
-                                // }
+                                val isValid = emailError == null && passwordError == null
+                                if (isValid){
+                                    signInViewModel.login(
+                                        email = viewModel.email,
+                                        password = viewModel.password
+                                    )
+                                }
+
                             },
                             modifier = Modifier
                                 .width(220.dp)

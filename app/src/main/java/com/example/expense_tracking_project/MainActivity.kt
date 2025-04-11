@@ -17,10 +17,9 @@ class MainActivity : ComponentActivity() {
             Expense_Tracking_ProjectTheme {
                 //Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 //LoginScreen()
-                 //SignUpScreen()
+                //SignUpScreen()
                 AppNavigation()
             }
         }
     }
 }
-
