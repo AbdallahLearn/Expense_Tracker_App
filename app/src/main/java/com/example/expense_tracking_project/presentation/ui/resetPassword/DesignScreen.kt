@@ -66,14 +66,14 @@ fun DesignScreen(
     image: (@Composable () -> Unit)? = null,
     rememberMeState: MutableState<Boolean>? = null,
     onForgotPassword: (() -> Unit)? = null,
-    footerText: (@Composable () -> Unit)? = null
+    footerText: (@Composable () -> Unit)? = null,
+    emailError: String? = null,
+    passwordError: String? = null
 ) {
+    // Check if fieldStates matches fields size
     if (fields.size != fieldStates.size) {
         Log.e("DesignScreen", "Mismatched fieldStates and fields length")
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Something went wrong. Please restart the app.")
         }
         return
@@ -107,6 +107,7 @@ fun DesignScreen(
             )
         }
 
+        // Main Card Layout
         Card(
             shape = RoundedCornerShape(32.dp),
             elevation = CardDefaults.cardElevation(8.dp),
@@ -123,6 +124,7 @@ fun DesignScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
+                // Instruction Text
                 Text(
                     text = instruction,
                     color = Color.Gray,
@@ -132,6 +134,7 @@ fun DesignScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Image if provided
                 image?.let {
                     it()
                     Spacer(modifier = Modifier.height(16.dp))
@@ -182,10 +185,28 @@ fun DesignScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
+                    // Error Text
+                    val errorText = when (field.label.lowercase()) {
+                        "email" -> emailError
+                        "password" -> passwordError
+                        else -> null
+                    }
+
+                    if (!errorText.isNullOrEmpty()) {
+                        Text(
+                            text = errorText,
+                            color = Color.Red,
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .align(Alignment.Start)
+                                .padding(start = 8.dp, top = 2.dp)
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(6.dp))
                 }
 
-                // Remember Me and Forgot Password
+                // Remember Me and Forgot Password Row
                 if (rememberMeState != null || onForgotPassword != null) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -222,8 +243,9 @@ fun DesignScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+                // Spacer and Login Button
+                Spacer(modifier = Modifier.height(50.dp))
 
-                // Login Button
                 Button(
                     onClick = {
                         // Handle button click
@@ -233,7 +255,6 @@ fun DesignScreen(
                             }
                             onButtonClick(updatedFields)
                         } else {
-                            // If no fields, just execute the button action
                             onButtonClick(emptyList())  // No fields here
                         }
                     },
@@ -254,6 +275,7 @@ fun DesignScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // Footer Text
                 footerText?.invoke()
             }
         }

@@ -120,19 +120,3 @@ fun SignUpScreen(
     )
 }
 
-    // Handling different auth states
-//    LaunchedEffect(authState) {
-//        when (authState) {
-//            is AuthState.Authenticated -> {
-//                Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show()
-//                navController.navigate("login") {
-//                    popUpTo("signup") { inclusive = true }
-//                }
-//            }
-//            is AuthState.Error -> {
-//                Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_LONG).show()
-//            }
-//            else -> Unit
-//        }
-//    }
-
