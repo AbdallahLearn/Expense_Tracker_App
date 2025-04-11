@@ -55,6 +55,16 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
+    // Add dependency
+    implementation (libs.ui)
+    implementation (libs.androidx.material)
+    implementation (libs.androidx.foundation)
+    implementation (libs.androidx.material.icons.extended)
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.androidx.navigation.compose)
+    implementation (libs.androidx.runtime.livedata)
+
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
