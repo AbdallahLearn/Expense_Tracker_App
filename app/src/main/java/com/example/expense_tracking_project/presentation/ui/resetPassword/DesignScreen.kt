@@ -65,8 +65,11 @@ fun DesignScreen(
     image: (@Composable () -> Unit)? = null,
     rememberMeState: MutableState<Boolean>? = null,
     onForgotPassword: (() -> Unit)? = null,
-    footerText: (@Composable () -> Unit)? = null
-) {
+    footerText: (@Composable () -> Unit)? = null,
+    emailError: String? = null,
+    passwordError: String? = null,
+
+    ) {
     if (fields.size != fieldStates.size) {
         Log.e("DesignScreen", "Mismatched fieldStates and fields length")
         Box(
@@ -142,6 +145,7 @@ fun DesignScreen(
                     val textState = fieldStates.getOrNull(index) ?: remember { mutableStateOf("") }
                     val passwordVisible = passwordVisibilityStatesSafe[index]
 
+
                     Text(
                         text = field.label,
                         color = Color.Gray,
@@ -181,6 +185,23 @@ fun DesignScreen(
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
+
+                    val errorText = when (field.label.lowercase()) {
+                        "email" -> emailError
+                        "password" -> passwordError
+                        else -> null
+                    }
+
+                    if (!errorText.isNullOrEmpty()) {
+                        Text(
+                            text = errorText,
+                            color = Color.Red,
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .align(Alignment.Start)
+                                .padding(start = 8.dp, top = 2.dp)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(6.dp))
                 }

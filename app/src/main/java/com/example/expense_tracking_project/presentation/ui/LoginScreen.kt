@@ -1,5 +1,6 @@
 package com.example.expense_tracking_project.presentation.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -16,31 +17,33 @@ import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.DesignScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.FormField
+import com.example.expense_tracking_project.presentation.vm.AuthState
 import com.example.expense_tracking_project.presentation.vm.SignInViewModel
+import com.example.expense_tracking_project.presentation.vm.ValidationInputViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    signInViewModel: SignInViewModel = viewModel()
+    signInViewModel: SignInViewModel = viewModel(),
+    validationViewModel: ValidationInputViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val authState by signInViewModel.authState.observeAsState()
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    val rememberMe = remember { mutableStateOf(false) }
-    val fields = listOf(
-        FormField(label = stringResource(R.string.email), value = email),
-        FormField(label = stringResource(R.string.password), value = password, isPassword = true)
-    )
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
+    val rememberMe = remember { mutableStateOf(false) }
 
+    val fields = listOf(
+        FormField(label = stringResource(R.string.email), value = emailState.value),
+        FormField(label = stringResource(R.string.password), value = passwordState.value, isPassword = true)
+    )
     val fieldStates = listOf(emailState, passwordState)
     val passwordVisibilityStates = listOf(
-        remember { mutableStateOf(false) }, // email (not used, but keeps indexing consistent)
-        remember { mutableStateOf(false) }  // password
+        remember { mutableStateOf(false) }, // email not needed but keeps index
+        remember { mutableStateOf(false) }
     )
+
     DesignScreen(
         title = stringResource(R.string.login),
         instruction = stringResource(R.string.login_prompt),
@@ -49,18 +52,28 @@ fun LoginScreen(
         passwordVisibilityStates = passwordVisibilityStates,
         buttonText = stringResource(R.string.login),
         rememberMeState = rememberMe,
+        emailError = validationViewModel.emailError,
+        passwordError = validationViewModel.passwordError,
         onForgotPassword = {
             navController.navigate(Screen.ResetPassword.route)
         },
         onButtonClick = { updatedFields ->
-            email = updatedFields[0].value
-            password = updatedFields[1].value
-            signInViewModel.login(email = email, password = password)
+            val email = updatedFields[0].value
+            val password = updatedFields[1].value
+
+            validationViewModel.email = email
+            validationViewModel.password = password
+
+            validationViewModel.validateEmail()
+            validationViewModel.validatePassword()
+
+            if (validationViewModel.emailError == null && validationViewModel.passwordError == null) {
+                signInViewModel.login(email = email, password = password)
+            }
         },
         footerText = {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(text = stringResource(R.string.dont_have_account), color = Color.Black)
@@ -73,24 +86,20 @@ fun LoginScreen(
                 )
             }
         }
-
     )
 
-    // Optional Auth Handling
-//    LaunchedEffect(authState) {
-//        when (authState) {
-//            is AuthState.Authenticated -> {
-//                Toast.makeText(context, "Success Login!", Toast.LENGTH_SHORT).show()
-//                navController.navigate(Screen.Home.route) {
-//                    popUpTo(Screen.Login.route) { inclusive = true }
-//                }
-//            }
-//            is AuthState.Error -> {
-//                Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_LONG).show()
-//            }
-//            else -> Unit
-//        }
-//    }
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Authenticated -> {
+                Toast.makeText(context, "Success Login!", Toast.LENGTH_SHORT).show()
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
+                }
+            }
+            is AuthState.Error -> {
+                Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_LONG).show()
+            }
+            else -> Unit
+        }
+    }
 }
-
-
