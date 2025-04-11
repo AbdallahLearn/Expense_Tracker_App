@@ -1,5 +1,6 @@
 package com.example.expense_tracking_project.presentation.ui.resetPassword
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +42,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.MutableState
+
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import com.example.expense_tracking_project.R
@@ -66,10 +67,19 @@ fun DesignScreen(
     onForgotPassword: (() -> Unit)? = null,
     footerText: (@Composable () -> Unit)? = null
 ) {
-    fields.forEachIndexed { index, field ->
-        val textState = fieldStates.getOrNull(index) ?: remember { mutableStateOf("") }
-        val passwordVisible =
-            passwordVisibilityStates.getOrNull(index) ?: remember { mutableStateOf(false) }
+    if (fields.size != fieldStates.size) {
+        Log.e("DesignScreen", "Mismatched fieldStates and fields length")
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Something went wrong. Please restart the app.")
+        }
+        return
+    }
+
+    val passwordVisibilityStatesSafe = fields.mapIndexed { index, _ ->
+        passwordVisibilityStates.getOrNull(index) ?: remember { mutableStateOf(false) }
     }
 
     Box(
@@ -103,7 +113,6 @@ fun DesignScreen(
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(top = 150.dp, start = 24.dp, end = 24.dp, bottom = 30.dp)
-
                 .padding(top = 100.dp, start = 20.dp, end = 20.dp, bottom = 60.dp)
         ) {
             Column(
@@ -128,9 +137,11 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
+                // Fields (Email, Password)
                 fields.forEachIndexed { index, field ->
-                    val textState = fieldStates[index]
-                    val passwordVisible = passwordVisibilityStates[index]
+                    val textState = fieldStates.getOrNull(index) ?: remember { mutableStateOf("") }
+                    val passwordVisible = passwordVisibilityStatesSafe[index]
+
                     Text(
                         text = field.label,
                         color = Color.Gray,
@@ -144,7 +155,7 @@ fun DesignScreen(
                         value = textState.value,
                         onValueChange = { textState.value = it },
                         singleLine = true,
-                        textStyle = TextStyle(color = Color.Black), // Black text
+                        textStyle = TextStyle(color = Color.Black),
                         visualTransformation = if (field.isPassword && !passwordVisible.value)
                             PasswordVisualTransformation() else VisualTransformation.None,
                         trailingIcon = {
@@ -162,9 +173,9 @@ fun DesignScreen(
                             }
                         },
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color(0xFF5C4DB7),   // Purple when focused
-                            unfocusedBorderColor = Color(0xFF5C4DB7), // Purple when not focused
-                            cursorColor = Color(0xFF5C4DB7),          // Purple cursor
+                            focusedBorderColor = Color(0xFF5C4DB7),
+                            unfocusedBorderColor = Color(0xFF5C4DB7),
+                            cursorColor = Color(0xFF5C4DB7),
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black
                         ),
@@ -197,30 +208,35 @@ fun DesignScreen(
 
                         onForgotPassword?.let {
                             Text(
-                                text =stringResource(R.string.forgot_password) ,
+                                text = stringResource(R.string.forgot_password),
                                 color = Color(0xFF5C4DB7),
                                 fontSize = 14.sp,
                                 modifier = Modifier
-                                    .padding(top = 6.dp) // Adjust this to control vertical alignment
+                                    .padding(top = 6.dp)
                                     .clickable { it() }
                             )
                         }
                     }
 
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
                 Spacer(modifier = Modifier.height(50.dp))
-
                 Spacer(modifier = Modifier.height(32.dp))
 
+                // Login Button
                 Button(
                     onClick = {
-                        val updatedFields = fields.mapIndexed { i, field ->
-                            field.copy(value = fieldStates[i].value)
+                        // Handle button click
+                        if (fields.isNotEmpty() && fieldStates.size == fields.size) {
+                            val updatedFields = fields.mapIndexed { i, field ->
+                                field.copy(value = fieldStates[i].value)
+                            }
+                            onButtonClick(updatedFields)
+                        } else {
+                            // If no fields, just execute the button action
+                            onButtonClick(emptyList())  // No fields here
                         }
-                        onButtonClick(updatedFields)
                     },
                     shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5C4DB7)),

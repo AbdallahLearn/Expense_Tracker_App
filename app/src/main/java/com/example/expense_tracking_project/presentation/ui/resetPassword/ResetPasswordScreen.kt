@@ -15,7 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
+import com.example.expense_tracking_project.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
+
+
 
 @Composable
 fun ResetPasswordScreen(navController: NavController) {
@@ -51,29 +54,6 @@ fun ResetPasswordScreen(navController: NavController) {
 
 
 
-import com.example.expense_tracking_project.navigation.Screen
-
-
-@Composable
-fun ResetPasswordScreen(navController: NavController) {
-    DesignScreen(
-        title = stringResource(R.string.reset_password),
-        instruction = stringResource(R.string.enter_email_to_reset),
-        fields = listOf(
-            FormField(stringResource(R.string.email))
-        ),
-        buttonText = stringResource(R.string.send_verification),
-        onButtonClick = { fields ->
-            val email = fields.firstOrNull()?.value ?: ""
-            if (email.isNotBlank()) {
-                navController.navigate(Screen.CheckEmail.route)
-            } else {
-                // Show error message if needed
-            }
-        }
-    )
-}
-
 @Composable
 fun CheckEmailScreen(navController: NavController) {
     DesignScreen(
@@ -91,35 +71,15 @@ fun CheckEmailScreen(navController: NavController) {
             )
         },
         onButtonClick = {
-            navController.navigate(Screen.Login.route)//nav to log in
+            // No fields here, just navigate to Login screen
+            navController.popBackStack() // Clear CheckEmail screen from the back stack
+            navController.navigate(Screen.Login.route) // Navigate to Login screen
         }
     )
 }
 
-@Composable
-fun Login(navController: NavController) {
-    val emailState = remember { mutableStateOf("") }
-    val passwordState = remember { mutableStateOf("") }
-    val passwordVisibilityState = remember { mutableStateOf(false) }
 
-    DesignScreen(
-        title = "Log in",
-        instruction = "",
-        fields = listOf(
-            FormField("Email"),
-            FormField("Password", isPassword = true)
-        ),
-        fieldStates = listOf(emailState, passwordState),
-        passwordVisibilityStates = listOf(
-            passwordVisibilityState,
-            passwordVisibilityState
-        ),
-        buttonText = "Send verification",
-        onButtonClick = {
-            navController.navigate(Screen.CheckEmail.route)
-        }
-    )
-}
+
 
 
 fun resetPassword(email: String, onResult: (Boolean) -> Unit) {

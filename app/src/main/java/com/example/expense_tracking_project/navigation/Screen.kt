@@ -16,18 +16,18 @@ sealed class Screen(val route: String) {
     // Example with passing arguments using Kotlin serialization
     //@Serializable
     //data class UserProfile(val userId: Int) : Screen("userProfile/{userId}")
-
+    object SignUp : Screen("signup")
     object ResetPassword : Screen("ResetPasswordScreen")
     object CheckEmail : Screen("CheckEmailScreen")
     object log : Screen("Login")
 }
 
 //@Serializable
-sealed class Screen(val route:String) {
+/*sealed class Screen(val route:String) {
     object Onboarding : Screen("onboarding")
     object Login : Screen("login")
     object SignUp : Screen("signup")
     object Home : Screen("home")
     object ResetPassword : Screen("resetPassword")
     object CheckEmail : Screen("checkEmail")
-}
+}*/

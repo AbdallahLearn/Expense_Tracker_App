@@ -3,6 +3,7 @@ package com.example.expense_tracking_project.presentation.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -28,20 +29,27 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val rememberMe = remember { mutableStateOf(false) }
-
     val fields = listOf(
         FormField(label = stringResource(R.string.email), value = email),
         FormField(label = stringResource(R.string.password), value = password, isPassword = true)
     )
+    val emailState = remember { mutableStateOf("") }
+    val passwordState = remember { mutableStateOf("") }
 
+    val fieldStates = listOf(emailState, passwordState)
+    val passwordVisibilityStates = listOf(
+        remember { mutableStateOf(false) }, // email (not used, but keeps indexing consistent)
+        remember { mutableStateOf(false) }  // password
+    )
     DesignScreen(
         title = stringResource(R.string.login),
         instruction = stringResource(R.string.login_prompt),
         fields = fields,
+        fieldStates = fieldStates,
+        passwordVisibilityStates = passwordVisibilityStates,
         buttonText = stringResource(R.string.login),
         rememberMeState = rememberMe,
         onForgotPassword = {
-            // Navigate to ForgotPassword screen
             navController.navigate(Screen.ResetPassword.route)
         },
         onButtonClick = { updatedFields ->
