@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.expense_tracking_project.navigation.AppNavigation
 import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.navigation.Screen
+
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +30,8 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             Expense_Tracking_ProjectTheme {
+
+              
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         AppNavigation(
@@ -64,3 +68,4 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
+
