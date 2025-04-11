@@ -14,6 +14,8 @@ class SignInViewModel : ViewModel() {
     private val _authState = MutableLiveData<AuthState>()
     val authState: LiveData<AuthState> = _authState
 
+    private var passwordResetCompleted = false // Flag to track password reset
+
     init {
         // Check the authentication status as soon as the ViewModel is initialized
         checkAuthStatus()
@@ -27,6 +29,24 @@ class SignInViewModel : ViewModel() {
         } else {
             // If the user is authenticated, set the state to Authenticated
             _authState.value = AuthState.Authenticated
+        }
+    }
+
+    fun setPasswordResetCompleted(completed: Boolean) {
+        passwordResetCompleted = completed
+    }
+
+    fun isPasswordResetCompleted(): Boolean {
+        return passwordResetCompleted
+    }
+
+    fun authenticate(isAuthenticated: Boolean) {
+        if (isAuthenticated) {
+            _authState.value = AuthState.Authenticated
+            passwordResetCompleted = false // Reset the flag after successful login
+        } else {
+            _authState.value = AuthState.Unauthenticated
+            passwordResetCompleted = false // Reset the flag when logging out or unauthenticated
         }
     }
 

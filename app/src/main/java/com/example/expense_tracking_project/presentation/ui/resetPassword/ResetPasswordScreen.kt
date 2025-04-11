@@ -13,15 +13,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.presentation.vm.SignInViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 
 
 @Composable
-fun ResetPasswordScreen(navController: NavController) {
+fun ResetPasswordScreen(navController: NavController, signInViewModel: SignInViewModel = viewModel()) {
     val context = LocalContext.current
     val emailState = remember { mutableStateOf("") }
 
@@ -39,6 +41,7 @@ fun ResetPasswordScreen(navController: NavController) {
                     if (success) {
                         Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT)
                             .show()
+                        signInViewModel.setPasswordResetCompleted(true) // Set the flag
                         navController.navigate(Screen.CheckEmail.route)
                     } else {
                         Toast.makeText(context, "Failed to send reset email", Toast.LENGTH_SHORT)
@@ -73,19 +76,22 @@ fun CheckEmailScreen(navController: NavController) {
         onButtonClick = {
             // No fields here, just navigate to Login screen
             navController.popBackStack() // Clear CheckEmail screen from the back stack
-            navController.navigate(Screen.Login.route) // Navigate to Login screen
+            // Navigate to Login screen and clear CheckEmail from the backstack
+            navController.navigate(Screen.Login.route) {
+                popUpTo(Screen.CheckEmail.route) { inclusive = true }
+            }
         }
     )
 }
 
 
-
-
-
 fun resetPassword(email: String, onResult: (Boolean) -> Unit) {
     FirebaseAuth.getInstance().sendPasswordResetEmail(email)
         .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Log out the user after successfully sending the reset email
+                FirebaseAuth.getInstance().signOut()
+            }
             onResult(task.isSuccessful)
         }
 }
-

@@ -1,8 +1,8 @@
 package com.example.expense_tracking_project.presentation.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -16,46 +16,76 @@ import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.DesignScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.FormField
+import com.example.expense_tracking_project.presentation.vm.AuthState
 import com.example.expense_tracking_project.presentation.vm.SignInViewModel
+import com.example.expense_tracking_project.presentation.vm.ValidationInputViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    signInViewModel: SignInViewModel = viewModel()
+    signInViewModel: SignInViewModel = viewModel(),
+    validationInputViewModel: ValidationInputViewModel = viewModel() // Add ValidationInputViewModel
 ) {
     val context = LocalContext.current
-    val authState by signInViewModel.authState.observeAsState()
+    val authState by signInViewModel.authState.observeAsState() // Observe authentication state
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    val rememberMe = remember { mutableStateOf(false) }
-    val fields = listOf(
-        FormField(label = stringResource(R.string.email), value = email),
-        FormField(label = stringResource(R.string.password), value = password, isPassword = true)
-    )
-    val emailState = remember { mutableStateOf("") }
-    val passwordState = remember { mutableStateOf("") }
+    // Observe validation errors
+    val emailAndPasswordError = validationInputViewModel.emailAndPasswordError
 
-    val fieldStates = listOf(emailState, passwordState)
-    val passwordVisibilityStates = listOf(
-        remember { mutableStateOf(false) }, // email (not used, but keeps indexing consistent)
-        remember { mutableStateOf(false) }  // password
-    )
+    // Handle navigation to Home page after successful login
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Authenticated -> {
+                Toast.makeText(context, "Logged in successfully", Toast.LENGTH_SHORT).show()
+                navController.navigate(Screen.Home.route)
+            }
+            is AuthState.Error -> {
+                val errorMessage = (authState as AuthState.Error).message
+                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+            }
+            else -> Unit // Handle other states if needed
+        }
+    }
+
     DesignScreen(
         title = stringResource(R.string.login),
         instruction = stringResource(R.string.login_prompt),
-        fields = fields,
-        fieldStates = fieldStates,
-        passwordVisibilityStates = passwordVisibilityStates,
+        fields = listOf(
+            FormField(label = stringResource(R.string.email), value = validationInputViewModel.email),
+            FormField(label = stringResource(R.string.password), value = validationInputViewModel.password, isPassword = true)
+        ),
+        fieldStates = listOf(
+            remember { mutableStateOf(validationInputViewModel.email) },
+            remember { mutableStateOf(validationInputViewModel.password) }
+        ),
+        passwordVisibilityStates = listOf(
+            remember { mutableStateOf(false) }, // email (not used, but keeps indexing consistent)
+            remember { mutableStateOf(false) }  // password
+        ),
         buttonText = stringResource(R.string.login),
-        rememberMeState = rememberMe,
+        rememberMeState = remember { mutableStateOf(false) },
         onForgotPassword = {
             navController.navigate(Screen.ResetPassword.route)
         },
         onButtonClick = { updatedFields ->
-            email = updatedFields[0].value
-            password = updatedFields[1].value
-            signInViewModel.login(email = email, password = password)
+            // Update email and password in ValidationInputViewModel
+            validationInputViewModel.email = updatedFields[0].value
+            validationInputViewModel.password = updatedFields[1].value
+
+            // Validate email and password
+            validationInputViewModel.validateEmailAndPassword()
+
+            // Check for validation errors
+            if (emailAndPasswordError == null) {
+                // Trigger login process if inputs are valid
+                signInViewModel.login(
+                    email = validationInputViewModel.email,
+                    password = validationInputViewModel.password
+                )
+            } else {
+                // Show validation error as a Toast message
+                Toast.makeText(context, emailAndPasswordError, Toast.LENGTH_SHORT).show()
+            }
         },
         footerText = {
             Row(
@@ -73,24 +103,5 @@ fun LoginScreen(
                 )
             }
         }
-
     )
-
-    // Optional Auth Handling
-//    LaunchedEffect(authState) {
-//        when (authState) {
-//            is AuthState.Authenticated -> {
-//                Toast.makeText(context, "Success Login!", Toast.LENGTH_SHORT).show()
-//                navController.navigate(Screen.Home.route) {
-//                    popUpTo(Screen.Login.route) { inclusive = true }
-//                }
-//            }
-//            is AuthState.Error -> {
-//                Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_LONG).show()
-//            }
-//            else -> Unit
-//        }
-//    }
 }
-
-
