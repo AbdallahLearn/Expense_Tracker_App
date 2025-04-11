@@ -1,6 +1,5 @@
 package com.example.expense_tracking_project.presentation.ui
 
-
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -83,7 +82,6 @@ fun SignUpScreen(navController : NavController,
                 )
             }
         }
-
         // Card Content
         Column(
             modifier = Modifier
@@ -137,7 +135,6 @@ fun SignUpScreen(navController : NavController,
                         value = email,
                         onValueChange = { viewModel.email = it
                             viewModel.validateEmail() },
-                        //keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
                         isError = viewModel.emailError != null,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -223,7 +220,6 @@ fun SignUpScreen(navController : NavController,
                                         password = viewModel.password,
                                         confirmPassword = viewModel.confirmPassword
                                     )
-                                   // navController.navigate("login")
                                 }
                             },
                             modifier = Modifier

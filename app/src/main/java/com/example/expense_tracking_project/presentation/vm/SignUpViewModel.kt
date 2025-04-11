@@ -1,6 +1,7 @@
 package com.example.expense_tracking_project.presentation.vm
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -64,6 +65,8 @@ class SignUpViewModel : ViewModel() {
             _authState.value = AuthState.Error("Passwords don't match")
             return
         }
+        Log.d("SignUpViewModel", "Password: $password")
+        Log.d("SignUpViewModel", "Valid: ${isValidPassword(password)}")
 
         // Check if the email format is valid
         if (!isValidEmail(email)) {

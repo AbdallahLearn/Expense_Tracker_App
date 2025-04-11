@@ -54,13 +54,13 @@ dependencies {
     implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     // Add dependency
-    implementation ("androidx.compose.ui:ui:1.7.8")
-    implementation ("androidx.compose.material:material:1.7.8")
-    implementation ("androidx.compose.foundation:foundation:1.7.8")
-    implementation ("androidx.compose.material:material-icons-extended:1.6.0")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation ("androidx.navigation:navigation-compose:2.7.6")
-    implementation ("androidx.compose.runtime:runtime-livedata:1.6.0")
+    implementation (libs.ui)
+    implementation (libs.androidx.material)
+    implementation (libs.androidx.foundation)
+    implementation (libs.androidx.material.icons.extended)
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.androidx.navigation.compose)
+    implementation (libs.androidx.runtime.livedata)
 
 
     androidTestImplementation(libs.androidx.junit)
