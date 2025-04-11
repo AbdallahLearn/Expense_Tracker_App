@@ -47,12 +47,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import com.example.expense_tracking_project.R
 
+
 data class FormField(
     val label: String,
     var value: String = "",
     val isPassword: Boolean = false
-
 )
+
 @Composable
 fun DesignScreen(
     title: String = "",
@@ -114,7 +115,6 @@ fun DesignScreen(
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(top = 150.dp, start = 24.dp, end = 24.dp, bottom = 30.dp)
-                .padding(top = 100.dp, start = 20.dp, end = 20.dp, bottom = 60.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -242,6 +242,7 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
+                Spacer(modifier = Modifier.height(16.dp))
                 // Spacer and Login Button
                 Spacer(modifier = Modifier.height(50.dp))
 

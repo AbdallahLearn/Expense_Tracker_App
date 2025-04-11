@@ -11,19 +11,17 @@ class ValidationInputViewModel : ViewModel() {
     // For Login
     var email by mutableStateOf("")
     var password by mutableStateOf("")
-    var emailError by mutableStateOf<String?>(null)
-    var passwordError by mutableStateOf<String?>(null)
+    var emailAndPasswordError by mutableStateOf<String?>(null)
 
     // For Sign Up
     var name by mutableStateOf("")
     var confirmPassword by mutableStateOf("")
-    var nameError by  mutableStateOf<String?>(null)
-    var confirmPasswordError by mutableStateOf<String?>(null)
+    var fieldsError by mutableStateOf<String?>(null)
 
-    // Validate Email (for login and sign up)
-    fun validateEmail() {
-        emailError = if (email.isBlank()) {
-            "Email is required"
+    // Validate Email and Password (combined for login)
+    fun validateEmailAndPassword() {
+        emailAndPasswordError = if (email.isBlank() || password.isBlank()) {
+            "Email and password can't be empty"
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             "Invalid email format"
         } else {
@@ -31,33 +29,23 @@ class ValidationInputViewModel : ViewModel() {
         }
     }
 
-    // Validate Password (for login)
-    fun validatePassword() {
-        passwordError = if (password.isBlank()) {
-            "Password is required"
-        } else if (password.length < 8) {
-            "Password must be at least 8 characters"
-        } else {
-            null
-        }
-    }
-
-    // Validate Name (for sign up)
-    fun validateName() {
-        nameError = if (name.isBlank()) {
-            "Name is required"
-        } else {
-            null
-        }
-    }
-
-    // Validate Confirm Password (for sign up)
-    fun validateConfirmPassword() {
-        confirmPasswordError = when {
-            confirmPassword.isBlank() -> "Confirm Password is required"
-            confirmPassword != password -> "Passwords do not match"
-            else -> null
-        }
+    // Validate Fields (for sign up)
+    fun validateFields() {
+        fieldsError =
+            if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
+                "Fields can't be empty"
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                "Invalid email format"
+            } else if (!Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}\$").matches(
+                    password
+                )
+            ) {
+                "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+            } else if (confirmPassword != password) {
+                "Passwords do not match"
+            } else {
+                null
+            }
     }
 
     // Form validation (for sign up)
@@ -67,11 +55,9 @@ class ValidationInputViewModel : ViewModel() {
         password: String,
         confirmPassword: String
     ): Boolean {
-        validateName()
-        validateEmail()
-        validatePassword()
-        validateConfirmPassword()
+        validateFields()
+        validateEmailAndPassword()
 
-        return nameError == null && emailError == null && passwordError == null && confirmPasswordError == null
+        return fieldsError == null && emailAndPasswordError == null
     }
 }
