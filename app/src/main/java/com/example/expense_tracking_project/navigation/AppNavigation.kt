@@ -47,6 +47,7 @@ fun AppNavigation(
         composable(Screen.SignUp.route) {
             SignUpScreen(navController)
         }
+
     }
 }
 

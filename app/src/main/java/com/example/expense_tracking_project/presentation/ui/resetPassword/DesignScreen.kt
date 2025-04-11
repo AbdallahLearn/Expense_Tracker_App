@@ -1,4 +1,5 @@
 package com.example.expense_tracking_project.presentation.ui.resetPassword
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.MutableState
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
@@ -55,6 +57,8 @@ fun DesignScreen(
     title: String = "",
     instruction: String = "",
     fields: List<FormField> = emptyList(),
+    fieldStates: List<MutableState<String>> = emptyList(),
+    passwordVisibilityStates: List<MutableState<Boolean>> = emptyList(),
     buttonText: String = "",
     onButtonClick: (List<FormField>) -> Unit,
     image: (@Composable () -> Unit)? = null,
@@ -62,12 +66,10 @@ fun DesignScreen(
     onForgotPassword: (() -> Unit)? = null,
     footerText: (@Composable () -> Unit)? = null
 ) {
-    val fieldStates = remember {
-        fields.map { mutableStateOf(it.value) }
-    }
-
-    val passwordVisibilityStates = remember {
-        fields.map { mutableStateOf(false) }
+    fields.forEachIndexed { index, field ->
+        val textState = fieldStates.getOrNull(index) ?: remember { mutableStateOf("") }
+        val passwordVisible =
+            passwordVisibilityStates.getOrNull(index) ?: remember { mutableStateOf(false) }
     }
 
     Box(
@@ -100,6 +102,8 @@ fun DesignScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .padding(top = 150.dp, start = 24.dp, end = 24.dp, bottom = 30.dp)
+
                 .padding(top = 100.dp, start = 20.dp, end = 20.dp, bottom = 60.dp)
         ) {
             Column(
@@ -206,6 +210,8 @@ fun DesignScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
                 }
+
+                Spacer(modifier = Modifier.height(50.dp))
 
                 Spacer(modifier = Modifier.height(32.dp))
 
