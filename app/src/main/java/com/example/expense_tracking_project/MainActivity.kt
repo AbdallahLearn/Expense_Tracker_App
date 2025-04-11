@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.expense_tracking_project.navigation.AppNavigation
@@ -26,19 +29,20 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val showOnboarding = remember { mutableStateOf(true) }
+            var showOnboarding  by rememberSaveable { mutableStateOf(true) }
             val navController = rememberNavController()
 
             Expense_Tracking_ProjectTheme {
-
-              
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         AppNavigation(
                             navController = navController,
-                            showOnboarding = showOnboarding.value,
+                            showOnboarding = showOnboarding,
                             onFinish = {
-                                showOnboarding.value = false
+                                showOnboarding = false
+                                // Navigate to Login and clear Onboarding from backstack
                                 navController.navigate(Screen.Login.route) {
                                     popUpTo(Screen.Onboarding.route) { inclusive = true }
                                 }
@@ -50,6 +54,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 
 

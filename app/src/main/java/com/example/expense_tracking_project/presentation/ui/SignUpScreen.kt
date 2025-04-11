@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -23,240 +24,92 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.expense_tracking_project.R
+import com.example.expense_tracking_project.presentation.ui.resetPassword.DesignScreen
+import com.example.expense_tracking_project.presentation.ui.resetPassword.FormField
 import com.example.expense_tracking_project.presentation.vm.AuthState
 import com.example.expense_tracking_project.presentation.vm.SignUpViewModel
 import com.example.expense_tracking_project.presentation.vm.ValidationInputViewModel
 
+
 @Composable
-fun SignUpScreen(navController : NavController,
-                 viewModel: ValidationInputViewModel = viewModel() ,
-                 signUpViewModel: SignUpViewModel = viewModel() ) {
-    val name = viewModel.name
-    val email = viewModel.email
-    val password = viewModel.password
-    val confirmPassword = viewModel.confirmPassword
-    var showPassword by remember { mutableStateOf(false) }
-    var showConfirmPassword by remember { mutableStateOf(false) }
-
-    val authState by signUpViewModel.authState.observeAsState()
+fun SignUpScreen(
+    navController: NavController,
+    viewModel: ValidationInputViewModel = viewModel(),
+    signUpViewModel: SignUpViewModel = viewModel()
+) {
     val context = LocalContext.current
+    val authState by signUpViewModel.authState.observeAsState()
 
-    LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show()
-                navController.navigate("login")
-            }
-            is AuthState.Error -> {
-                val errorMessage = (authState as AuthState.Error).message
-                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
-            }
-            else -> Unit
-        }
-    }
+    // Define the form fields
+    val fields = listOf(
+        FormField(label = stringResource(R.string.name) , value = viewModel.name),
+        FormField(label = stringResource(R.string.email), value = viewModel.email),
+        FormField(label = stringResource(R.string.password), value = viewModel.password, isPassword = true),
+        FormField(label = stringResource(R.string.confirm_password), value = viewModel.confirmPassword, isPassword = true)
+    )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        // Top Purple Curve Area
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(220.dp)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(Color(0xFF5C4DB7), Color(0xFF5C4DB7))
-                    ),
-                    shape = RoundedCornerShape(bottomStart = 80.dp, bottomEnd = 80.dp)
+    // Design Screen UI
+    DesignScreen(
+        title = stringResource(R.string.signup),
+        instruction =  stringResource(R.string.signup_prompt),
+        fields = fields,
+        buttonText =  stringResource(R.string.signup),
+        onButtonClick = { updatedFields ->
+            viewModel.name = updatedFields[0].value
+            viewModel.email = updatedFields[1].value
+            viewModel.password = updatedFields[2].value
+            viewModel.confirmPassword = updatedFields[3].value
+
+            viewModel.validateName()
+            viewModel.validateEmail()
+            viewModel.validatePassword()
+            viewModel.validateConfirmPassword()
+
+            if (viewModel.isFormValid(
+                    name = viewModel.name,
+                    email = viewModel.email,
+                    password = viewModel.password,
+                    confirmPassword = viewModel.confirmPassword
+                )) {
+                signUpViewModel.signup(
+                    name = viewModel.name,
+                    email = viewModel.email,
+                    password = viewModel.password,
+                    confirmPassword = viewModel.confirmPassword
                 )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 60.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            } else {
+                Toast.makeText(context, "Please fill all fields correctly", Toast.LENGTH_SHORT).show()
+            }
+        },
+        footerText = {
+            Row {
+                Text(text = stringResource(R.string.already_have_account), color = Color.Black)
                 Text(
-                    text = "Sign Up",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    text = stringResource(R.string.login),
+                    color = Color(0xFF5C4DB7),
+                    modifier = Modifier.clickable {
+                        navController.navigate("login")
+                    }
                 )
             }
         }
-        // Card Content
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(top = 130.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                elevation = 8.dp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                ) {
-                    // Name
-                    Text(
-                        text = "NAME",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { viewModel.name = it
-                            viewModel.validateName()},
-                        isError = viewModel.nameError != null,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    if (viewModel.nameError != null){
-                        Text(
-                            text = viewModel.nameError ?: "" ,color = Color.Red
-                        )
-                    }
+    )
 
-                    Spacer(modifier = Modifier.height(12.dp))
 
-                    // Email
-                    Text(
-                        text = "EMAIL",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = { viewModel.email = it
-                            viewModel.validateEmail() },
-                        isError = viewModel.emailError != null,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    if (viewModel.emailError != null) {
-                        Text(
-                            text = viewModel.emailError ?: "", color = Color.Red)
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Password
-                    Text(
-                        text = "PASSWORD",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { viewModel.password = it
-                            viewModel.validatePassword() },
-                        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-                        trailingIcon = {
-                            IconButton(onClick = { showPassword = !showPassword }) {
-                                Icon(
-                                    imageVector = if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                    contentDescription = "Toggle Password"
-                                )
-                            }
-                        },
-                        isError = viewModel.passwordError != null,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    if (viewModel.passwordError != null) {
-                        Text(text = viewModel.passwordError ?: "", color = Color.Red)
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Confirm Password
-                    Text(
-                        text = "CONFIRM PASSWORD",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = confirmPassword,
-                        onValueChange = { viewModel.confirmPassword = it
-                            viewModel.validateConfirmPassword() },
-                        visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
-                        trailingIcon = {
-                            IconButton(onClick = { showConfirmPassword = !showConfirmPassword }) {
-                                Icon(
-                                    imageVector = if (showConfirmPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                    contentDescription = "Toggle Confirm Password"
-                                )
-                            }
-                        },
-                        isError = viewModel.confirmPasswordError != null,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    if (viewModel.confirmPasswordError != null) {
-                        Text(text = viewModel.confirmPasswordError ?: "", color = Color.Red)
-                    }
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // Sign Up Button
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Button(
-                            onClick = {
-                                val isValid = viewModel.nameError == null && viewModel.emailError == null && viewModel.passwordError == null && viewModel.confirmPasswordError == null
-                                if (isValid){
-                                    signUpViewModel.signup(
-                                        name = viewModel.name,
-                                        email = viewModel.email,
-                                        password = viewModel.password,
-                                        confirmPassword = viewModel.confirmPassword
-                                    )
-                                }
-                            },
-                            modifier = Modifier
-                                .width(220.dp)
-                                .height(48.dp),
-                            shape = RoundedCornerShape(50),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF5C4DB7))
-                        )
-                        {
-                            Text("Sign Up", color = Color.White, fontSize = 16.sp)
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Already have account
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Already have an account?",
-                            color = Color(0xFF5C4DB7),
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            "Sign In",
-                            color = Color(0xFF000000),
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.clickable {
-                                navController.navigate("login")
-                            }
-                        )
-                    }
-                }
-            }
-        }
-    }
+    // Handling different auth states
+//    LaunchedEffect(authState) {
+//        when (authState) {
+//            is AuthState.Authenticated -> {
+//                Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show()
+//                navController.navigate("login") {
+//                    popUpTo("signup") { inclusive = true }
+//                }
+//            }
+//            is AuthState.Error -> {
+//                Toast.makeText(context, (authState as AuthState.Error).message, Toast.LENGTH_LONG).show()
+//            }
+//            else -> Unit
+//        }
+//    }
 }

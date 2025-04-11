@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name"> مصاريفي</string>
+    <string name="app_name">مصاريفي</string>
 
     <!-- Onboarding Titles -->
     <string name="onboarding_title_1">تتبع ذكي للمصاريف</string>
@@ -15,4 +15,42 @@
     <!-- Buttons -->
     <string name="get_started">ابدأ الآن</string>
     <string name="sign_in_prompt">لديك حساب بالفعل؟ سجّل الدخول</string>
+
+    <!-- Login -->
+    <string name="login">تسجيل الدخول</string>
+    <string name="login_prompt">يرجى إدخال بياناتك لتسجيل الدخول</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="remember_me">تذكرني</string>
+    <string name="forgot_password">هل نسيت كلمة المرور؟</string>
+    <string name="dont_have_account">ليس لديك حساب؟</string>
+
+    <!-- Sign Up -->
+    <string name="signup_prompt">يرجى تعبئة البيانات لإنشاء حساب</string>
+    <string name="signup">إنشاء حساب</string>
+    <string name="name">الاسم</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+    <string name="already_have_account">لديك حساب بالفعل؟</string>
+
+    <!-- Validation & Messages -->
+    <string name="email_required">البريد الإلكتروني مطلوب</string>
+    <string name="please_fill_fields">يرجى تعبئة جميع الحقول بشكل صحيح</string>
+    <string name="invalid_email">صيغة البريد الإلكتروني غير صحيحة</string>
+    <string name="password_required">كلمة المرور مطلوبة</string>
+    <string name="password_min_length">يجب أن تكون كلمة المرور 8 أحرف على الأقل</string>
+    <string name="password_complexity">يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وحرف كبير، وحرف صغير، ورقم، ورمز</string>
+    <string name="name_required">الاسم مطلوب</string>
+    <string name="confirm_password_required">تأكيد كلمة المرور مطلوب</string>
+    <string name="passwords_do_not_match">كلمتا المرور غير متطابقتين</string>
+    <string name="please_enter_valid_email">يرجى إدخال بريد إلكتروني صالح</string>
+    <string name="fields_cannot_be_empty">لا يمكن ترك الحقول فارغة</string>
+    <string name="something_went_wrong">حدث خطأ ما</string>
+    <string name="email_password_empty">لا يمكن ترك البريد الإلكتروني أو كلمة المرور فارغين</string>
+    <string name="check_your_email">تحقق من بريدك</string>
+    <string name="recovery_email_sent">تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني</string>
+    <string name="send_verification">إرسال التحقق</string>
+    <string name="enter_email_to_reset">أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور</string>
+    <string name="reset_password">إعادة تعيين كلمة المرور</string>
 </resources>
+
+

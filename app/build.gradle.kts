@@ -56,7 +56,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     // Add dependency
-    implementation (libs.ui)
+//    implementation (libs.ui)
     implementation (libs.androidx.material)
     implementation (libs.androidx.foundation)
     implementation (libs.androidx.material.icons.extended)
@@ -71,7 +71,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.compose.material3:material3:1.0.0")
-    implementation("androidx.compose.material:material-icons-extended:1.0.5")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation(libs.material3)
+    implementation(libs.androidx.material.icons.extended.v105)
+    implementation(libs.androidx.navigation.compose.v277)
 }

@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import android.util.Patterns
 
 class ValidationInputViewModel : ViewModel() {
 
@@ -13,24 +14,24 @@ class ValidationInputViewModel : ViewModel() {
     var emailError by mutableStateOf<String?>(null)
     var passwordError by mutableStateOf<String?>(null)
 
-
     // For Sign Up
     var name by mutableStateOf("")
     var confirmPassword by mutableStateOf("")
     var nameError by  mutableStateOf<String?>(null)
     var confirmPasswordError by mutableStateOf<String?>(null)
 
-    // Login validation for real-time feedback
+    // Validate Email (for login and sign up)
     fun validateEmail() {
         emailError = if (email.isBlank()) {
             "Email is required"
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             "Invalid email format"
         } else {
             null
         }
     }
 
+    // Validate Password (for login)
     fun validatePassword() {
         passwordError = if (password.isBlank()) {
             "Password is required"
@@ -41,6 +42,7 @@ class ValidationInputViewModel : ViewModel() {
         }
     }
 
+    // Validate Name (for sign up)
     fun validateName() {
         nameError = if (name.isBlank()) {
             "Name is required"
@@ -48,11 +50,28 @@ class ValidationInputViewModel : ViewModel() {
             null
         }
     }
+
+    // Validate Confirm Password (for sign up)
     fun validateConfirmPassword() {
         confirmPasswordError = when {
             confirmPassword.isBlank() -> "Confirm Password is required"
             confirmPassword != password -> "Passwords do not match"
             else -> null
         }
+    }
+
+    // Form validation (for sign up)
+    fun isFormValid(
+        name: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
+        validateName()
+        validateEmail()
+        validatePassword()
+        validateConfirmPassword()
+
+        return nameError == null && emailError == null && passwordError == null && confirmPasswordError == null
     }
 }

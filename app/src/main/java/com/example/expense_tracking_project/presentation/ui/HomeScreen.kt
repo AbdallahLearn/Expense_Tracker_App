@@ -12,15 +12,4 @@ fun HomeScreen(navController : NavController){
     Text("Hello")
 
 }
-// =======
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 
-@Composable
-fun HomeScreen() {
-    Column {
-        Text(text = "You are in Home page")
-    }
-}
-// >>>>>>> dev

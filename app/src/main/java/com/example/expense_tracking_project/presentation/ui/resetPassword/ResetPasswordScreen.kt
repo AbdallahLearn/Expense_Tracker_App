@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
@@ -49,12 +50,36 @@ fun ResetPasswordScreen(navController: NavController) {
 }
 
 
+
+import com.example.expense_tracking_project.navigation.Screen
+
+
+@Composable
+fun ResetPasswordScreen(navController: NavController) {
+    DesignScreen(
+        title = stringResource(R.string.reset_password),
+        instruction = stringResource(R.string.enter_email_to_reset),
+        fields = listOf(
+            FormField(stringResource(R.string.email))
+        ),
+        buttonText = stringResource(R.string.send_verification),
+        onButtonClick = { fields ->
+            val email = fields.firstOrNull()?.value ?: ""
+            if (email.isNotBlank()) {
+                navController.navigate(Screen.CheckEmail.route)
+            } else {
+                // Show error message if needed
+            }
+        }
+    )
+}
+
 @Composable
 fun CheckEmailScreen(navController: NavController) {
     DesignScreen(
-        title = "Check your mail",
-        instruction = "We have send a password recover to your email",
-        buttonText = "Open email app",
+        title = stringResource(R.string.check_your_email),
+        instruction = stringResource(R.string.recovery_email_sent),
+        buttonText = stringResource(R.string.login),
         image = {
             Image(
                 painter = painterResource(id = R.drawable.email),
@@ -66,7 +91,7 @@ fun CheckEmailScreen(navController: NavController) {
             )
         },
         onButtonClick = {
-            navController.navigate(Screen.log.route)//nav to log in
+            navController.navigate(Screen.Login.route)//nav to log in
         }
     )
 }
@@ -103,3 +128,4 @@ fun resetPassword(email: String, onResult: (Boolean) -> Unit) {
             onResult(task.isSuccessful)
         }
 }
+
