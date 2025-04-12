@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.expense_tracking_project.data.dataSource.AppDatabase
 import com.example.expense_tracking_project.data.dataSource.Transaction
 import com.example.expense_tracking_project.domain.repository.Transaction.TransactionRepository
-import com.example.expense_tracking_project.domain.repository.empty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
