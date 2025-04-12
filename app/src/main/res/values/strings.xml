@@ -73,6 +73,14 @@
     <string name="no_data_available">No data available</string>
     <string name="search">Search</string>
     <string name="theme">Theme</string>
+    <string name="save">Save</string>
+    <string name="amount">AMOUNT</string>
+    <string name="category">CATEGORY</string>
+    <string name="date">DATE</string>
+    <string name="note">NOTE</string>
+
+
+
 
 
 </resources>

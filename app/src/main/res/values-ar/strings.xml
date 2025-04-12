@@ -73,7 +73,11 @@
     <string name="no_data_available">لا توجد بيانات</string>
     <string name="search">بحث</string>
     <string name="theme">الثيم</string>
-
+    <string name="save">حفظ</string>
+    <string name="amount">القيمة</string>
+    <string name="category">النوع</string>
+    <string name="date">التاريخ</string>
+    <string name="note">ملاحظة</string>
 
 
 
