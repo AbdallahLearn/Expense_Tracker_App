@@ -92,7 +92,7 @@ fun HomeScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(24.dp)) // Top spacing
                     TopSection(
                         name = "Enjelin Morgeana")
-                    BudgetCard(income = 0.0, expenses = 0.0)
+                    BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
                     TimeTabSection()
                     RecentTransactions(navController, transactions = transactions)
                 }
@@ -154,10 +154,10 @@ fun BudgetCard(income: Double, expenses: Double) {
 
                 // Budget Amount Text
                 Text(
-                    " 00.00",  // Replace this with dynamic value if needed
+                    "$${income - expenses}",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(start = 8.dp)  // Padding after the image
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
 

@@ -59,6 +59,13 @@ fun TransactionScreen(navController: NavHostController) {
             onClick = {
                 val amount = amountText.toDoubleOrNull() ?: 0.0
                 if (amount > 0) {
+                    // Update income or expenses based on user selection
+                    val category = if (noteText.contains("income", ignoreCase = true)) {
+                        "expense"
+                    } else {
+                        "income"
+                    }
+
                     viewModel.insert(
                         Transaction(
                             categoryId = 1, // just a sample category
@@ -69,11 +76,12 @@ fun TransactionScreen(navController: NavHostController) {
                             updated_at = Date()
                         )
                     )
+
                     amountText = ""
                     noteText = ""
                 }
                 navController.navigate(Screen.Home.route)
-                      },
+            },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text("Save")
@@ -82,13 +90,15 @@ fun TransactionScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
         Text("All Transactions", style = MaterialTheme.typography.titleMedium)
 
+        // LazyColumn to display the list of transactions with dynamic amount
         LazyColumn {
             items(transactions) { txn ->
                 Text(
-                    text = "${txn.amount} - ${txn.note}",
+                    text = "Amount: ${txn.amount} - Note: ${txn.note}",
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
         }
+
     }
 }
