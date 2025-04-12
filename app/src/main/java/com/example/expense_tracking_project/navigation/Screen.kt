@@ -21,6 +21,7 @@ sealed class Screen(val route: String) {
     object CheckEmail : Screen("CheckEmailScreen")
     object log : Screen("Login")
     object Profile : Screen("profile")
+    object AddTransaction : Screen("add_transaction")
 
 }
 

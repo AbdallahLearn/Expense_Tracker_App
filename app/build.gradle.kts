@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
+    id("com.google.devtools.ksp")
+
 }
 
 android {
@@ -54,6 +56,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.firebase.auth)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.room.common.jvm)
     testImplementation(libs.junit)
     // Add dependency
 //    implementation (libs.ui)
@@ -74,4 +77,16 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.material.icons.extended.v105)
     implementation(libs.androidx.navigation.compose.v277)
+
+    // Room Database
+    implementation(libs.androidx.room.runtime) // Room runtime
+    implementation(libs.androidx.room.ktx) // Kotlin extensions for Room
+    ksp(libs.androidx.room.compiler) // Annotation processor for Room
+
+
+    //firebase store
+    //implementation(libs.firebase.bom)
+    //implementation("com.google.firebase:firebase-firestore-ktx")
+
+
 }

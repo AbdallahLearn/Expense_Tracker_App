@@ -18,7 +18,7 @@ import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.vm.SignInViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.example.expense_tracking_project.presentation.vm.resetPassword
 
 
 
@@ -85,13 +85,3 @@ fun CheckEmailScreen(navController: NavController) {
 }
 
 
-fun resetPassword(email: String, onResult: (Boolean) -> Unit) {
-    FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                // Log out the user after successfully sending the reset email
-                FirebaseAuth.getInstance().signOut()
-            }
-            onResult(task.isSuccessful)
-        }
-}
