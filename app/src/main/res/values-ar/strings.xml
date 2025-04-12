@@ -51,6 +51,32 @@
     <string name="send_verification">إرسال التحقق</string>
     <string name="enter_email_to_reset">أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور</string>
     <string name="reset_password">إعادة تعيين كلمة المرور</string>
+
+    <!-- Bottom Bar -->
+    <string name="home">الرئيسية</string>
+    <string name="statistics">الإحصائيات</string>
+    <string name="edit">الإعدادات</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name="add">إضافة</string>
+
+     <!-- Home Screen -->
+    <string name="welcome">أهلاً،</string>
+    <string name="budget">الميزانية</string>
+    <string name="income">↓ الدخل</string>
+    <string name="expenses">↑ النفقات</string>
+    <string name="today">اليوم</string>
+    <string name="week">الأسبوع</string>
+    <string name="month">الشهر</string>
+    <string name="year">السنة</string>
+    <string name="recent_transactions">المعاملات الأخيرة</string>
+    <string name="see_all">عرض الكل</string>
+    <string name="no_data_available">لا توجد بيانات</string>
+    <string name="search">بحث</string>
+    <string name="theme">الثيم</string>
+
+
+
+
 </resources>
 
 
