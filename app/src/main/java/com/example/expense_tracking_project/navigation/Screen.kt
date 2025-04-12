@@ -20,6 +20,8 @@ sealed class Screen(val route: String) {
     object ResetPassword : Screen("ResetPasswordScreen")
     object CheckEmail : Screen("CheckEmailScreen")
     object log : Screen("Login")
+    object Profile : Screen("profile")
+
 }
 
 //@Serializable

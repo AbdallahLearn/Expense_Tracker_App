@@ -12,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.expense_tracking_project.R
 
 @Composable
 fun CustomBottomBar(
@@ -22,12 +24,11 @@ fun CustomBottomBar(
     onFabClick: () -> Unit
 ) {
     val items = listOf(
-        Icons.Default.Home to "Home",
-        Icons.Default.BarChart to "Statistics",
-        Icons.Default.Settings to "Edit",
-        Icons.Default.Person to "Profile"
+        Icons.Default.Home to stringResource(R.string.home),
+        Icons.Default.BarChart to stringResource(R.string.statistics),
+        Icons.Default.Settings to stringResource(R.string.edit),
+        Icons.Default.Person to stringResource(R.string.profile)
     )
-
     Box {
         BottomAppBar(
             containerColor = Color.White,
@@ -73,7 +74,11 @@ fun CustomBottomBar(
                 .align(Alignment.Center) // Center the FAB in the BottomAppBar
                 .offset(y = -28.dp) // Adjust to center vertically
         ) {
-            Icon(Icons.Default.Add, contentDescription = "Add")
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add",
+                tint = Color.White
+            )
         }
     }
 }
