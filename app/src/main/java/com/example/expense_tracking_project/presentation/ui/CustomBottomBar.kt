@@ -34,7 +34,7 @@ fun CustomBottomBar(
     )
     Box {
         BottomAppBar(
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.background,
             tonalElevation = 4.dp,
             modifier = Modifier.height(130.dp) // height of the bottom bar
         ) {

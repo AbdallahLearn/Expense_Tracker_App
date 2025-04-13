@@ -3,6 +3,7 @@ package com.example.expense_tracking_project.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.expense_tracking_project.presentation.ui.HomeScreen
@@ -17,13 +18,17 @@ import com.example.expense_tracking_project.presentation.ui.StatisticsScreen
 import com.example.expense_tracking_project.presentation.ui.onBoardingScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.CheckEmailScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.ResetPasswordScreen
+import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
     navController: NavHostController,
     showOnboarding: Boolean,
-    onFinish: () -> Unit
+    onFinish: () -> Unit,
+    themeViewModel: ThemeViewModel,
+    isDarkTheme: Boolean
+
 ) {
     NavHost(
         navController = navController,
@@ -41,7 +46,11 @@ fun AppNavigation(
         }
 
         composable(Screen.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(
+                navController = navController,
+                themeViewModel = themeViewModel,
+                isDarkTheme = isDarkTheme
+            )
         }
 
         composable(Screen.ResetPassword.route) {
@@ -57,14 +66,18 @@ fun AppNavigation(
         }
 
         composable(Screen.AddTransaction.route) {
-            TransactionScreen(navController)
-       }
+            TransactionScreen(
+                navController,
+                isDarkTheme = isDarkTheme
+            )
+        }
+
 
         composable(Screen.AddExpense.route) {
-            AddExpenseScreen(navController)
+            AddExpenseScreen(navController,)
         }
         composable(Screen.Profile.route) {
-            ProfileScreen(navController ,  onSignOut = {})
+            ProfileScreen(navController )
         }
         composable(Screen.Edit.route) {
             EditScreen(navController)

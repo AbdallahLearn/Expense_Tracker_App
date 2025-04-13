@@ -19,10 +19,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.LightMode
+
 import androidx.compose.material.icons.filled.Delete
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
+
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -31,13 +40,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.data.dataSource.Transaction.Transaction
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isDarkTheme: Boolean) {
     val transactionViewModel: TransactionViewModel = viewModel()
     val transactions by transactionViewModel.allTransactions.observeAsState(emptyList())
-    val viewModel: TransactionViewModel = viewModel()
+
     Scaffold(
         bottomBar = {
             CustomBottomBar(
@@ -66,27 +76,33 @@ fun HomeScreen(navController: NavController) {
                     )
             )
 
-
-                // Foreground content
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Spacer(modifier = Modifier.height(24.dp)) // Top spacing
-                    TopSection(
-                        name = "Enjelin Morgeana")
-                    BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
-                    TimeTabSection()
-                    RecentTransactions(navController, transactions, viewModel)
-                }
+            // Foreground content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp)
+            ) {
+                Spacer(modifier = Modifier.height(24.dp)) // Top spacing
+                TopSection(
+                    name = "Abdullah",
+                    isDarkTheme = isDarkTheme,
+                    onToggleTheme = { themeViewModel.toggleTheme() }
+                )
+                BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
+                TimeTabSection()
+                RecentTransactions(navController, transactions)
+            }
         }
     }
 }
 
 @Composable
-fun TopSection(name: String) {
+fun TopSection(
+    name: String,
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -103,12 +119,21 @@ fun TopSection(name: String) {
                 color = Color.White
             )
         }
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { /* Search action */ }) {
-                Icon(Icons.Default.Search, contentDescription = stringResource(R.string.search), tint = Color.White)
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = Color.White
+                )
             }
-            IconButton(onClick = { /* Theme toggle */ }) {
-                Icon(Icons.Default.DarkMode, contentDescription = stringResource(R.string.theme), tint = Color.White)
+            IconButton(onClick = onToggleTheme) {
+                Icon(
+                    imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
+                    contentDescription = stringResource(id = R.string.theme),
+                    tint = Color.White
+                )
             }
         }
     }
@@ -216,10 +241,8 @@ fun TimeTabSection() {
 @Composable
 fun RecentTransactions(
     navController: NavController,
-    transactions: List<Transaction>,
-    viewModel: TransactionViewModel = viewModel()
+    transactions: List<Transaction>
 ) {
-
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -252,38 +275,27 @@ fun RecentTransactions(
 
         if (transactions.isEmpty()) {
             Text(
-
                 stringResource(R.string.no_data_available),
-
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )
         } else {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(transactions) { transaction ->
-                    TransactionItem(
-                        transaction = transaction,
-                        onDeleteClick = { viewModel.hideTransaction(transaction) }
-                    )
-    }
+                    TransactionItem(transaction = transaction)
+                }
             }
         }
     }
 }
 
-
 @Composable
-fun TransactionItem(
-    transaction: Transaction,
-    onDeleteClick: (Transaction) -> Unit
-) {
+fun TransactionItem(transaction: Transaction) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable {
-
-            },
+            .clickable { /* Handle click action */ },
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -303,41 +315,16 @@ fun TransactionItem(
                 )
             }
 
-            IconButton(onClick = { onDeleteClick(transaction) }) {
+            IconButton(onClick = { /* Handle delete action */ }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete Transaction",
                     tint = Color.Red
                 )
-
-
             }
         }
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewHomeScreen() {
-//    // You can pass a mock NavController or any other necessary parameters for testing.
-//    HomeScreen(navController = rememberNavController()) // Assuming you have a mock NavController here.
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewTopSection() {
-//    TopSection(name = "Enjelin Morgeana")
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewBudgetCard() {
-//    BudgetCard(income = 2000.0, expenses = 1500.0)
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewRecentTransactions() {
-//    RecentTransactions()
-//}
+
 

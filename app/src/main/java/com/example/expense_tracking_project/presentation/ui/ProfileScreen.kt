@@ -8,12 +8,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.presentation.vm.SignInViewModel
+import com.example.expense_tracking_project.presentation.vm.SignOutViewModel
 
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    onSignOut: () -> Unit
+//    onSignOut: () -> Unit
+    signOutViewModel: SignOutViewModel = viewModel()
 ) {
     Scaffold(
         bottomBar = {
@@ -44,7 +49,10 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = { onSignOut() },
+                    onClick = {
+                              signOutViewModel.signout()
+                              navController.navigate(Screen.Login.route)
+                              },
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(vertical = 16.dp)
                 ) {

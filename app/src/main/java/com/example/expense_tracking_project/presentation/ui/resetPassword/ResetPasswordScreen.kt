@@ -52,7 +52,8 @@ fun ResetPasswordScreen(navController: NavController, signInViewModel: SignInVie
             } else {
                 Toast.makeText(context, "Please enter an email", Toast.LENGTH_SHORT).show()
             }
-        }
+        },
+        onTabSelected = {}
     )
 }
 
@@ -75,14 +76,11 @@ fun CheckEmailScreen(navController: NavController) {
             )
         },
         onButtonClick = {
-            // No fields here, just navigate to Login screen
-            navController.popBackStack() // Clear CheckEmail screen from the back stack
-            // Navigate to Login screen and clear CheckEmail from the backstack
+            navController.popBackStack()
             navController.navigate(Screen.Login.route) {
                 popUpTo(Screen.CheckEmail.route) { inclusive = true }
             }
-        }
+        },
+        onTabSelected = {}
     )
 }
-
-

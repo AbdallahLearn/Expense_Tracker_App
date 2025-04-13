@@ -18,7 +18,7 @@ class SignOutViewModel : ViewModel() {
         checkAuthStatus()
     }
 
-    // Function to check if the user is already authenticated or not
+    // Function to  check if the user is already authenticated or not
     fun checkAuthStatus() {
         if (auth.currentUser == null) {
             // If the user is not authenticated, set the state to Unauthenticated
