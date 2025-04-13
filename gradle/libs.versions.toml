@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.2"
+firebaseBom = "32.1.1"
 foundation = "1.7.8"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -20,6 +21,8 @@ googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.2.0"
 runtimeLivedata = "1.7.8"
 ui = "1.7.8"
+roomRuntime = "2.6.1"
+roomCommonJvm = "2.7.0" # Latest stable version of Room
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,6 +51,10 @@ androidx-navigation-runtime-android = { group = "androidx.navigation", name = "n
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

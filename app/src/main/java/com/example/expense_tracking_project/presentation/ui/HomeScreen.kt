@@ -33,20 +33,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.R
+import com.example.expense_tracking_project.data.dataSource.Transaction
+import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 
 
 @Composable
 fun HomeScreen(navController: NavController) {
+    val transactionViewModel: TransactionViewModel = viewModel()
+    val transactions by transactionViewModel.allTransactions.observeAsState(emptyList())
         Scaffold(
             bottomBar = {
                 CustomBottomBar(
@@ -84,9 +95,9 @@ fun HomeScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(24.dp)) // Top spacing
                     TopSection(
                         name = "Enjelin Morgeana")
-                    BudgetCard(income = 0.0, expenses = 0.0)
+                    BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
                     TimeTabSection()
-                    RecentTransactions()
+                    RecentTransactions(navController, transactions = transactions)
                 }
             }
         }
@@ -146,10 +157,10 @@ fun BudgetCard(income: Double, expenses: Double) {
 
                 // Budget Amount Text
                 Text(
-                    " 00.00",  // Replace this with dynamic value if needed
+                    "$${income - expenses}",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(start = 8.dp)  // Padding after the image
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
 
@@ -223,7 +234,7 @@ fun TimeTabSection() {
 }
 
 @Composable
-fun RecentTransactions() { // Later Add Lazy Column so transactions of the user appear here
+fun RecentTransactions(navController: NavController, transactions: List<Transaction>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -231,16 +242,63 @@ fun RecentTransactions() { // Later Add Lazy Column so transactions of the user 
         ) {
             Text(stringResource(R.string.recent_transactions), style = MaterialTheme.typography.titleSmall)
             Text(stringResource(R.string.see_all),
-                style = MaterialTheme.typography.bodySmall ,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable {  /* So the user can navigate to transactions screen */  })
+                modifier = Modifier.clickable {
+                    // Navigate to transactions screen
+                    navController.navigate(Screen.AddTransaction.route)
+                })
+        }
+
+        Button(
+            onClick = { navController.navigate(Screen.AddTransaction.route) },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+        ) {
+            Text("Add Transaction")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(stringResource(R.string.no_data_available), style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+        // If no data is available, show a placeholder message
+        if (transactions.isEmpty()) {
+            Text(stringResource(R.string.no_data_available), style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+        } else {
+            // Display transactions in a LazyColumn
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                items(transactions) { transaction ->
+                    TransactionItem(transaction) // Show each transaction item
+                }
+            }
+        }
     }
 }
+
+@Composable
+fun TransactionItem(transaction: Transaction) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable {
+                // Handle transaction item click (e.g., navigate to detail page)
+            },
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            Column {
+                Text("Amount: ${transaction.amount}", style = MaterialTheme.typography.bodyMedium)
+                Text("Note: ${transaction.note}", style = MaterialTheme.typography.bodySmall)
+            }
+            Text(
+                "Date: ${transaction.date}",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
+        }
+    }
+}
+
+
 
 @Preview(showBackground = true)
 @Composable
