@@ -37,9 +37,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -49,77 +51,104 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.data.dataSource.Transaction
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isDarkTheme: Boolean) {
     val transactionViewModel: TransactionViewModel = viewModel()
     val transactions by transactionViewModel.allTransactions.observeAsState(emptyList())
-        Scaffold(
-            bottomBar = {
-                CustomBottomBar(
-                    selectedIndex = 0,
-                    onItemSelected = { index ->
-                        // Handle navigation
-                    },
-                    navController = navController // Pass NavController here
-//                            onFabClick = {
-//                        // Handle FAB click
-//                    }
-                )
-            }
-        ) { padding ->
-            Box(modifier = Modifier.fillMaxSize()) {
 
-                // Curved Background Box
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp)
-                        .background(
-                            color = Color(0xFF5C4DB7),
-                            shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
-                        )
-                )
+    Scaffold(
+        bottomBar = {
+            CustomBottomBar(
+                selectedIndex = 0,
+                onItemSelected = { index ->
+                    // Handle navigation
+                },
+                navController = navController
+            )
+        }
+    ) { padding ->
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)) {
 
-                // Foreground content
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Spacer(modifier = Modifier.height(24.dp)) // Top spacing
-                    TopSection(
-                        name = "Enjelin Morgeana")
-                    BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
-                    TimeTabSection()
-                    RecentTransactions(navController, transactions = transactions)
-                }
+            // Curved Background Box
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .background(
+                        color = Color(0xFF5C4DB7),
+                        shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
+                    )
+            )
+
+            // Foreground content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
+                TopSection(
+                    name = "Abdullah",
+                    isDarkTheme = isDarkTheme,
+                    onToggleTheme = { themeViewModel.toggleTheme() }
+                )
+                BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
+                TimeTabSection()
+                RecentTransactions(navController, transactions = transactions)
             }
         }
     }
+}
+
 @Composable
-fun TopSection(name: String ) {
+fun TopSection(
+    name: String,
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
-            Text(stringResource(id = R.string.welcome), style = MaterialTheme.typography.labelMedium , color = Color.White)
-            Text(name, style = MaterialTheme.typography.titleMedium , color = Color.White)
+            Text(
+                text = stringResource(id = R.string.welcome),
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.White
+            )
+            Text(
+                text = name,
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.White
+            )
         }
+
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { /* Search */ }) {
-                Icon(Icons.Default.Search, contentDescription = stringResource(id = R.string.search), tint = Color.White)
+            IconButton(onClick = { /* TODO: Implement search */ }) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = Color.White
+                )
             }
-            IconButton(onClick = {}) {
-                Icon(Icons.Default.DarkMode, contentDescription =  stringResource(id = R.string.theme) , tint = Color.White)
+            IconButton(onClick = onToggleTheme) {
+                Icon(
+                    imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
+                    contentDescription = stringResource(id = R.string.theme),
+                    tint = Color.White
+                )
             }
         }
     }
 }
+
+
 @Composable
 fun BudgetCard(income: Double, expenses: Double) {
     Card(

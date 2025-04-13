@@ -242,9 +242,8 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
                 // Spacer and Login Button
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
                 Button(
                     onClick = {
