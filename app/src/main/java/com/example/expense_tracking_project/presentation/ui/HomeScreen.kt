@@ -18,29 +18,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
 import androidx.compose.material.icons.filled.LightMode
-// =======
+
 import androidx.compose.material.icons.filled.Delete
-// >>>>>>> dev
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
-import com.example.expense_tracking_project.data.dataSource.Transaction
+import com.example.expense_tracking_project.data.dataSource.Transaction.Transaction
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel

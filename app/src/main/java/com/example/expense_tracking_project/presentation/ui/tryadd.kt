@@ -27,7 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.expense_tracking_project.data.dataSource.Transaction
+import com.example.expense_tracking_project.data.dataSource.Transaction.Transaction
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 import java.util.Date
