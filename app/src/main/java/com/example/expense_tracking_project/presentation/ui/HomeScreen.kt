@@ -46,8 +46,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.data.dataSource.Transaction
 import com.example.expense_tracking_project.navigation.Screen
@@ -182,6 +180,11 @@ fun BudgetCard(income: Double, expenses: Double) {
                         contentScale = ContentScale.Fit,
                         colorFilter = ColorFilter.tint(Color.White) // Change the color of Riyal symbol
                     )
+                    Text(
+                        "${stringResource(R.string.income)}\n $${income}",
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 8.dp)  // Padding after the image
+                    )
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -300,29 +303,29 @@ fun TransactionItem(transaction: Transaction) {
 
 
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewHomeScreen() {
-    // You can pass a mock NavController or any other necessary parameters for testing.
-    HomeScreen(navController = rememberNavController()) // Assuming you have a mock NavController here.
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewTopSection() {
-    TopSection(name = "Enjelin Morgeana")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewBudgetCard() {
-    BudgetCard(income = 2000.0, expenses = 1500.0)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewRecentTransactions() {
-    RecentTransactions()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewHomeScreen() {
+//    // You can pass a mock NavController or any other necessary parameters for testing.
+//    HomeScreen(navController = rememberNavController()) // Assuming you have a mock NavController here.
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewTopSection() {
+//    TopSection(name = "Enjelin Morgeana")
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewBudgetCard() {
+//    BudgetCard(income = 2000.0, expenses = 1500.0)
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewRecentTransactions() {
+//    RecentTransactions()
+//}
 
 
