@@ -22,12 +22,8 @@ sealed class Screen(val route: String) {
     object log : Screen("Login")
 }
 
-//@Serializable
-/*sealed class Screen(val route:String) {
-    object Onboarding : Screen("onboarding")
-    object Login : Screen("login")
-    object SignUp : Screen("signup")
-    object Home : Screen("home")
-    object ResetPassword : Screen("resetPassword")
-    object CheckEmail : Screen("checkEmail")
-}*/
+enum class ScreenType {
+    LOGIN,
+    SIGNUP,
+    RESET_PASSWORD
+}

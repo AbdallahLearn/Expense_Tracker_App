@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.navigation.ScreenType
 import com.example.expense_tracking_project.presentation.ui.resetPassword.DesignScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.FormField
 import com.example.expense_tracking_project.presentation.vm.SignUpViewModel
@@ -116,7 +117,8 @@ fun SignUpScreen(
                     }
                 )
             }
-        }
+        },
+        screenType = ScreenType.SIGNUP
     )
 }
 

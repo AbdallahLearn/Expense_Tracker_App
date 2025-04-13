@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.navigation.ScreenType
 import com.example.expense_tracking_project.presentation.vm.SignInViewModel
 import com.google.firebase.auth.FirebaseAuth
 
@@ -51,7 +52,8 @@ fun ResetPasswordScreen(navController: NavController, signInViewModel: SignInVie
             } else {
                 Toast.makeText(context, "Please enter an email", Toast.LENGTH_SHORT).show()
             }
-        }
+        },
+        screenType = ScreenType.RESET_PASSWORD
     )
 }
 
@@ -80,7 +82,8 @@ fun CheckEmailScreen(navController: NavController) {
             navController.navigate(Screen.Login.route) {
                 popUpTo(Screen.CheckEmail.route) { inclusive = true }
             }
-        }
+        },
+        screenType = ScreenType.RESET_PASSWORD
     )
 }
 

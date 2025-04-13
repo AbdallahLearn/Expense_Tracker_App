@@ -3,49 +3,26 @@ package com.example.expense_tracking_project.presentation.ui.resetPassword
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.MutableState
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
-
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import com.example.expense_tracking_project.R
+import com.example.expense_tracking_project.navigation.ScreenType
 
 
 data class FormField(
@@ -67,10 +44,10 @@ fun DesignScreen(
     rememberMeState: MutableState<Boolean>? = null,
     onForgotPassword: (() -> Unit)? = null,
     footerText: (@Composable () -> Unit)? = null,
+    screenType: ScreenType,
     emailError: String? = null,
     passwordError: String? = null
 ) {
-    // Check if fieldStates matches fields size
     if (fields.size != fieldStates.size) {
         Log.e("DesignScreen", "Mismatched fieldStates and fields length")
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -83,11 +60,23 @@ fun DesignScreen(
         passwordVisibilityStates.getOrNull(index) ?: remember { mutableStateOf(false) }
     }
 
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
+        val screenWidth = maxWidth
+        val isCompact = screenWidth < 400.dp
+        val horizontalPadding = if (isCompact) 16.dp else 24.dp
+        val cardTopPadding = if (isCompact) 100.dp else 150.dp
+        val cardBottomPadding = if (isCompact) 50.dp else 150.dp
+        val fontTitleSize = if (isCompact) 18.sp else 20.sp
+        val fontLabelSize = if (isCompact) 10.sp else 14.sp
+        val fontButtonSize = if (isCompact) 14.sp else 16.sp
+        val textFieldHeight = if (isCompact) 50.dp else 56.dp
+        val textFieldFontSize = if (isCompact) 14.sp else 16.sp
+
+        // Top Box (Header)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -101,20 +90,29 @@ fun DesignScreen(
             Text(
                 text = title,
                 color = Color.White,
-                fontSize = 20.sp,
+                fontSize = fontTitleSize,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 60.dp)
             )
         }
 
-        // Main Card Layout
+        // Main Card
+        val cardModifier = if (screenType == ScreenType.LOGIN || screenType == ScreenType.RESET_PASSWORD ) {
+            Modifier
+                .fillMaxWidth()
+                .height(700.dp) // 👈 Example: smaller height for Login screen
+                .padding(top = cardTopPadding, start = horizontalPadding, end = horizontalPadding, bottom = cardBottomPadding)
+        } else {
+            Modifier
+                .fillMaxWidth()
+                .fillMaxHeight() // 👈 default full height
+                .padding(top = cardTopPadding, start = horizontalPadding, end = horizontalPadding, bottom = cardBottomPadding)
+        }
+
         Card(
             shape = RoundedCornerShape(32.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(top = 150.dp, start = 24.dp, end = 24.dp, bottom = 30.dp)
+            modifier = cardModifier
         ) {
             Column(
                 modifier = Modifier
@@ -124,33 +122,27 @@ fun DesignScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                // Instruction Text
                 Text(
                     text = instruction,
                     color = Color.Gray,
-                    fontSize = 14.sp,
+                    fontSize = fontLabelSize,
                     modifier = Modifier.padding(end = 55.dp)
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                // Image if provided
-                image?.let {
-                    it()
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
+                image?.invoke()
 
-                // Fields (Email, Password)
                 fields.forEachIndexed { index, field ->
-                    val textState = fieldStates.getOrNull(index) ?: remember { mutableStateOf("") }
+                    val textState = fieldStates[index]
                     val passwordVisible = passwordVisibilityStatesSafe[index]
 
                     Text(
                         text = field.label,
                         color = Color.Gray,
-                        fontSize = 14.sp,
+                        fontSize = fontLabelSize,
                         modifier = Modifier
-                            .padding(bottom = 4.dp)
+                            .padding(bottom = 1.dp)
                             .align(Alignment.Start)
                     )
 
@@ -158,7 +150,7 @@ fun DesignScreen(
                         value = textState.value,
                         onValueChange = { textState.value = it },
                         singleLine = true,
-                        textStyle = TextStyle(color = Color.Black),
+                        textStyle = TextStyle(color = Color.Black, fontSize = textFieldFontSize),
                         visualTransformation = if (field.isPassword && !passwordVisible.value)
                             PasswordVisualTransformation() else VisualTransformation.None,
                         trailingIcon = {
@@ -182,10 +174,11 @@ fun DesignScreen(
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black
                         ),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(textFieldHeight)
                     )
 
-                    // Error Text
                     val errorText = when (field.label.lowercase()) {
                         "email" -> emailError
                         "password" -> passwordError
@@ -206,7 +199,6 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(6.dp))
                 }
 
-                // Remember Me and Forgot Password Row
                 if (rememberMeState != null || onForgotPassword != null) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -222,7 +214,7 @@ fun DesignScreen(
                                 Text(
                                     text = stringResource(R.string.remember_me),
                                     color = Color.Gray,
-                                    fontSize = 14.sp
+                                    fontSize = fontLabelSize
                                 )
                             }
                         }
@@ -231,7 +223,7 @@ fun DesignScreen(
                             Text(
                                 text = stringResource(R.string.forgot_password),
                                 color = Color(0xFF5C4DB7),
-                                fontSize = 14.sp,
+                                fontSize = fontLabelSize,
                                 modifier = Modifier
                                     .padding(top = 6.dp)
                                     .clickable { it() }
@@ -239,24 +231,17 @@ fun DesignScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
-                // Spacer and Login Button
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Button(
                     onClick = {
-                        // Handle button click
-                        if (fields.isNotEmpty() && fieldStates.size == fields.size) {
-                            val updatedFields = fields.mapIndexed { i, field ->
-                                field.copy(value = fieldStates[i].value)
-                            }
-                            onButtonClick(updatedFields)
-                        } else {
-                            onButtonClick(emptyList())  // No fields here
+                        val updatedFields = fields.mapIndexed { i, field ->
+                            field.copy(value = fieldStates[i].value)
                         }
+                        onButtonClick(updatedFields)
                     },
                     shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5C4DB7)),
@@ -268,14 +253,13 @@ fun DesignScreen(
                     Text(
                         text = buttonText,
                         color = Color.White,
-                        fontSize = 16.sp,
+                        fontSize = fontButtonSize,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                // Footer Text
                 footerText?.invoke()
             }
         }
