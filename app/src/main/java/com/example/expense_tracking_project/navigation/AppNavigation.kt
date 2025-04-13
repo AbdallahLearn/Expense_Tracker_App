@@ -18,13 +18,17 @@ import com.example.expense_tracking_project.presentation.ui.StatisticsScreen
 import com.example.expense_tracking_project.presentation.ui.onBoardingScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.CheckEmailScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.ResetPasswordScreen
+import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
     navController: NavHostController,
     showOnboarding: Boolean,
-    onFinish: () -> Unit
+    onFinish: () -> Unit,
+    themeViewModel: ThemeViewModel,
+    isDarkTheme: Boolean
+
 ) {
     NavHost(
         navController = navController,
@@ -42,7 +46,11 @@ fun AppNavigation(
         }
 
         composable(Screen.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(
+                navController = navController,
+                themeViewModel = themeViewModel,
+                isDarkTheme = isDarkTheme
+            )
         }
 
         composable(Screen.ResetPassword.route) {
@@ -58,11 +66,19 @@ fun AppNavigation(
         }
 
         composable(Screen.AddTransaction.route) {
+// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
+            TransactionScreen(
+                navController,
+                isDarkTheme = isDarkTheme
+            )
+        }
+// =======
             TransactionScreen(navController)
        }
+// >>>>>>> dev
 
         composable(Screen.AddExpense.route) {
-            AddExpenseScreen(navController)
+            AddExpenseScreen(navController,)
         }
         composable(Screen.Profile.route) {
             ProfileScreen(navController )

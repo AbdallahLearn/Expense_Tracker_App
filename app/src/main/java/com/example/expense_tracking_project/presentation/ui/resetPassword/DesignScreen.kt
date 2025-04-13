@@ -234,7 +234,12 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
+// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
+                // Spacer and Login Button
+                Spacer(modifier = Modifier.height(30.dp))
+// =======
                 Spacer(modifier = Modifier.height(50.dp))
+// >>>>>>> dev
 
                 Button(
                     onClick = {

@@ -23,10 +23,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
+import androidx.compose.material.icons.filled.LightMode
+// =======
 import androidx.compose.material.icons.filled.Delete
+// >>>>>>> dev
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -37,12 +42,58 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.data.dataSource.Transaction
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isDarkTheme: Boolean) {
     val transactionViewModel: TransactionViewModel = viewModel()
     val transactions by transactionViewModel.allTransactions.observeAsState(emptyList())
+// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
+
+    Scaffold(
+        bottomBar = {
+            CustomBottomBar(
+                selectedIndex = 0,
+                onItemSelected = { index ->
+                    // Handle navigation
+                },
+                navController = navController
+            )
+        }
+    ) { padding ->
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)) {
+
+            // Curved Background Box
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .background(
+                        color = Color(0xFF5C4DB7),
+                        shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
+                    )
+            )
+
+            // Foreground content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
+                TopSection(
+                    name = "Abdullah",
+                    isDarkTheme = isDarkTheme,
+                    onToggleTheme = { themeViewModel.toggleTheme() }
+                )
+                BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
+                TimeTabSection()
+                RecentTransactions(navController, transactions = transactions)
+            }
+// =======
     val viewModel: TransactionViewModel = viewModel()
     Scaffold(
         bottomBar = {
@@ -87,12 +138,21 @@ fun HomeScreen(navController: NavController) {
                     TimeTabSection()
                     RecentTransactions(navController, transactions, viewModel)
                 }
+// >>>>>>> dev
         }
     }
 }
 
 @Composable
+// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
+fun TopSection(
+    name: String,
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit
+) {
+// =======
 fun TopSection(name: String) {
+// >>>>>>> dev
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -109,7 +169,29 @@ fun TopSection(name: String) {
                 color = Color.White
             )
         }
+
         Row(verticalAlignment = Alignment.CenterVertically) {
+// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
+            IconButton(onClick = { /* TODO: Implement search */ }) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = Color.White
+                )
+            }
+            IconButton(onClick = onToggleTheme) {
+                Icon(
+                    imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
+                    contentDescription = stringResource(id = R.string.theme),
+                    tint = Color.White
+                )
+            }
+        }
+    }
+}
+
+
+// =======
             IconButton(onClick = { /* Search action */ }) {
                 Icon(Icons.Default.Search, contentDescription = stringResource(R.string.search), tint = Color.White)
             }
@@ -120,6 +202,7 @@ fun TopSection(name: String) {
     }
 }
 
+// >>>>>>> dev
 @Composable
 fun BudgetCard(income: Double, expenses: Double) {
     Card(
