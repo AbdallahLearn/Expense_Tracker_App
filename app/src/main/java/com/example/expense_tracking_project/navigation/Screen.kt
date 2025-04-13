@@ -24,7 +24,7 @@ sealed class Screen(val route: String) {
     object Statistics : Screen("statistics") // statistic screen
     object Edit : Screen("edit") // edit screen
 
-    object AddTransaction : Screen("add_transaction")
+    object AddTransaction : Screen("TransactionScreen")
     object AddExpense : Screen("addexpense")
 
 

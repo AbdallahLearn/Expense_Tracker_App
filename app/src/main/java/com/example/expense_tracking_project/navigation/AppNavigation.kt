@@ -56,9 +56,9 @@ fun AppNavigation(
             SignUpScreen(navController)
         }
 
-//        composable(Screen.AddTransaction.route) {
-//            TransactionScreen(navController)
-//        }
+        composable(Screen.AddTransaction.route) {
+            TransactionScreen(navController)
+       }
 
         composable(Screen.AddExpense.route) {
             AddExpenseScreen(navController)
