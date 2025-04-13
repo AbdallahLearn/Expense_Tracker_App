@@ -13,6 +13,7 @@ import com.example.expense_tracking_project.data.dataSource.Transaction
 import com.example.expense_tracking_project.domain.repository.Transaction.TransactionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -51,6 +52,22 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             }
         }
     }
+
+    fun hideTransaction(transaction: Transaction) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val deletedTransaction = transaction.copy(
+                    isDeleted = true,
+                    updated_at = Date()
+                )
+                repository.update(deletedTransaction)
+                Log.d("TransactionDelete", "Soft delete applied to transaction.")
+            } catch (e: Exception) {
+                Log.e("TransactionDelete", "Error applying soft delete: ${e.message}", e)
+            }
+        }
+    }
+
 }
 
 

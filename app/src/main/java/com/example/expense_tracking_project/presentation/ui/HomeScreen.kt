@@ -16,6 +16,18 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -32,7 +44,7 @@ import com.example.expense_tracking_project.presentation.vm.transaction_list.Tra
 fun HomeScreen(navController: NavController) {
     val transactionViewModel: TransactionViewModel = viewModel()
     val transactions by transactionViewModel.allTransactions.observeAsState(emptyList())
-
+    val viewModel: TransactionViewModel = viewModel()
     Scaffold(
         bottomBar = {
             CustomBottomBar(
@@ -61,22 +73,21 @@ fun HomeScreen(navController: NavController) {
                     )
             )
 
-            // Foreground content
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp)
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
-                TopSection(name = "Enjelin Morgeana")
-                BudgetCard(
-                    income = transactionViewModel.income,
-                    expenses = transactionViewModel.expenses
-                )
-                TimeTabSection()
-                RecentTransactions(navController = navController, transactions = transactions)
-            }
+
+                // Foreground content
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(24.dp)) // Top spacing
+                    TopSection(
+                        name = "Enjelin Morgeana")
+                    BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
+                    TimeTabSection()
+                    RecentTransactions(navController, transactions, viewModel)
+                }
         }
     }
 }
@@ -210,7 +221,12 @@ fun TimeTabSection() {
 }
 
 @Composable
-fun RecentTransactions(navController: NavController, transactions: List<Transaction>) {
+fun RecentTransactions(
+    navController: NavController,
+    transactions: List<Transaction>,
+    viewModel: TransactionViewModel = viewModel()
+) {
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -243,44 +259,92 @@ fun RecentTransactions(navController: NavController, transactions: List<Transact
 
         if (transactions.isEmpty()) {
             Text(
-                text = stringResource(R.string.no_data_available),
+
+                stringResource(R.string.no_data_available),
+
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )
         } else {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(transactions) { transaction ->
-                    TransactionItem(transaction)
-                }
+                    TransactionItem(
+                        transaction = transaction,
+                        onDeleteClick = { viewModel.hideTransaction(transaction) }
+                    )
+    }
             }
         }
     }
 }
 
+
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(
+    transaction: Transaction,
+    onDeleteClick: (Transaction) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                // Handle transaction item click
+
             },
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text("Amount: ${transaction.amount}", style = MaterialTheme.typography.bodyMedium)
                 Text("Note: ${transaction.note}", style = MaterialTheme.typography.bodySmall)
+                Text(
+                    "Date: ${transaction.date}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
             }
-            Text(
-                "Date: ${transaction.date}",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
+
+            IconButton(onClick = { onDeleteClick(transaction) }) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Transaction",
+                    tint = Color.Red
+                )
+
+
+            }
         }
     }
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewHomeScreen() {
+//    // You can pass a mock NavController or any other necessary parameters for testing.
+//    HomeScreen(navController = rememberNavController()) // Assuming you have a mock NavController here.
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewTopSection() {
+//    TopSection(name = "Enjelin Morgeana")
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewBudgetCard() {
+//    BudgetCard(income = 2000.0, expenses = 1500.0)
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewRecentTransactions() {
+//    RecentTransactions()
+//}
+

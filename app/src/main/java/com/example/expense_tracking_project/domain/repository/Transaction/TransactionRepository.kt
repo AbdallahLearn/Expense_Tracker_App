@@ -9,6 +9,10 @@ class TransactionRepository(private val transactionDao: TransactionDao) {
     val allTransactions: LiveData<List<Transaction>> = transactionDao.getAllTransactions()
 
     suspend fun insert(transaction: Transaction) {
-        transactionDao.insert(transaction) // Save the transaction
+        transactionDao.insert(transaction)
+    }
+
+    suspend fun update(transaction: Transaction) {
+        transactionDao.update(transaction)
     }
 }
