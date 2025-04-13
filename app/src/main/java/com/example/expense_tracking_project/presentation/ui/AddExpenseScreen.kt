@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.DesignScreen
@@ -49,12 +51,26 @@ fun AddExpenseScreen(
         )
     }
 
+//    val fields = listOf(
+//        FormField(label = stringResource(R.string.amount), value = amountState.value),
+//        FormField(label = stringResource(R.string.category), value = categoryState.value),
+//        FormField(label = stringResource(R.string.date), value = dateState.value),
+//        FormField(label = stringResource(R.string.note), value = noteState.value),
+//    )
+
     val fields = listOf(
         FormField(label = stringResource(R.string.amount), value = amountState.value),
         FormField(label = stringResource(R.string.category), value = categoryState.value),
-        FormField(label = stringResource(R.string.date), value = dateState.value),
+        FormField(
+            label = stringResource(R.string.date),
+            value = dateState.value,
+            onClick = {
+                datePickerDialog.show()
+            }
+        ),
         FormField(label = stringResource(R.string.note), value = noteState.value),
     )
+
     val fieldStates = listOf(amountState, categoryState, dateState, noteState)
 
     // Handle navigation to the Home screen after successful add
@@ -82,4 +98,14 @@ fun AddExpenseScreen(
             }
         }
     )
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun AddExpenseScreenPreview() {
+    // Provide a basic NavController for preview
+    val navController = rememberNavController()
+
+    AddExpenseScreen(navController = navController)
 }
