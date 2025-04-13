@@ -66,16 +66,12 @@ fun AppNavigation(
         }
 
         composable(Screen.AddTransaction.route) {
-// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
             TransactionScreen(
                 navController,
                 isDarkTheme = isDarkTheme
             )
         }
-// =======
-            TransactionScreen(navController)
-       }
-// >>>>>>> dev
+
 
         composable(Screen.AddExpense.route) {
             AddExpenseScreen(navController,)

@@ -49,52 +49,7 @@ import com.example.expense_tracking_project.presentation.vm.transaction_list.Tra
 fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isDarkTheme: Boolean) {
     val transactionViewModel: TransactionViewModel = viewModel()
     val transactions by transactionViewModel.allTransactions.observeAsState(emptyList())
-// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
 
-    Scaffold(
-        bottomBar = {
-            CustomBottomBar(
-                selectedIndex = 0,
-                onItemSelected = { index ->
-                    // Handle navigation
-                },
-                navController = navController
-            )
-        }
-    ) { padding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)) {
-
-            // Curved Background Box
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .background(
-                        color = Color(0xFF5C4DB7),
-                        shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
-                    )
-            )
-
-            // Foreground content
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
-                TopSection(
-                    name = "Abdullah",
-                    isDarkTheme = isDarkTheme,
-                    onToggleTheme = { themeViewModel.toggleTheme() }
-                )
-                BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
-                TimeTabSection()
-                RecentTransactions(navController, transactions = transactions)
-            }
-// =======
-    val viewModel: TransactionViewModel = viewModel()
     Scaffold(
         bottomBar = {
             CustomBottomBar(
@@ -123,36 +78,33 @@ fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isD
                     )
             )
 
-
-                // Foreground content
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Spacer(modifier = Modifier.height(24.dp)) // Top spacing
-                    TopSection(
-                        name = "Enjelin Morgeana")
-                    BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
-                    TimeTabSection()
-                    RecentTransactions(navController, transactions, viewModel)
-                }
-// >>>>>>> dev
+            // Foreground content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp)
+            ) {
+                Spacer(modifier = Modifier.height(24.dp)) // Top spacing
+                TopSection(
+                    name = "Abdullah",
+                    isDarkTheme = isDarkTheme,
+                    onToggleTheme = { themeViewModel.toggleTheme() }
+                )
+                BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
+                TimeTabSection()
+                RecentTransactions(navController, transactions)
+            }
         }
     }
 }
 
 @Composable
-// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
 fun TopSection(
     name: String,
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit
 ) {
-// =======
-fun TopSection(name: String) {
-// >>>>>>> dev
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -171,8 +123,7 @@ fun TopSection(name: String) {
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
-            IconButton(onClick = { /* TODO: Implement search */ }) {
+            IconButton(onClick = { /* Search action */ }) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = stringResource(id = R.string.search),
@@ -190,19 +141,6 @@ fun TopSection(name: String) {
     }
 }
 
-
-// =======
-            IconButton(onClick = { /* Search action */ }) {
-                Icon(Icons.Default.Search, contentDescription = stringResource(R.string.search), tint = Color.White)
-            }
-            IconButton(onClick = { /* Theme toggle */ }) {
-                Icon(Icons.Default.DarkMode, contentDescription = stringResource(R.string.theme), tint = Color.White)
-            }
-        }
-    }
-}
-
-// >>>>>>> dev
 @Composable
 fun BudgetCard(income: Double, expenses: Double) {
     Card(
@@ -305,10 +243,8 @@ fun TimeTabSection() {
 @Composable
 fun RecentTransactions(
     navController: NavController,
-    transactions: List<Transaction>,
-    viewModel: TransactionViewModel = viewModel()
+    transactions: List<Transaction>
 ) {
-
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -341,38 +277,27 @@ fun RecentTransactions(
 
         if (transactions.isEmpty()) {
             Text(
-
                 stringResource(R.string.no_data_available),
-
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )
         } else {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(transactions) { transaction ->
-                    TransactionItem(
-                        transaction = transaction,
-                        onDeleteClick = { viewModel.hideTransaction(transaction) }
-                    )
-    }
+                    TransactionItem(transaction = transaction)
+                }
             }
         }
     }
 }
 
-
 @Composable
-fun TransactionItem(
-    transaction: Transaction,
-    onDeleteClick: (Transaction) -> Unit
-) {
+fun TransactionItem(transaction: Transaction) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable {
-
-            },
+            .clickable { /* Handle click action */ },
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -392,41 +317,16 @@ fun TransactionItem(
                 )
             }
 
-            IconButton(onClick = { onDeleteClick(transaction) }) {
+            IconButton(onClick = { /* Handle delete action */ }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete Transaction",
                     tint = Color.Red
                 )
-
-
             }
         }
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewHomeScreen() {
-//    // You can pass a mock NavController or any other necessary parameters for testing.
-//    HomeScreen(navController = rememberNavController()) // Assuming you have a mock NavController here.
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewTopSection() {
-//    TopSection(name = "Enjelin Morgeana")
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewBudgetCard() {
-//    BudgetCard(income = 2000.0, expenses = 1500.0)
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewRecentTransactions() {
-//    RecentTransactions()
-//}
+
 
