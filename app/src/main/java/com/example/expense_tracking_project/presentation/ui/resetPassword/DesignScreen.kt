@@ -1,4 +1,3 @@
-
 package com.example.expense_tracking_project.presentation.ui.resetPassword
 
 import android.util.Log
@@ -16,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +32,7 @@ data class FormField(
     val onClick: (() -> Unit)? = null
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DesignScreen(
     title: String = "",
@@ -46,7 +47,8 @@ fun DesignScreen(
     onForgotPassword: (() -> Unit)? = null,
     footerText: (@Composable () -> Unit)? = null,
     emailError: String? = null,
-    passwordError: String? = null
+    passwordError: String? = null,
+    onTabSelected: (String) -> Unit
 ) {
     if (fields.size != fieldStates.size) {
         Log.e("DesignScreen", "Mismatched fieldStates and fields length")
@@ -59,6 +61,8 @@ fun DesignScreen(
     val passwordVisibilityStatesSafe = fields.mapIndexed { index, _ ->
         passwordVisibilityStates.getOrNull(index) ?: remember { mutableStateOf(false) }
     }
+
+    var activeButton by remember { mutableStateOf("Expenses") }
 
     Box(
         modifier = Modifier
@@ -75,6 +79,57 @@ fun DesignScreen(
                 ),
             contentAlignment = Alignment.TopCenter
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = {
+                        activeButton = "Income"
+                        onTabSelected("Income")
+                    },
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (activeButton == "Income") Color.White else Color(0xFFF4F6F6)
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(130.dp)
+                        .padding(bottom = 85.dp)
+                ) {
+                    Text(
+                        text = "Income",
+                        color = Color(0xFF5C4DB7),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        activeButton = "Expenses"
+                        onTabSelected("Expenses")
+                    },
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (activeButton == "Expenses") Color.White else Color(0xFFF4F6F6)
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(130.dp)
+                        .padding(bottom = 85.dp)
+                ) {
+                    Text(
+                        text = "Expenses",
+                        color = Color(0xFF5C4DB7),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
             Text(
                 text = title,
                 color = Color.White,
@@ -115,7 +170,7 @@ fun DesignScreen(
                 }
 
                 fields.forEachIndexed { index, field ->
-                    val textState = fieldStates.getOrNull(index) ?: remember { mutableStateOf("") }
+                    val textState = fieldStates[index]
                     val passwordVisible = passwordVisibilityStatesSafe[index]
 
                     Text(
@@ -127,57 +182,97 @@ fun DesignScreen(
                             .align(Alignment.Start)
                     )
 
-                    OutlinedTextField(
-                        value = textState.value,
-                        onValueChange = {
-                            if (field.onClick == null) {
-                                textState.value = it
-                            }
-                        },
-                        singleLine = true,
-                        textStyle = TextStyle(color = Color.Black),
-                        visualTransformation = if (field.isPassword && !passwordVisible.value)
-                            PasswordVisualTransformation() else VisualTransformation.None,
-                        trailingIcon = {
-                            when {
-                                field.isPassword -> {
-                                    IconButton(onClick = {
-                                        passwordVisible.value = !passwordVisible.value
-                                    }) {
-                                        Icon(
-                                            imageVector = if (passwordVisible.value)
-                                                Icons.Filled.Visibility
-                                            else Icons.Filled.VisibilityOff,
-                                            contentDescription = "Toggle Password Visibility"
-                                        )
-                                    }
-                                }
+                    // Handle category as a dropdown
+                    if (field.label.lowercase().contains("category")) {
+                        var expanded by remember { mutableStateOf(false) }
+                        val categoryOptions = if (activeButton == "Income") {
+                            listOf("Salary", "Bonus", "Freelance", "Investment", "Other")
+                        } else {
+                            listOf("Food", "Transport", "Entertainment", "Shopping", "Bills", "Other")
+                        }
 
-                                field.onClick != null -> {
-                                    IconButton(onClick = { field.onClick?.invoke() }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.CalendarToday,
-                                            contentDescription = "Select Date",
-                                            tint = Color.Gray
-                                        )
-                                    }
+                        ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = { expanded = !expanded }
+                        ) {
+                            OutlinedTextField(
+                                readOnly = true,
+                                value = textState.value,
+                                onValueChange = {},
+                                label = { Text(field.label) },
+                                trailingIcon = {
+                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+                                },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth()
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                categoryOptions.forEach { option ->
+                                    DropdownMenuItem(
+                                        text = { Text(option) },
+                                        onClick = {
+                                            textState.value = option
+                                            expanded = false
+                                        }
+                                    )
                                 }
                             }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(enabled = field.onClick != null) {
-                                field.onClick?.invoke()
+                        }
+                    } else {
+                        OutlinedTextField(
+                            value = textState.value,
+                            onValueChange = {
+                                if (field.onClick == null) textState.value = it
                             },
-                        readOnly = field.onClick != null,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color(0xFF5C4DB7),
-                            unfocusedBorderColor = Color(0xFF5C4DB7),
-                            cursorColor = Color(0xFF5C4DB7),
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black
+                            singleLine = true,
+                            textStyle = TextStyle(color = Color.Black),
+                            visualTransformation = if (field.isPassword && !passwordVisible.value)
+                                PasswordVisualTransformation() else VisualTransformation.None,
+                            trailingIcon = {
+                                when {
+                                    field.isPassword -> {
+                                        IconButton(onClick = {
+                                            passwordVisible.value = !passwordVisible.value
+                                        }) {
+                                            Icon(
+                                                imageVector = if (passwordVisible.value)
+                                                    Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                                contentDescription = null
+                                            )
+                                        }
+                                    }
+
+                                    field.onClick != null -> {
+                                        IconButton(onClick = { field.onClick?.invoke() }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.CalendarToday,
+                                                contentDescription = "Select Date",
+                                                tint = Color.Gray
+                                            )
+                                        }
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable(enabled = field.onClick != null) {
+                                    field.onClick?.invoke()
+                                },
+                            readOnly = field.onClick != null,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF5C4DB7),
+                                unfocusedBorderColor = Color(0xFF5C4DB7),
+                                cursorColor = Color(0xFF5C4DB7),
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black
+                            )
                         )
-                    )
+                    }
 
                     val errorText = when (field.label.lowercase()) {
                         "email" -> emailError
@@ -234,9 +329,7 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                // Spacer and Login Button
-                Spacer(modifier = Modifier.height(30.dp))
-
+                Spacer(modifier = Modifier.height(50.dp))
 
                 Button(
                     onClick = {

@@ -74,10 +74,16 @@
     <string name="search">Search</string>
     <string name="theme">Theme</string>
     <string name="save">Save</string>
-    <string name="amount">AMOUNT</string>
-    <string name="category">CATEGORY</string>
-    <string name="date">DATE</string>
-    <string name="note">NOTE</string>
+
+    <string name="expenseAmount">EXPENSE AMOUNT</string>
+    <string name="expenseCategory">EXPENSE CATEGORY</string>
+    <string name="expenseDate">EXPENSE DATE</string>
+    <string name="expenseNote">EXPENSE NOTE</string>
+
+    <string name="incomeAmount">INCOME AMOUNT</string>
+    <string name="incomeCategory">INCOME CATEGORY</string>
+    <string name="incomeDate">INCOME DATE</string>
+    <string name="incomeNote">INCOME NOTE</string>
 
 
 
