@@ -22,7 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.navigation.AppNavigation
 import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.presentation.vm.AuthState
+import com.example.expense_tracking_project.data.model.AuthState
 import com.example.expense_tracking_project.presentation.vm.SignInViewModel
 
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme

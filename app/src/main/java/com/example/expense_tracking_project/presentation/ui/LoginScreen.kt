@@ -16,7 +16,7 @@ import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.DesignScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.FormField
-import com.example.expense_tracking_project.presentation.vm.AuthState
+import com.example.expense_tracking_project.data.model.AuthState
 import com.example.expense_tracking_project.presentation.vm.SignInViewModel
 import com.example.expense_tracking_project.presentation.vm.ValidationInputViewModel
 

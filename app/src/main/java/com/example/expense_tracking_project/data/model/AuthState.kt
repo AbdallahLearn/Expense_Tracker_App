@@ -1,4 +1,4 @@
-package com.example.expense_tracking_project.presentation.vm
+package com.example.expense_tracking_project.data.model
 
 // Sealed class to represent the authentication states
 sealed class AuthState {
