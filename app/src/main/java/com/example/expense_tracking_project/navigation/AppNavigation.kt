@@ -3,6 +3,7 @@ package com.example.expense_tracking_project.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.expense_tracking_project.presentation.ui.HomeScreen
@@ -64,7 +65,7 @@ fun AppNavigation(
             AddExpenseScreen(navController)
         }
         composable(Screen.Profile.route) {
-            ProfileScreen(navController ,  onSignOut = {})
+            ProfileScreen(navController )
         }
         composable(Screen.Edit.route) {
             EditScreen(navController)
