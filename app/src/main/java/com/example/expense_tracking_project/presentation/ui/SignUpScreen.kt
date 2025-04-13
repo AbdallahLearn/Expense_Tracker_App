@@ -119,14 +119,7 @@ fun SignUpScreen(
                     }
                 )
             }
-        }
+        },
+        onTabSelected = {}
     )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSignUpScreen() {
-    // You can pass a mock NavController or any other necessary parameters for testing.
-    SignUpScreen(navController = rememberNavController()) // Assuming you have a mock NavController here.
-}
-

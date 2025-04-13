@@ -74,10 +74,16 @@
     <string name="search">بحث</string>
     <string name="theme">الثيم</string>
     <string name="save">حفظ</string>
-    <string name="amount">القيمة</string>
-    <string name="category">النوع</string>
-    <string name="date">التاريخ</string>
-    <string name="note">ملاحظة</string>
+
+    <string name="expenseAmount">القيمة</string>
+    <string name="expenseCategory">النوع</string>
+    <string name="expenseDate">التاريخ</string>
+    <string name="expenseNote">ملاحظة</string>
+
+    <string name="incomeAmount">القيمة</string>
+    <string name="incomeCategory">النوع</string>
+    <string name="incomeDate">التاريخ</string>
+    <string name="incomeNote">ملاحظة</string>
 
 
 
