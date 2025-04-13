@@ -7,6 +7,7 @@ import com.example.expense_tracking_project.presentation.ui.HomeScreen
 import com.example.expense_tracking_project.presentation.ui.LoginScreen
 import com.example.expense_tracking_project.presentation.ui.SignUpScreen
 import androidx.navigation.NavHostController
+import com.example.expense_tracking_project.presentation.ui.AddExpenseScreen
 import com.example.expense_tracking_project.presentation.ui.onBoardingScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.CheckEmailScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.ResetPasswordScreen
@@ -46,6 +47,10 @@ fun AppNavigation(
 
         composable(Screen.SignUp.route) {
             SignUpScreen(navController)
+        }
+
+        composable(Screen.AddExpense.route) {
+            AddExpenseScreen(navController)
         }
 
     }
