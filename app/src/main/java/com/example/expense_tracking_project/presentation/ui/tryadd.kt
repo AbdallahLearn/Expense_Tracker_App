@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.expense_tracking_project.data.dataSource.Transaction
+import com.example.expense_tracking_project.data.dataSource.Transaction.Transaction
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 import java.util.Date
@@ -68,7 +68,7 @@ fun TransactionScreen(navController: NavHostController) {
 
                     viewModel.insert(
                         Transaction(
-                            categoryId = 1, // just a sample category
+                            categoryId = 1,
                             amount = amount,
                             date = Date(),
                             note = noteText,
@@ -90,7 +90,6 @@ fun TransactionScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
         Text("All Transactions", style = MaterialTheme.typography.titleMedium)
 
-        // LazyColumn to display the list of transactions with dynamic amount
         LazyColumn {
             items(transactions) { txn ->
                 Text(
