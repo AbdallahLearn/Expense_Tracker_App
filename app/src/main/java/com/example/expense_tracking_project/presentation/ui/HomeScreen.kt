@@ -91,7 +91,7 @@ fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isD
                 )
                 BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
                 TimeTabSection()
-                RecentTransactions(navController, transactions)
+                RecentTransactions(navController, transactions, transactionViewModel = transactionViewModel)
             }
         }
     }
@@ -241,7 +241,8 @@ fun TimeTabSection() {
 @Composable
 fun RecentTransactions(
     navController: NavController,
-    transactions: List<Transaction>
+    transactions: List<Transaction>,
+    transactionViewModel: TransactionViewModel
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -282,7 +283,7 @@ fun RecentTransactions(
         } else {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(transactions) { transaction ->
-                    TransactionItem(transaction = transaction)
+                    TransactionItem(transaction = transaction , transactionViewModel = transactionViewModel )
                 }
             }
         }
@@ -290,7 +291,8 @@ fun RecentTransactions(
 }
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionViewModel) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -315,7 +317,7 @@ fun TransactionItem(transaction: Transaction) {
                 )
             }
 
-            IconButton(onClick = { /* Handle delete action */ }) {
+            IconButton(onClick = {  transactionViewModel.hideTransaction(transaction) }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete Transaction",
