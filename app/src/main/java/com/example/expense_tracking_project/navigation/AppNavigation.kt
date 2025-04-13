@@ -9,6 +9,9 @@ import com.example.expense_tracking_project.presentation.ui.SignUpScreen
 import androidx.navigation.NavHostController
 import com.example.expense_tracking_project.presentation.ui.TransactionScreen
 import com.example.expense_tracking_project.presentation.ui.AddExpenseScreen
+import com.example.expense_tracking_project.presentation.ui.EditScreen
+import com.example.expense_tracking_project.presentation.ui.ProfileScreen
+import com.example.expense_tracking_project.presentation.ui.StatisticsScreen
 import com.example.expense_tracking_project.presentation.ui.onBoardingScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.CheckEmailScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.ResetPasswordScreen
@@ -50,13 +53,25 @@ fun AppNavigation(
             SignUpScreen(navController)
         }
 
-        composable(Screen.AddTransaction.route) {
-            TransactionScreen(navController)
-        }
+//        composable(Screen.AddTransaction.route) {
+//            TransactionScreen(navController)
+//        }
 
         composable(Screen.AddExpense.route) {
             AddExpenseScreen(navController)
         }
+        composable(Screen.Profile.route) {
+            ProfileScreen(navController ,  onSignOut = {})
+        }
+        composable(Screen.Edit.route) {
+            EditScreen(navController)
+        }
+        composable(Screen.Statistics.route) {
+            StatisticsScreen(navController)
+        }
+
+
+
 
     }
 }
