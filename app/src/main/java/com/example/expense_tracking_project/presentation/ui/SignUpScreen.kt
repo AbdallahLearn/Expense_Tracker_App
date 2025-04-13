@@ -10,8 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.DesignScreen
@@ -62,8 +64,8 @@ fun SignUpScreen(
 
     // Design Screen UI
     DesignScreen(
-        title = stringResource(R.string.signup),
-        instruction = stringResource(R.string.signup_prompt),
+        title = stringResource(R.string.signup), // Income / Expense
+        instruction = stringResource(R.string.signup_prompt), // Remove
         fields = fields,
         fieldStates = fieldStates,
         buttonText = stringResource(R.string.signup),
@@ -97,6 +99,7 @@ fun SignUpScreen(
             }
         },
         footerText = {
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -118,5 +121,12 @@ fun SignUpScreen(
             }
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSignUpScreen() {
+    // You can pass a mock NavController or any other necessary parameters for testing.
+    SignUpScreen(navController = rememberNavController()) // Assuming you have a mock NavController here.
 }
 

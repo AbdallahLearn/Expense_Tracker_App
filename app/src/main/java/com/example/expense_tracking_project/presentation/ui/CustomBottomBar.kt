@@ -15,13 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
+import com.example.expense_tracking_project.navigation.Screen
 
 @Composable
 fun CustomBottomBar(
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit,
-    onFabClick: () -> Unit
+    navController: NavController,
+//    onFabClick: () -> Unit
 ) {
     val items = listOf(
         Icons.Default.Home to stringResource(R.string.home),
@@ -68,7 +71,10 @@ fun CustomBottomBar(
 
         // Floating Action Button in the center
         FloatingActionButton(
-            onClick = onFabClick,
+//            onClick = onFabClick,
+            onClick = {
+                navController.navigate(Screen.AddExpense.route) // Navigate to AddExpense screen when FAB is clicked
+            },
             containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .align(Alignment.Center) // Center the FAB in the BottomAppBar
@@ -83,12 +89,26 @@ fun CustomBottomBar(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewCustomBottomBar() {
-    CustomBottomBar(
-        selectedIndex = 0,
-        onItemSelected = {},
-        onFabClick = {}
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewCustomBottomBar() {
+//    CustomBottomBar(
+//        selectedIndex = 0,
+//        onItemSelected = {},
+//        onFabClick = {}
+//    )
+//}
+//
+
+
+
+
+
+
+
+
+
+
+
+
+

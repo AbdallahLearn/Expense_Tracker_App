@@ -4,6 +4,7 @@ package com.example.expense_tracking_project.presentation.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.expense_tracking_project.data.model.AuthState
 import com.google.firebase.auth.FirebaseAuth
 import java.util.regex.Pattern
 

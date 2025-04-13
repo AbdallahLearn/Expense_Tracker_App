@@ -83,10 +83,4 @@ dependencies {
     implementation(libs.androidx.room.ktx) // Kotlin extensions for Room
     ksp(libs.androidx.room.compiler) // Annotation processor for Room
 
-
-    //firebase store
-    //implementation(libs.firebase.bom)
-    //implementation("com.google.firebase:firebase-firestore-ktx")
-
-
 }
