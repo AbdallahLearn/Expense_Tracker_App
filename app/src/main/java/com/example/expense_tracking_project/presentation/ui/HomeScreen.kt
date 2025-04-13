@@ -37,6 +37,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -56,6 +57,8 @@ import com.example.expense_tracking_project.presentation.vm.transaction_list.Tra
 fun HomeScreen(navController: NavController) {
     val transactionViewModel: TransactionViewModel = viewModel()
     val transactions by transactionViewModel.allTransactions.observeAsState(emptyList())
+    val viewModel: TransactionViewModel = viewModel()
+
         Scaffold(
             bottomBar = {
                 CustomBottomBar(
@@ -95,7 +98,7 @@ fun HomeScreen(navController: NavController) {
                         name = "Enjelin Morgeana")
                     BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
                     TimeTabSection()
-                    RecentTransactions(navController, transactions = transactions)
+                    RecentTransactions(navController, transactions, viewModel)
                 }
             }
         }
@@ -237,69 +240,107 @@ fun TimeTabSection() {
 }
 
 @Composable
-fun RecentTransactions(navController: NavController, transactions: List<Transaction>) {
+fun RecentTransactions(
+    navController: NavController,
+    transactions: List<Transaction>,
+    viewModel: TransactionViewModel = viewModel()
+) {
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(stringResource(R.string.recent_transactions), style = MaterialTheme.typography.titleSmall)
-            Text(stringResource(R.string.see_all),
+            Text(
+                stringResource(R.string.recent_transactions),
+                style = MaterialTheme.typography.titleSmall
+            )
+            Text(
+                stringResource(R.string.see_all),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable {
-                    // Navigate to transactions screen
                     navController.navigate(Screen.AddTransaction.route)
-                })
+                }
+            )
         }
 
         Button(
             onClick = { navController.navigate(Screen.AddTransaction.route) },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
         ) {
             Text("Add Transaction")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // If no data is available, show a placeholder message
         if (transactions.isEmpty()) {
-            Text(stringResource(R.string.no_data_available), style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+            Text(
+                stringResource(R.string.no_data_available),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
         } else {
-            // Display transactions in a LazyColumn
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(transactions) { transaction ->
-                    TransactionItem(transaction) // Show each transaction item
+                    TransactionItem(
+                        transaction = transaction,
+                        onDeleteClick = { viewModel.hideTransaction(transaction) }
+                    )
                 }
             }
         }
     }
 }
 
+
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(
+    transaction: Transaction,
+    onDeleteClick: (Transaction) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                // Handle transaction item click (e.g., navigate to detail page)
+                // Optional: Handle transaction item click
             },
         shape = RoundedCornerShape(8.dp)
     ) {
-        Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-            Column {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text("Amount: ${transaction.amount}", style = MaterialTheme.typography.bodyMedium)
                 Text("Note: ${transaction.note}", style = MaterialTheme.typography.bodySmall)
+                Text(
+                    "Date: ${transaction.date}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
             }
-            Text(
-                "Date: ${transaction.date}",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
+
+            IconButton(onClick = { onDeleteClick(transaction) }) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Transaction",
+                    tint = Color.Red
+                )
+
+
+            }
         }
     }
 }
+
+
 
 
 

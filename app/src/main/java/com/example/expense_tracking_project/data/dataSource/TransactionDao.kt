@@ -9,17 +9,22 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.Insert
+import androidx.room.Update
 
 
 @Dao
 interface TransactionDao {
 
-    @Query("SELECT * FROM transactions") // Use your actual table name
+    @Query("SELECT * FROM transactions WHERE isDeleted = 0 ORDER BY date DESC")
     fun getAllTransactions(): LiveData<List<Transaction>>
 
     @Insert
     suspend fun insert(transaction: Transaction)
+
+    @Update
+    suspend fun update(transaction: Transaction)
 }
+
 @Database(entities = [Transaction::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverter::class) // Add if Date needs type conversion
 abstract class AppDatabase : RoomDatabase() {
