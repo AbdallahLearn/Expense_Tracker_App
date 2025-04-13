@@ -89,16 +89,6 @@ fun CustomBottomBar(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewCustomBottomBar() {
-//    CustomBottomBar(
-//        selectedIndex = 0,
-//        onItemSelected = {},
-//        onFabClick = {}
-//    )
-//}
-//
 
 
 
