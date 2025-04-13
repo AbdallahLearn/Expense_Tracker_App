@@ -3,6 +3,7 @@ package com.example.expense_tracking_project.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.expense_tracking_project.presentation.ui.HomeScreen
@@ -11,6 +12,9 @@ import com.example.expense_tracking_project.presentation.ui.SignUpScreen
 import androidx.navigation.NavHostController
 import com.example.expense_tracking_project.presentation.ui.TransactionScreen
 import com.example.expense_tracking_project.presentation.ui.AddExpenseScreen
+import com.example.expense_tracking_project.presentation.ui.EditScreen
+import com.example.expense_tracking_project.presentation.ui.ProfileScreen
+import com.example.expense_tracking_project.presentation.ui.StatisticsScreen
 import com.example.expense_tracking_project.presentation.ui.onBoardingScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.CheckEmailScreen
 import com.example.expense_tracking_project.presentation.ui.resetPassword.ResetPasswordScreen
@@ -62,15 +66,32 @@ fun AppNavigation(
         }
 
         composable(Screen.AddTransaction.route) {
+// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
             TransactionScreen(
                 navController,
                 isDarkTheme = isDarkTheme
             )
         }
+// =======
+            TransactionScreen(navController)
+       }
+// >>>>>>> dev
 
         composable(Screen.AddExpense.route) {
             AddExpenseScreen(navController,)
         }
+        composable(Screen.Profile.route) {
+            ProfileScreen(navController )
+        }
+        composable(Screen.Edit.route) {
+            EditScreen(navController)
+        }
+        composable(Screen.Statistics.route) {
+            StatisticsScreen(navController)
+        }
+
+
+
 
     }
 }

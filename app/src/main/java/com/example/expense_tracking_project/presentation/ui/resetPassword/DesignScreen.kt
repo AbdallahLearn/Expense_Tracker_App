@@ -1,57 +1,35 @@
+
 package com.example.expense_tracking_project.presentation.ui.resetPassword
 
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.MutableState
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
-
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import com.example.expense_tracking_project.R
-
 
 data class FormField(
     val label: String,
     var value: String = "",
-    val isPassword: Boolean = false
+    val isPassword: Boolean = false,
+    val onClick: (() -> Unit)? = null
 )
 
 @Composable
@@ -70,7 +48,6 @@ fun DesignScreen(
     emailError: String? = null,
     passwordError: String? = null
 ) {
-    // Check if fieldStates matches fields size
     if (fields.size != fieldStates.size) {
         Log.e("DesignScreen", "Mismatched fieldStates and fields length")
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -107,7 +84,6 @@ fun DesignScreen(
             )
         }
 
-        // Main Card Layout
         Card(
             shape = RoundedCornerShape(32.dp),
             elevation = CardDefaults.cardElevation(8.dp),
@@ -124,7 +100,6 @@ fun DesignScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                // Instruction Text
                 Text(
                     text = instruction,
                     color = Color.Gray,
@@ -134,13 +109,11 @@ fun DesignScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Image if provided
                 image?.let {
                     it()
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                // Fields (Email, Password)
                 fields.forEachIndexed { index, field ->
                     val textState = fieldStates.getOrNull(index) ?: remember { mutableStateOf("") }
                     val passwordVisible = passwordVisibilityStatesSafe[index]
@@ -156,36 +129,56 @@ fun DesignScreen(
 
                     OutlinedTextField(
                         value = textState.value,
-                        onValueChange = { textState.value = it },
+                        onValueChange = {
+                            if (field.onClick == null) {
+                                textState.value = it
+                            }
+                        },
                         singleLine = true,
                         textStyle = TextStyle(color = Color.Black),
                         visualTransformation = if (field.isPassword && !passwordVisible.value)
                             PasswordVisualTransformation() else VisualTransformation.None,
                         trailingIcon = {
-                            if (field.isPassword) {
-                                IconButton(onClick = {
-                                    passwordVisible.value = !passwordVisible.value
-                                }) {
-                                    Icon(
-                                        imageVector = if (passwordVisible.value)
-                                            Icons.Filled.Visibility
-                                        else Icons.Filled.VisibilityOff,
-                                        contentDescription = "Toggle Password Visibility"
-                                    )
+                            when {
+                                field.isPassword -> {
+                                    IconButton(onClick = {
+                                        passwordVisible.value = !passwordVisible.value
+                                    }) {
+                                        Icon(
+                                            imageVector = if (passwordVisible.value)
+                                                Icons.Filled.Visibility
+                                            else Icons.Filled.VisibilityOff,
+                                            contentDescription = "Toggle Password Visibility"
+                                        )
+                                    }
+                                }
+
+                                field.onClick != null -> {
+                                    IconButton(onClick = { field.onClick?.invoke() }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.CalendarToday,
+                                            contentDescription = "Select Date",
+                                            tint = Color.Gray
+                                        )
+                                    }
                                 }
                             }
                         },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = field.onClick != null) {
+                                field.onClick?.invoke()
+                            },
+                        readOnly = field.onClick != null,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color(0xFF5C4DB7),
                             unfocusedBorderColor = Color(0xFF5C4DB7),
                             cursorColor = Color(0xFF5C4DB7),
                             focusedTextColor = Color.Black,
                             unfocusedTextColor = Color.Black
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                        )
                     )
 
-                    // Error Text
                     val errorText = when (field.label.lowercase()) {
                         "email" -> emailError
                         "password" -> passwordError
@@ -206,7 +199,6 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(6.dp))
                 }
 
-                // Remember Me and Forgot Password Row
                 if (rememberMeState != null || onForgotPassword != null) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -242,19 +234,22 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
+// <<<<<<< LYM-96-Ensure-all-screens-adapt-to-dark-and-light-mode
                 // Spacer and Login Button
                 Spacer(modifier = Modifier.height(30.dp))
+// =======
+                Spacer(modifier = Modifier.height(50.dp))
+// >>>>>>> dev
 
                 Button(
                     onClick = {
-                        // Handle button click
                         if (fields.isNotEmpty() && fieldStates.size == fields.size) {
                             val updatedFields = fields.mapIndexed { i, field ->
                                 field.copy(value = fieldStates[i].value)
                             }
                             onButtonClick(updatedFields)
                         } else {
-                            onButtonClick(emptyList())  // No fields here
+                            onButtonClick(emptyList())
                         }
                     },
                     shape = RoundedCornerShape(50),
@@ -273,8 +268,6 @@ fun DesignScreen(
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
-
-                // Footer Text
                 footerText?.invoke()
             }
         }
