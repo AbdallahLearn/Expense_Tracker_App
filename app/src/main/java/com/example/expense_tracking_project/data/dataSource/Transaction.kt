@@ -1,22 +1,22 @@
-package com.example.expense_tracking_project.data.dataSource.Transaction
+package com.example.expense_tracking_project.data.dataSource
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity(
     tableName = "transactions",
-    indices = [Index("categoryId")]
+    indices = [Index("category_id")]
 )
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val transaction_id: Int = 0,
 
- //   val categoryId: Int,
-    val categoryId: Int? = null, // make FK after screen add category
+    @ColumnInfo(name = "category_id")
+    val categoryId: Int,
+
     val amount: Double,
     val date: Date,
     val note: String,

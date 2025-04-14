@@ -1,8 +1,8 @@
 package com.example.expense_tracking_project.domain.repository.Transaction
 
 import androidx.lifecycle.LiveData
-import com.example.expense_tracking_project.data.dataSource.Transaction.Transaction
-import com.example.expense_tracking_project.data.dataSource.Transaction.TransactionDao
+import com.example.expense_tracking_project.data.dataSource.Transaction
+import com.example.expense_tracking_project.data.dataSource.TransactionDao
 
 class TransactionRepository(private val transactionDao: TransactionDao) {
 

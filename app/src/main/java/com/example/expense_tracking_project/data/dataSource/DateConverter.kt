@@ -1,4 +1,4 @@
-package com.example.expense_tracking_project.data.dataSource.Transaction
+package com.example.expense_tracking_project.data.dataSource
 
 import androidx.room.TypeConverter
 import java.util.Date
