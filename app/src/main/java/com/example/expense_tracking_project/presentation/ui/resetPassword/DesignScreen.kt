@@ -48,7 +48,8 @@ fun DesignScreen(
     footerText: (@Composable () -> Unit)? = null,
     emailError: String? = null,
     passwordError: String? = null,
-    onTabSelected: (String) -> Unit
+    onTabSelected: (String) -> Unit,
+    showTabs: Boolean = false
 ) {
     if (fields.size != fieldStates.size) {
         Log.e("DesignScreen", "Mismatched fieldStates and fields length")
@@ -79,54 +80,60 @@ fun DesignScreen(
                 ),
             contentAlignment = Alignment.TopCenter
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Button(
-                    onClick = {
-                        activeButton = "Income"
-                        onTabSelected("Income")
-                    },
-                    shape = RectangleShape,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (activeButton == "Income") Color.White else Color(0xFFF4F6F6)
-                    ),
+            if(showTabs) {
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .height(130.dp)
-                        .padding(bottom = 85.dp)
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "Income",
-                        color = Color(0xFF5C4DB7),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                    Button(
+                        onClick = {
+                            activeButton = "Income"
+                            onTabSelected("Income")
+                        },
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (activeButton == "Income") Color.White else Color(
+                                0xFFF4F6F6
+                            )
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(130.dp)
+                            .padding(bottom = 85.dp)
+                    ) {
+                        Text(
+                            text = "Income",
+                            color = Color(0xFF5C4DB7),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
 
-                Button(
-                    onClick = {
-                        activeButton = "Expenses"
-                        onTabSelected("Expenses")
-                    },
-                    shape = RectangleShape,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (activeButton == "Expenses") Color.White else Color(0xFFF4F6F6)
-                    ),
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(130.dp)
-                        .padding(bottom = 85.dp)
-                ) {
-                    Text(
-                        text = "Expenses",
-                        color = Color(0xFF5C4DB7),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Button(
+                        onClick = {
+                            activeButton = "Expenses"
+                            onTabSelected("Expenses")
+                        },
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (activeButton == "Expenses") Color.White else Color(
+                                0xFFF4F6F6
+                            )
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(130.dp)
+                            .padding(bottom = 85.dp)
+                    ) {
+                        Text(
+                            text = "Expenses",
+                            color = Color(0xFF5C4DB7),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
 

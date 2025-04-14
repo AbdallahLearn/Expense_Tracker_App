@@ -19,8 +19,6 @@ import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.vm.SignInViewModel
 import com.example.expense_tracking_project.presentation.vm.resetPassword
-import com.google.firebase.auth.FirebaseAuth
-
 
 
 @Composable

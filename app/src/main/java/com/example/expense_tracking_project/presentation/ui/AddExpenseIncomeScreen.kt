@@ -103,11 +103,17 @@ fun AddExpenseScreen(
 
     // Design Screen UI
     DesignScreen(
+        showTabs = true,
         fields = fields,
         fieldStates = fieldStates,
         buttonText = stringResource(R.string.save),
         onButtonClick = {
-            if (fieldStates.all { it.value.isNotBlank() }) {
+            val requiredFields = if (selectedTab == "income") {
+                listOf(incomeamountState, incomecategoryState, incomedateState)
+            } else {
+                listOf(expensesamountState, expensescategoryState, expensesdateState)
+            }
+                if (requiredFields.all { it.value.isNotBlank() }) {
                 Toast.makeText(
                     context,
                     if (selectedTab == "income") "Added Income successfully" else "Added Expenses successfully",
