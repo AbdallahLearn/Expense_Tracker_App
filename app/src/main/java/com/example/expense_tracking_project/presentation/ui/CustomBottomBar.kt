@@ -88,17 +88,3 @@ fun CustomBottomBar(
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

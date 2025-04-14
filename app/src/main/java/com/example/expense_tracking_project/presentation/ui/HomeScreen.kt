@@ -19,19 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.LightMode
-
 import androidx.compose.material.icons.filled.Delete
-
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
-
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -44,55 +36,49 @@ import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 
 @Composable
-fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isDarkTheme: Boolean) {
+fun HomeScreen(
+    navController: NavController,
+    themeViewModel: ThemeViewModel,
+    isDarkTheme: Boolean,
+    modifier: Modifier = Modifier
+) {
     val transactionViewModel: TransactionViewModel = viewModel()
     val transactions by transactionViewModel.allTransactions.observeAsState(emptyList())
 
-    Scaffold(
-        bottomBar = {
-            CustomBottomBar(
-                selectedIndex = 0,
-                onItemSelected = { index ->
-                    when (index) {
-                        0 -> navController.navigate("home")
-                        1 -> navController.navigate("statistics")
-                        2 -> navController.navigate("edit")
-                        3 -> navController.navigate("profile")
-                    }
-                },
-                navController = navController
-            )
-        }
-    ) { padding ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            // Curved Top Background
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .background(
-                        color = Color(0xFF5C4DB7),
-                        shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
-                    )
-            )
-
-            // Foreground content
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp)
-            ) {
-                Spacer(modifier = Modifier.height(24.dp)) // Top spacing
-                TopSection(
-                    name = "Abdullah",
-                    isDarkTheme = isDarkTheme,
-                    onToggleTheme = { themeViewModel.toggleTheme() }
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Curved Top Background
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .background(
+                    color = Color(0xFF5C4DB7),
+                    shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
                 )
-                BudgetCard(income = transactionViewModel.income, expenses = transactionViewModel.expenses)
-                TimeTabSection()
-                RecentTransactions(navController, transactions, transactionViewModel = transactionViewModel)
-            }
+        )
+
+        // Foreground content
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(24.dp)) // Top spacing
+            TopSection(
+                name = "Abdullah",
+                isDarkTheme = isDarkTheme,
+                onToggleTheme = { themeViewModel.toggleTheme() }
+            )
+            BudgetCard(
+                income = transactionViewModel.income,
+                expenses = transactionViewModel.expenses
+            )
+            TimeTabSection()
+            RecentTransactions(
+                navController,
+                transactions,
+                transactionViewModel = transactionViewModel
+            )
         }
     }
 }
@@ -283,7 +269,10 @@ fun RecentTransactions(
         } else {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(transactions) { transaction ->
-                    TransactionItem(transaction = transaction , transactionViewModel = transactionViewModel )
+                    TransactionItem(
+                        transaction = transaction,
+                        transactionViewModel = transactionViewModel
+                    )
                 }
             }
         }
@@ -317,7 +306,7 @@ fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionV
                 )
             }
 
-            IconButton(onClick = {  transactionViewModel.hideTransaction(transaction) }) {
+            IconButton(onClick = { transactionViewModel.hideTransaction(transaction) }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete Transaction",
