@@ -2,7 +2,6 @@ package com.example.expense_tracking_project
 
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,11 +15,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.navigation.AppNavigation
 import androidx.navigation.compose.rememberNavController
+import com.example.expense_tracking_project.data.model.AuthState
+import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.presentation.ui.AuthenticationHandler
+import com.example.expense_tracking_project.presentation.vm.SignInViewModel
+import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.data.model.AuthState
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
@@ -37,9 +39,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val signInViewModel: SignInViewModel = viewModel()
-            val authState by signInViewModel.authState.observeAsState(AuthState.Loading)
-
-            val context = LocalContext.current
+            val authState by signInViewModel.authState.observeAsState()
 
             val themeViewModel: ThemeViewModel = viewModel()
             val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
@@ -47,36 +47,12 @@ class MainActivity : ComponentActivity() {
             Expense_Tracking_ProjectTheme(darkTheme = isDarkTheme) {
                 // Removed inner Scaffold to avoid double padding
                 Box(modifier = Modifier.fillMaxSize()) {
-
-                    // Handle authentication state and navigation
-                    LaunchedEffect(authState) {
-                        when (authState) {
-                            is AuthState.Authenticated -> {
-                                if (signInViewModel.isPasswordResetCompleted()) {
-                                    signInViewModel.authenticate(false)
-                                    navController.navigate(Screen.Login.route) {
-                                        popUpTo(Screen.Onboarding.route) { inclusive = true }
-                                    }
-                                } else {
-                                    navController.navigate(Screen.Home.route) {
-                                        popUpTo(Screen.Onboarding.route) { inclusive = true }
-                                    }
-                                }
-                            }
-
-                            is AuthState.Unauthenticated -> {
-                                navController.navigate(Screen.Onboarding.route) {
-                                    popUpTo(Screen.Home.route) { inclusive = true }
-                                }
-                            }
-
-                            is AuthState.Error -> {
-                                val errorMessage = (authState as AuthState.Error).message
-                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                            }
-
-                            AuthState.Loading -> {}
-                        }
+                    if (authState != null) {
+                        AuthenticationHandler(
+                            authState = authState!!,
+                            navController = navController,
+                            signInViewModel = signInViewModel
+                        )
                     }
 
                     AppNavigation(
@@ -95,20 +71,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Expense_Tracking_ProjectTheme {
-        Greeting("Android")
-    }
-}
-
