@@ -20,7 +20,7 @@ import com.example.expense_tracking_project.presentation.ui.resetPassword.CheckE
 import com.example.expense_tracking_project.presentation.ui.resetPassword.ResetPasswordScreen
 import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
+//@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
     navController: NavHostController,

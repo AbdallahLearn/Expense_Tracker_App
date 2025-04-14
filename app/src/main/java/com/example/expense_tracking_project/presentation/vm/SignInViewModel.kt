@@ -76,5 +76,4 @@ class SignInViewModel : ViewModel() {
                 }
             }
     }
-
 }
