@@ -1,13 +1,13 @@
-package com.example.expense_tracking_project.presentation.ui
+package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.example.expense_tracking_project.data.model.AuthState
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.presentation.vm.SignInViewModel
+import com.example.expense_tracking_project.screens.authentication.data.model.AuthState
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
 
 @Composable
 fun AuthenticationHandler(

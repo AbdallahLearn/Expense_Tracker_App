@@ -4,12 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,24 +13,14 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.expense_tracking_project.navigation.AppNavigation
 import androidx.navigation.compose.rememberNavController
+import com.example.expense_tracking_project.navigation.AppNavigation
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AuthenticationHandler
 import com.example.expense_tracking_project.screens.authentication.data.model.AuthState
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
-
-import com.example.expense_tracking_project.data.model.AuthState
-import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.presentation.ui.AuthenticationHandler
-import com.example.expense_tracking_project.presentation.ui.CustomBottomBar
-import com.example.expense_tracking_project.presentation.vm.SignInViewModel
-import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
-import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.screens.authentication.data.model.AuthState
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
-
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
 
 class MainActivity : ComponentActivity() {
