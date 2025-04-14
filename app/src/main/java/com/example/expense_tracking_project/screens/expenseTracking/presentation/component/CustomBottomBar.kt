@@ -87,17 +87,3 @@ fun CustomBottomBar(
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -8,32 +8,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
 
-
 @Composable
-fun EditScreen(navController: NavController) {
-    Scaffold(
-        bottomBar = {
-            CustomBottomBar(
-                selectedIndex = 2, // Edit tab index
-                onItemSelected = { index ->
-                    when (index) {
-                        0 -> navController.navigate("home")
-                        1 -> navController.navigate("statistics")
-                        2 -> navController.navigate("edit")
-                        3 -> navController.navigate("profile")
-                    }
-                },
-                navController = navController
-            )
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Edit", style = MaterialTheme.typography.headlineMedium)
-        }
+fun EditScreen(navController: NavController, modifier: Modifier = Modifier) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text("Edit", style = MaterialTheme.typography.headlineMedium)
     }
 }
