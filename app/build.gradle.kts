@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.room.common.jvm)
+    implementation(libs.firebase.crashlytics.buildtools)
     testImplementation(libs.junit)
     // Add dependency
 //    implementation (libs.ui)
