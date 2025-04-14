@@ -1,0 +1,38 @@
+package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
+
+@Composable
+fun StatisticsScreen(navController: NavController) {
+    Scaffold(
+        bottomBar = {
+            CustomBottomBar(
+                selectedIndex = 1, // Statistics tab index
+                onItemSelected = { index ->
+                    when (index) {
+                        0 -> navController.navigate("home")
+                        1 -> navController.navigate("statistics")
+                        2 -> navController.navigate("edit")
+                        3 -> navController.navigate("profile")
+                    }
+                },
+                navController = navController
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Statistics", style = MaterialTheme.typography.headlineMedium)
+        }
+    }
+}

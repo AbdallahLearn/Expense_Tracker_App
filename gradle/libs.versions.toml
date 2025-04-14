@@ -22,7 +22,8 @@ firebaseAuth = "23.2.0"
 runtimeLivedata = "1.7.8"
 ui = "1.7.8"
 roomRuntime = "2.6.1"
-roomCommonJvm = "2.7.0" # Latest stable version of Room
+roomCommonJvm = "2.7.0"
+firebaseCrashlyticsBuildtools = "3.0.3" # Latest stable version of Room
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
