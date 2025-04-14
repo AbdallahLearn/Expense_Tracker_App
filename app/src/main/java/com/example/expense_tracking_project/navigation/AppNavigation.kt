@@ -3,22 +3,21 @@ package com.example.expense_tracking_project.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.expense_tracking_project.presentation.ui.HomeScreen
-import com.example.expense_tracking_project.presentation.ui.LoginScreen
-import com.example.expense_tracking_project.presentation.ui.SignUpScreen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
+import com.example.expense_tracking_project.screens.authentication.presentation.screens.LoginScreen
+import com.example.expense_tracking_project.screens.authentication.presentation.screens.SignUpScreen
 import androidx.navigation.NavHostController
-import com.example.expense_tracking_project.presentation.ui.TransactionScreen
-import com.example.expense_tracking_project.presentation.ui.AddExpenseScreen
-import com.example.expense_tracking_project.presentation.ui.EditScreen
-import com.example.expense_tracking_project.presentation.ui.ProfileScreen
-import com.example.expense_tracking_project.presentation.ui.StatisticsScreen
-import com.example.expense_tracking_project.presentation.ui.onBoardingScreen
-import com.example.expense_tracking_project.presentation.ui.resetPassword.CheckEmailScreen
-import com.example.expense_tracking_project.presentation.ui.resetPassword.ResetPasswordScreen
-import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.TransactionScreen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AddExpenseScreen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.EditScreen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.ProfileScreen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.StatisticsScreen
+import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.onBoardingScreen
+import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
+import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
 
 //@RequiresApi(Build.VERSION_CODES.O)
 @Composable
