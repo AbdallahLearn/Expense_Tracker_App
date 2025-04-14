@@ -16,13 +16,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.navigation.AppNavigation
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AuthenticationHandler
 import com.example.expense_tracking_project.screens.authentication.data.model.AuthState
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.AuthenticationHandler
 
 class MainActivity : ComponentActivity() {
     //    @RequiresApi(Build.VERSION_CODES.O)
@@ -79,13 +77,6 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(padding)
                     ) {
-                        if (authState != null) {
-                            AuthenticationHandler(
-                                authState = authState!!,
-                                navController = navController,
-                                signInViewModel = signInViewModel
-                            )
-                        }
                         AppNavigation(
                             navController = navController,
                             showOnboarding = authState == AuthState.Unauthenticated,
