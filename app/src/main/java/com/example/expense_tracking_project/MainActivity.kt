@@ -16,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.navigation.AppNavigation
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AuthenticationHandler
 import com.example.expense_tracking_project.screens.authentication.data.model.AuthState
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
