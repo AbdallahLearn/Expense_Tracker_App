@@ -40,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.data.dataSource.Transaction.Transaction
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.presentation.ui.dialogs.ConfirmationDialog
 import com.example.expense_tracking_project.presentation.vm.ThemeViewModel
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 
@@ -292,6 +293,7 @@ fun RecentTransactions(
 
 @Composable
 fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionViewModel) {
+    var showDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -317,7 +319,25 @@ fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionV
                 )
             }
 
-            IconButton(onClick = {  transactionViewModel.hideTransaction(transaction) }) {
+            if (showDialog) {
+                ConfirmationDialog(
+                    title = "Delete Transaction",
+                    message = "Are you sure you want to delete this transaction?",
+                    confirmButtonText = "Delete",
+                    confirmButtonColor = Color.Red,
+                    onConfirm = {
+                        transactionViewModel.hideTransaction(transaction)
+                        showDialog = false
+                    },
+                    onDismiss = {
+                        showDialog = false
+                    }
+                )
+            }
+
+            IconButton(onClick = {
+                showDialog = true
+            }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete Transaction",
