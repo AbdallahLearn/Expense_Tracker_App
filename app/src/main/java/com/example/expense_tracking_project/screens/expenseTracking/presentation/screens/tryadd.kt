@@ -15,33 +15,45 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.expense_tracking_project.core.local.db.AppDatabase
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TransactionViewModel
+import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
+import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.TransactionRepositoryImpl
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.GetAllTransactionsUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.InsertTransactionUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.UpdateTransactionUseCase
 import java.util.Date
-
-
 
 
 @Composable
 fun TransactionScreen(navController: NavHostController, isDarkTheme: Boolean) {
-    val viewModel: TransactionViewModel = viewModel()
-    val transactions by viewModel.allTransactions.observeAsState(emptyList())
+    val context = LocalContext.current
 
-    var amountText by remember { mutableStateOf("") }
-    var noteText by remember { mutableStateOf("") }
+    val transactionDao = AppDatabase.getDatabase(context).transactionDao()
+    val repository = TransactionRepositoryImpl(transactionDao)
+    val insertUseCase = InsertTransactionUseCase(repository)
+    val updateUseCase = UpdateTransactionUseCase(repository)
+    val getAllUseCase = GetAllTransactionsUseCase(repository)
+
+    val viewModel = remember {
+        TransactionViewModel(insertUseCase, updateUseCase, getAllUseCase)
+    }
+
+    val transactions by viewModel.allTransactions.collectAsState(emptyList())
+
+    val amountText = viewModel.amountText
+    val noteText = viewModel.noteText
 
     val backgroundColor = if (isDarkTheme) Color(0xFF121212) else Color.White
     val textColor = if (isDarkTheme) Color.White else Color.Black
@@ -50,16 +62,15 @@ fun TransactionScreen(navController: NavHostController, isDarkTheme: Boolean) {
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
+            .padding(16.dp)
     ) {
         Text(
-            text = "Add Transaction",
-            style = MaterialTheme.typography.titleLarge,
-            color = textColor
+            text = "Add Transaction", style = MaterialTheme.typography.titleLarge, color = textColor
         )
 
         OutlinedTextField(
             value = amountText,
-            onValueChange = { amountText = it },
+            onValueChange = { viewModel.onAmountChange(it) },
             label = { Text("Amount", color = textColor) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier
@@ -70,7 +81,7 @@ fun TransactionScreen(navController: NavHostController, isDarkTheme: Boolean) {
 
         OutlinedTextField(
             value = noteText,
-            onValueChange = { noteText = it },
+            onValueChange = { viewModel.onNoteChange(it) },
             label = { Text("Note", color = textColor) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -83,9 +94,9 @@ fun TransactionScreen(navController: NavHostController, isDarkTheme: Boolean) {
                 val amount = amountText.toDoubleOrNull() ?: 0.0
                 if (amount > 0) {
                     val category = if (noteText.contains("income", ignoreCase = true)) {
-                        "expense"
-                    } else {
                         "income"
+                    } else {
+                        "expense"
                     }
 
                     viewModel.insert(
@@ -99,17 +110,18 @@ fun TransactionScreen(navController: NavHostController, isDarkTheme: Boolean) {
                         )
                     )
 
-                    amountText = ""
-                    noteText = ""
+                    viewModel.onAmountChange("")
+                    viewModel.onNoteChange("")
+
+                    navController.navigate(Screen.Home.route)
                 }
-                navController.navigate(Screen.Home.route)
-            },
-            modifier = Modifier.align(Alignment.End)
+            }, modifier = Modifier.align(Alignment.End)
         ) {
             Text("Save")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = "All Transactions",
             style = MaterialTheme.typography.titleMedium,

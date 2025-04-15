@@ -1,5 +1,6 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,7 +13,6 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,31 +24,44 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
+import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
+import androidx.compose.runtime.collectAsState
+import com.example.expense_tracking_project.core.local.db.AppDatabase
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.TransactionRepositoryImpl
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.GetAllTransactionsUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.InsertTransactionUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.UpdateTransactionUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TransactionViewModel
 
 @Composable
-fun HomeScreen(
-    navController: NavController,
-    themeViewModel: ThemeViewModel,
-    isDarkTheme: Boolean,
-    modifier: Modifier = Modifier
-) {
-    val transactionViewModel: TransactionViewModel = viewModel()
-    val transactions by transactionViewModel.allTransactions.observeAsState(emptyList())
+fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isDarkTheme: Boolean) {
+    val context = LocalContext.current
+
+    val transactionDao = AppDatabase.getDatabase(context).transactionDao()
+    val repository = TransactionRepositoryImpl(transactionDao)
+    val insertUseCase = InsertTransactionUseCase(repository)
+    val updateUseCase = UpdateTransactionUseCase(repository)
+    val getAllUseCase = GetAllTransactionsUseCase(repository)
+
+    val transactionViewModel = remember {
+        TransactionViewModel(
+            insertTransactionUseCase = insertUseCase,
+            updateTransactionUseCase = updateUseCase,
+            getAllTransactionsUseCase = getAllUseCase
+        )
+    }
+    val transactions by transactionViewModel.allTransactions.collectAsState(emptyList())
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Curved Top Background
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -59,26 +72,24 @@ fun HomeScreen(
                 )
         )
 
-        // Foreground content
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(16.dp)
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(24.dp)) // Top spacing
+            Spacer(modifier = Modifier.height(24.dp))
             TopSection(
                 name = "Abdullah",
                 isDarkTheme = isDarkTheme,
-                onToggleTheme = { themeViewModel.toggleTheme() }
-            )
+                onToggleTheme = { themeViewModel.toggleTheme() })
             BudgetCard(
-                income = transactionViewModel.income,
-                expenses = transactionViewModel.expenses
+                income = transactionViewModel.income, expenses = transactionViewModel.expenses
             )
             TimeTabSection()
             RecentTransactions(
-                navController,
-                transactions,
+                navController = navController,
+                transactions = transactions,
                 transactionViewModel = transactionViewModel
             )
         }
@@ -87,13 +98,10 @@ fun HomeScreen(
 
 @Composable
 fun TopSection(
-    name: String,
-    isDarkTheme: Boolean,
-    onToggleTheme: () -> Unit
+    name: String, isDarkTheme: Boolean, onToggleTheme: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
             Text(
@@ -102,9 +110,7 @@ fun TopSection(
                 color = Color.White
             )
             Text(
-                text = name,
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White
+                text = name, style = MaterialTheme.typography.titleMedium, color = Color.White
             )
         }
 
@@ -161,8 +167,7 @@ fun BudgetCard(income: Double, expenses: Double) {
             }
             Spacer(modifier = Modifier.height(20.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
@@ -215,8 +220,7 @@ fun TimeTabSection() {
     ) {
         tabs.forEach { tab ->
             TextButton(
-                onClick = { selectedTab = tab },
-                colors = ButtonDefaults.textButtonColors(
+                onClick = { selectedTab = tab }, colors = ButtonDefaults.textButtonColors(
                     containerColor = if (tab == selectedTab) Color(0xFFFFEBCD) else Color.Transparent
                 )
             ) {
@@ -234,8 +238,7 @@ fun RecentTransactions(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 stringResource(R.string.recent_transactions),
@@ -247,8 +250,7 @@ fun RecentTransactions(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable {
                     navController.navigate(Screen.AddTransaction.route)
-                }
-            )
+                })
         }
 
         Button(
@@ -272,8 +274,7 @@ fun RecentTransactions(
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(transactions) { transaction ->
                     TransactionItem(
-                        transaction = transaction,
-                        transactionViewModel = transactionViewModel
+                        transaction = transaction, transactionViewModel = transactionViewModel
                     )
                 }
             }
@@ -288,7 +289,7 @@ fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionV
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { /* Handle click action */ },
+            .clickable { },
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
