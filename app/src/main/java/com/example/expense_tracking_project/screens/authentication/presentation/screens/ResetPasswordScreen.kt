@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
@@ -22,7 +23,6 @@ import com.example.expense_tracking_project.screens.authentication.domain.usecas
 import com.example.expense_tracking_project.screens.authentication.presentation.component.DesignScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.FormField
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -35,9 +35,7 @@ fun ResetPasswordScreen(navController: NavController) {
     val loginUseCase = LoginUseCase(AuthRepositoryImpl(FirebaseAuth.getInstance()))
 
     // Use the ViewModel factory to pass LoginUseCase
-    val signInViewModel: SignInViewModel = viewModel(
-        factory = SignInViewModelFactory(loginUseCase)
-    )
+    val signInViewModel: SignInViewModel = hiltViewModel()
 
     DesignScreen(
         title = "Reset Password",

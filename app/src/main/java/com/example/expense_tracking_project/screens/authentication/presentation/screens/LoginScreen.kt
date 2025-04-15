@@ -2,24 +2,33 @@ package com.example.expense_tracking_project.screens.authentication.presentation
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
-import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.presentation.component.DesignScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.FormField
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.*
-import com.google.firebase.auth.FirebaseAuth
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.AuthState
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.ValidationInputViewModel
 
 @Composable
 fun LoginScreen(
@@ -31,13 +40,7 @@ fun LoginScreen(
     val email = remember { mutableStateOf(validationInputViewModel.email) }
     val password = remember { mutableStateOf(validationInputViewModel.password) }
 
-    // Initialize LoginUseCase
-    val loginUseCase = remember {
-        LoginUseCase(AuthRepositoryImpl(FirebaseAuth.getInstance()))
-    }
-    val factory = remember { SignInViewModelFactory(loginUseCase) }
-    val signInViewModel: SignInViewModel = viewModel(factory = factory)
-
+    val signInViewModel: SignInViewModel = hiltViewModel()
 
 
     // Collect authState
