@@ -3,6 +3,7 @@ package com.example.expense_tracking_project
 import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
 import com.example.expense_tracking_project.screens.authentication.domain.repository.AuthRepository
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
+import com.example.expense_tracking_project.screens.authentication.domain.usecase.SignUpUseCase
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -26,9 +27,19 @@ object AppModule {
     }
 
     @Provides
-    fun provideLoginUseCase(
+    fun provideLoginUseCase( // Sign In
         authRepository: AuthRepository
     ): LoginUseCase {
         return LoginUseCase(authRepository)
     }
+
+
+    @Provides
+    fun provideSignUpUseCase( // Sign Up
+        authRepository: AuthRepository
+    ): SignUpUseCase {
+        return SignUpUseCase(authRepository)
+    }
+
+
 }
