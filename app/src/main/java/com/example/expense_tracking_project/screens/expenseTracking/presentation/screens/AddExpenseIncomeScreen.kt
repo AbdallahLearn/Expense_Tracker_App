@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
 import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenu
@@ -29,82 +30,58 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.utils.isAtLeastOreo
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Locale
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.AddTransactionViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddExpenseScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: AddTransactionViewModel = viewModel()
 ) {
+
+    // retrieve current context
     val context = LocalContext.current
+
+    // handle navigation to the home screen after adding transaction
     var navigateToHome by remember { mutableStateOf(false) }
 
-    // Calendar to choose the date (By default the date as current date)
+    // initialize the date picker dialog for the Calendar
+    val datePickerDialog = remember { viewModel.updateDate(context) }
 
-    val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)
-    val currentDate = LocalDate.now()
-
-    // Form fields for the Expenses
-    val expensesAmountState = remember { mutableStateOf("") }
-    val expensesCategoryState = remember { mutableStateOf("") }
-    val expensesDateState = remember { mutableStateOf(currentDate.format(formatter)) }
-    val expensesNoteState = remember { mutableStateOf("") }
-
-    // Form fields for the Income
-    val incomeAmountState = remember { mutableStateOf("") }
-    val incomeCategoryState = remember { mutableStateOf("") }
-    val incomeDateState = remember { mutableStateOf(currentDate.format(formatter)) }
-    val incomeNoteState = remember { mutableStateOf("") }
-
-    // Calendar 
-    val calendar = java.util.Calendar.getInstance()
-    val datePickerDialog = remember {
-        android.app.DatePickerDialog(
-            context,
-            { _, year, month, dayOfMonth ->
-                val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-                val formattedDate = selectedDate.format(formatter)
-                expensesDateState.value = formattedDate
-                incomeDateState.value = formattedDate
-            },
-            calendar.get(java.util.Calendar.YEAR),
-            calendar.get(java.util.Calendar.MONTH),
-            calendar.get(java.util.Calendar.DAY_OF_MONTH)
-        )
-    }
-    
+    // Navigate to home screen
     LaunchedEffect(navigateToHome) {
         if (navigateToHome) {
             navController.navigate(Screen.Home)
         }
     }
 
-    var selectedTab by remember { mutableStateOf("Expenses") }
+    // Observe State from the ViewModel
+    val amountState = viewModel.getAmountState()
+    val categoryState = viewModel.getCategoryState()
+    val dateState = viewModel.getDateState()
+    val noteState = viewModel.getNoteState()
 
-    val amountState = if (selectedTab == "Income") incomeAmountState else expensesAmountState
-    val categoryState = if (selectedTab == "Income") incomeCategoryState else expensesCategoryState
-    val dateState = if (selectedTab == "Income") incomeDateState else expensesDateState
-    val noteState = if (selectedTab == "Income") incomeNoteState else expensesNoteState
 
-    val amountLabel =
-        if (selectedTab == "Income") stringResource(R.string.incomeAmount) else stringResource(R.string.expenseAmount)
-    val categoryLabel =
-        if (selectedTab == "Income") stringResource(R.string.incomeCategory) else stringResource(R.string.expenseCategory)
-    val dateLabel =
-        if (selectedTab == "Income") stringResource(R.string.incomeDate) else stringResource(R.string.expenseDate)
-    val noteLabel =
-        if (selectedTab == "Income") stringResource(R.string.incomeNote) else stringResource(R.string.expenseNote)
-
+    // text fields based on the selected transaction type (Income / Expenses)
+    val amountLabel = stringResource(
+        if (viewModel.selectedTab.value == "Income") R.string.incomeAmount else R.string.expenseAmount
+    )
+    val categoryLabel = stringResource(
+        if (viewModel.selectedTab.value == "Income") R.string.incomeCategory else R.string.expenseCategory
+    )
+    val dateLabel = stringResource(
+        if (viewModel.selectedTab.value == "Income") R.string.incomeDate else R.string.expenseDate
+    )
+    val noteLabel = stringResource(
+        if (viewModel.selectedTab.value == "Income") R.string.incomeNote else R.string.expenseNote
+    )
 
     BackgroundLayout()
 
     SelectTransaction(
         showTabs = true,
         tabOptions = listOf("Expenses", "Income"),
-        onTabSelected = { selectedTab = it }
+        onTabSelected = { viewModel.selectedTab.value = it }
     )
 
     Spacer(modifier = Modifier.height(20.dp))
@@ -115,7 +92,8 @@ fun AddExpenseScreen(
             .padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    )
+    {
         Card(
             shape = RoundedCornerShape(32.dp),
             elevation = CardDefaults.cardElevation(8.dp),
@@ -140,15 +118,12 @@ fun AddExpenseScreen(
                     value = amountState.value,
                     onValueChange = { amountState.value = it })
 
+
                 Spacer(modifier = Modifier.height(20.dp))
 
                 CustomDropdownMenu(
                     categoryLabel,
-                    categoryOptions = if (selectedTab == "Income") {
-                        listOf("Salary", "Bonus", "Freelance", "Investment")
-                    } else {
-                        listOf("Food", "Shopping", "Entertainment", "Bills")
-                    },
+                    categoryOptions = viewModel.getCategoryOptions(),
                     selectedOption = categoryState.value,
                     onOptionSelected = { categoryState.value = it }
                 )
@@ -171,9 +146,10 @@ fun AddExpenseScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Button Save
-                SimpleButton("Save") {}
-
+                SimpleButton("Save") {
+                    Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
+                    navigateToHome = true
+                }
 
             }
         }
