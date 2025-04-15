@@ -52,7 +52,7 @@ fun ResetPasswordScreen(navController: NavController) {
                         if (task.isSuccessful) {
                             Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT).show()
                             signInViewModel.setPasswordResetCompleted(true)
-                            navController.navigate(Screen.CheckEmail.route)
+                            navController.navigate(Screen.CheckEmail)
                         } else {
                             Toast.makeText(context, "Failed to send reset email", Toast.LENGTH_SHORT).show()
                         }
@@ -82,8 +82,8 @@ fun CheckEmailScreen(navController: NavController) {
             )
         },
         onButtonClick = {
-            navController.navigate(Screen.Login.route) {
-                popUpTo(Screen.CheckEmail.route) { inclusive = true }
+            navController.navigate(Screen.Login) {
+                popUpTo(Screen.CheckEmail) { inclusive = true }
             }
         },
         onTabSelected = {}

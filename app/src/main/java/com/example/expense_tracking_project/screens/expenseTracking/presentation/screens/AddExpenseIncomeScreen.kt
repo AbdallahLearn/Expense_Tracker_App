@@ -14,11 +14,11 @@ import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.DesignScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.FormField
+import com.example.expense_tracking_project.utils.isAtLeastOreo
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-//@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddExpenseScreen(
     navController: NavController
@@ -26,31 +26,35 @@ fun AddExpenseScreen(
     val context = LocalContext.current
     var navigateToHome by remember { mutableStateOf(false) }
 
-    // Format: (Fri, 22 Feb 2025)
+    // API Level check using utility function
+    if (!isAtLeastOreo()) {
+        Toast.makeText(context, "This feature requires Android 8.0 (API 26) or higher", Toast.LENGTH_LONG).show()
+        return
+    }
+
     val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)
     val currentDate = LocalDate.now()
 
-    // Define the form fields for expenses
+    // Form fields
     val expensesAmountState = remember { mutableStateOf("") }
     val expensesCategoryState = remember { mutableStateOf("") }
     val expensesDateState = remember { mutableStateOf(currentDate.format(formatter)) }
     val expensesNoteState = remember { mutableStateOf("") }
 
-    // Define the form fields for income
     val incomeAmountState = remember { mutableStateOf("") }
     val incomeCategoryState = remember { mutableStateOf("") }
     val incomeDateState = remember { mutableStateOf(currentDate.format(formatter)) }
     val incomeNoteState = remember { mutableStateOf("") }
 
-    // DatePickerDialog
     val calendar = java.util.Calendar.getInstance()
     val datePickerDialog = remember {
         android.app.DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
                 val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-                expensesDateState.value = selectedDate.format(formatter)
-                incomeDateState.value = selectedDate.format(formatter)
+                val formattedDate = selectedDate.format(formatter)
+                expensesDateState.value = formattedDate
+                incomeDateState.value = formattedDate
             },
             calendar.get(java.util.Calendar.YEAR),
             calendar.get(java.util.Calendar.MONTH),
@@ -64,14 +68,14 @@ fun AddExpenseScreen(
         FormField(
             label = stringResource(R.string.expenseDate),
             value = expensesDateState.value,
-            onClick = {
-                datePickerDialog.show()
-            }
+            onClick = { datePickerDialog.show() }
         ),
         FormField(label = stringResource(R.string.expenseNote), value = expensesNoteState.value),
     )
 
-    val expensesFieldStates = listOf(expensesAmountState, expensesCategoryState, expensesDateState, expensesNoteState)
+    val expensesFieldStates = listOf(
+        expensesAmountState, expensesCategoryState, expensesDateState, expensesNoteState
+    )
 
     val incomeFields = listOf(
         FormField(label = stringResource(R.string.incomeAmount), value = incomeAmountState.value),
@@ -79,29 +83,26 @@ fun AddExpenseScreen(
         FormField(
             label = stringResource(R.string.incomeDate),
             value = incomeDateState.value,
-            onClick = {
-                datePickerDialog.show()
-            }
+            onClick = { datePickerDialog.show() }
         ),
         FormField(label = stringResource(R.string.incomeNote), value = incomeNoteState.value),
     )
 
-    val incomeFieldStates = listOf(incomeAmountState, incomeCategoryState, incomeDateState, incomeNoteState)
+    val incomeFieldStates = listOf(
+        incomeAmountState, incomeCategoryState, incomeDateState, incomeNoteState
+    )
 
-    // Track which tab is selected
     var selectedTab by remember { mutableStateOf("expenses") }
 
     val fields = if (selectedTab == "income") incomeFields else expensesFields
     val fieldStates = if (selectedTab == "income") incomeFieldStates else expensesFieldStates
 
-    // Handle navigation to the Home screen after successful add
     LaunchedEffect(navigateToHome) {
         if (navigateToHome) {
-            navController.navigate(Screen.Home.route)
+            navController.navigate(Screen.Home)
         }
     }
 
-    // Design Screen UI
     DesignScreen(
         showTabs = true,
         fields = fields,
@@ -113,7 +114,8 @@ fun AddExpenseScreen(
             } else {
                 listOf(expensesAmountState, expensesCategoryState, expensesDateState)
             }
-                if (requiredFields.all { it.value.isNotBlank() }) {
+
+            if (requiredFields.all { it.value.isNotBlank() }) {
                 Toast.makeText(
                     context,
                     if (selectedTab == "income") "Added Income successfully" else "Added Expenses successfully",
@@ -129,6 +131,7 @@ fun AddExpenseScreen(
         }
     )
 }
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)

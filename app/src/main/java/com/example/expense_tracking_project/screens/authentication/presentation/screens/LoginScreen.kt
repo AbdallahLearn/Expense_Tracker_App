@@ -51,8 +51,8 @@ fun LoginScreen(
         when (authState) {
             is AuthState.Authenticated -> {
                 Toast.makeText(context, "Logged in successfully", Toast.LENGTH_SHORT).show()
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Login.route) { inclusive = true }
+                navController.navigate(Screen.Home) {
+                    popUpTo(Screen.Login) { inclusive = true }
                 }
             }
             is AuthState.Error -> {
@@ -75,7 +75,7 @@ fun LoginScreen(
         passwordVisibilityStates = listOf(remember { mutableStateOf(false) }),
         buttonText = stringResource(R.string.login),
         rememberMeState = remember { mutableStateOf(false) },
-        onForgotPassword = { navController.navigate(Screen.ResetPassword.route) },
+        onForgotPassword = { navController.navigate(Screen.ResetPassword) },
         onButtonClick = { fields ->
             val emailInput = fields[0].value.trim()
             val passwordInput = fields[1].value.trim()
@@ -98,7 +98,7 @@ fun LoginScreen(
                     text = stringResource(R.string.signup),
                     color = Color(0xFF5C4DB7),
                     modifier = Modifier.clickable {
-                        navController.navigate(Screen.SignUp.route)
+                        navController.navigate(Screen.SignUp)
                     }
                 )
             }

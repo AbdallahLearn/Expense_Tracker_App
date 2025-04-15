@@ -7,8 +7,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
 
-    kotlin("plugin.serialization") version "1.5.31"
-
+    kotlin("plugin.serialization") version "1.6.21"
 }
 
 android {
@@ -69,7 +68,6 @@ dependencies {
     implementation (libs.androidx.foundation)
     implementation (libs.androidx.material.icons.extended)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
-    implementation (libs.androidx.navigation.compose)
     implementation (libs.androidx.runtime.livedata)
 
 
@@ -80,8 +78,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.material3)
-    implementation(libs.androidx.material.icons.extended.v105)
-    implementation(libs.androidx.navigation.compose.v277)
 
     // Room Database
     implementation(libs.androidx.room.runtime) // Room runtime

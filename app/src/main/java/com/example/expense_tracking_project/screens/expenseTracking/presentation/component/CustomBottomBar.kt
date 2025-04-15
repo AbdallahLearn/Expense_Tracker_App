@@ -72,7 +72,7 @@ fun CustomBottomBar(
         FloatingActionButton(
 //            onClick = onFabClick,
             onClick = {
-                navController.navigate(Screen.AddExpense.route) // Navigate to AddExpense screen when FAB is clicked
+                navController.navigate(Screen.AddExpense) // Navigate to AddExpense screen when FAB is clicked
             },
             containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier

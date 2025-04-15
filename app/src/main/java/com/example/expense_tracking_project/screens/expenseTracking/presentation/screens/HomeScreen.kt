@@ -142,7 +142,7 @@ fun TopSection(
             }
             IconButton(onClick = onToggleTheme) {
                 Icon(
-                    painter = painterResource(id = R.drawable.sun),
+                    painter = painterResource(id = R.drawable.icon_theme),
                     contentDescription = stringResource(id = R.string.theme),
                     tint = Color.White
                 )
@@ -267,12 +267,12 @@ fun RecentTransactions(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable {
-                    navController.navigate(Screen.AddTransaction.route)
+                    navController.navigate(Screen.AddTransaction)
                 })
         }
 
         Button(
-            onClick = { navController.navigate(Screen.AddTransaction.route) },
+            onClick = { navController.navigate(Screen.AddTransaction) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
