@@ -1,5 +1,8 @@
 package com.example.expense_tracking_project.screens.authentication.presentation.vmModels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
@@ -10,13 +13,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class AuthState {
-    object Unauthenticated : AuthState()
-    object Authenticated : AuthState()
-    object Loading : AuthState()
+    data object Unauthenticated : AuthState()
+    data object Authenticated : AuthState()
+    data object Loading : AuthState()
     data class Error(val message: String) : AuthState()
 }
 @HiltViewModel
-class SignInViewModel @Inject constructor (private val loginUseCase: LoginUseCase) : ViewModel() {
+class LoginViewModel @Inject constructor (private val loginUseCase: LoginUseCase) : ViewModel() {
+
+    var email by mutableStateOf("")
+    var password by mutableStateOf("")
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
     val authState: StateFlow<AuthState> = _authState
@@ -39,19 +45,12 @@ class SignInViewModel @Inject constructor (private val loginUseCase: LoginUseCas
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            try {
-                loginUseCase(email, password)
-                _authState.value = AuthState.Authenticated
-            } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Login failed.")
-            }
+            val result = loginUseCase(email, password)
+
+            _authState.value = result.fold(
+                onSuccess = { AuthState.Authenticated },
+                onFailure = { AuthState.Error(it.message ?: "Login failed.") }
+            )
         }
     }
 }
-
-
-
-
-
-
-
