@@ -2,6 +2,7 @@ package com.example.expense_tracking_project
 
 import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
 import com.example.expense_tracking_project.screens.authentication.domain.repository.AuthRepository
+import com.example.expense_tracking_project.screens.authentication.domain.usecase.ForgotPasswordUseCase
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.SignUpUseCase
 import com.google.firebase.auth.FirebaseAuth
@@ -33,12 +34,18 @@ object AppModule {
         return LoginUseCase(authRepository)
     }
 
-
     @Provides
     fun provideSignUpUseCase( // Sign Up
         authRepository: AuthRepository
     ): SignUpUseCase {
         return SignUpUseCase(authRepository)
+    }
+
+    @Provides
+    fun provideForgotPasswordUseCase( // Forgot Password
+        authRepository: AuthRepository
+    ): ForgotPasswordUseCase {
+        return ForgotPasswordUseCase(authRepository)
     }
 
 
