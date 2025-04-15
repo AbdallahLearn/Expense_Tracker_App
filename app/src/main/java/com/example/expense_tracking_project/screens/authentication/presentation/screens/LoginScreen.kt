@@ -5,96 +5,92 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.screens.authentication.data.model.AuthState
+import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
+import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.presentation.component.DesignScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.FormField
-//import com.example.expense_tracking_project.data.model.AuthState
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.ValidationInputViewModel
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.*
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    signInViewModel: SignInViewModel = viewModel(),
-    validationInputViewModel: ValidationInputViewModel = viewModel() // Add ValidationInputViewModel
+    validationInputViewModel: ValidationInputViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val authState by signInViewModel.authState.observeAsState() // Observe authentication state
+    // These lines were removed (but are still needed):
+    val email = remember { mutableStateOf(validationInputViewModel.email) }
+    val password = remember { mutableStateOf(validationInputViewModel.password) }
 
-    // Observe validation errors
-    val emailAndPasswordError = validationInputViewModel.emailAndPasswordError
+    // Initialize LoginUseCase
+    val loginUseCase = remember {
+        LoginUseCase(AuthRepositoryImpl(FirebaseAuth.getInstance()))
+    }
+    val factory = remember { SignInViewModelFactory(loginUseCase) }
+    val signInViewModel: SignInViewModel = viewModel(factory = factory)
 
-    // Handle navigation to Home page after successful login
+
+
+    // Collect authState
+    val authState by signInViewModel.authState.collectAsState()
+
+    // Handle authentication state
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Authenticated -> {
                 Toast.makeText(context, "Logged in successfully", Toast.LENGTH_SHORT).show()
-                navController.navigate(Screen.Home.route)
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Login.route) { inclusive = true }
+                }
             }
             is AuthState.Error -> {
-                val errorMessage = (authState as AuthState.Error).message
-                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                val message = (authState as AuthState.Error).message
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
-            else -> Unit // Handle other states if needed
+            else -> Unit
         }
     }
 
+    // UI for LoginScreen (DesignScreen, etc.)
     DesignScreen(
         title = stringResource(R.string.login),
         instruction = stringResource(R.string.login_prompt),
         fields = listOf(
-            FormField(label = stringResource(R.string.email), value = validationInputViewModel.email),
-            FormField(label = stringResource(R.string.password), value = validationInputViewModel.password, isPassword = true)
+            FormField(label = stringResource(R.string.email), value = email.value),
+            FormField(label = stringResource(R.string.password), value = password.value, isPassword = true)
         ),
-        fieldStates = listOf(
-            remember { mutableStateOf(validationInputViewModel.email) },
-            remember { mutableStateOf(validationInputViewModel.password) }
-        ),
-        passwordVisibilityStates = listOf(
-            remember { mutableStateOf(false) }, // email (not used, but keeps indexing consistent)
-            remember { mutableStateOf(false) }  // password
-        ),
+        fieldStates = listOf(email, password),
+        passwordVisibilityStates = listOf(remember { mutableStateOf(false) }),
         buttonText = stringResource(R.string.login),
         rememberMeState = remember { mutableStateOf(false) },
-        onForgotPassword = {
-            navController.navigate(Screen.ResetPassword.route)
-        },
-        onButtonClick = { updatedFields ->
-            // Update email and password in ValidationInputViewModel
-            validationInputViewModel.email = updatedFields[0].value
-            validationInputViewModel.password = updatedFields[1].value
-
-            // Validate email and password
+        onForgotPassword = { navController.navigate(Screen.ResetPassword.route) },
+        onButtonClick = { fields ->
+            val emailInput = fields[0].value.trim()
+            val passwordInput = fields[1].value.trim()
+            validationInputViewModel.email = emailInput
+            validationInputViewModel.password = passwordInput
             validationInputViewModel.validateEmailAndPassword()
 
-            // Check for validation errors
-            if (emailAndPasswordError == null) {
-                // Trigger login process if inputs are valid
-                signInViewModel.login(
-                    email = validationInputViewModel.email,
-                    password = validationInputViewModel.password
-                )
-            } else {
-                // Show validation error as a Toast message
-                Toast.makeText(context, emailAndPasswordError, Toast.LENGTH_SHORT).show()
-            }
+            validationInputViewModel.emailAndPasswordError?.let {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            } ?: signInViewModel.login(emailInput, passwordInput)
         },
         footerText = {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(text = stringResource(R.string.dont_have_account), color = Color.Black)
+                Spacer(Modifier.width(8.dp))
                 Text(
                     text = stringResource(R.string.signup),
                     color = Color(0xFF5C4DB7),

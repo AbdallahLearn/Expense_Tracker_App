@@ -210,9 +210,7 @@ fun DesignScreen(
                                 trailingIcon = {
                                     ExposedDropdownMenuDefaults.TrailingIcon(expanded)
                                 },
-                                modifier = Modifier
-                                    .menuAnchor()
-                                    .fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth()
                             )
 
                             ExposedDropdownMenu(
@@ -230,6 +228,8 @@ fun DesignScreen(
                                 }
                             }
                         }
+
+
                     } else {
                         OutlinedTextField(
                             value = textState.value,

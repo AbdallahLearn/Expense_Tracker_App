@@ -17,38 +17,48 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
+import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
+import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.presentation.component.DesignScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.FormField
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.resetPassword
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
-fun ResetPasswordScreen(navController: NavController, signInViewModel: SignInViewModel = viewModel()) {
+fun ResetPasswordScreen(navController: NavController) {
     val context = LocalContext.current
     val emailState = remember { mutableStateOf("") }
+
+    // Initialize LoginUseCase
+    val loginUseCase = LoginUseCase(AuthRepositoryImpl(FirebaseAuth.getInstance()))
+
+    // Use the ViewModel factory to pass LoginUseCase
+    val signInViewModel: SignInViewModel = viewModel(
+        factory = SignInViewModelFactory(loginUseCase)
+    )
 
     DesignScreen(
         title = "Reset Password",
         instruction = "Enter your Gmail to reset the password",
-        fields = listOf(FormField("Email")),
+        fields = listOf(FormField(label = "Email", value = emailState.value)),
         fieldStates = listOf(emailState),
-        passwordVisibilityStates = listOf(remember { mutableStateOf(false) }),
+        passwordVisibilityStates = listOf(),
         buttonText = "Send verification",
         onButtonClick = {
             val email = emailState.value.trim()
             if (email.isNotEmpty()) {
-                resetPassword(email) { success ->
-                    if (success) {
-                        Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT)
-                            .show()
-                        signInViewModel.setPasswordResetCompleted(true) // Set the flag
-                        navController.navigate(Screen.CheckEmail.route)
-                    } else {
-                        Toast.makeText(context, "Failed to send reset email", Toast.LENGTH_SHORT)
-                            .show()
+                FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT).show()
+                            signInViewModel.setPasswordResetCompleted(true)
+                            navController.navigate(Screen.CheckEmail.route)
+                        } else {
+                            Toast.makeText(context, "Failed to send reset email", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
             } else {
                 Toast.makeText(context, "Please enter an email", Toast.LENGTH_SHORT).show()
             }
@@ -56,8 +66,6 @@ fun ResetPasswordScreen(navController: NavController, signInViewModel: SignInVie
         onTabSelected = {}
     )
 }
-
-
 
 @Composable
 fun CheckEmailScreen(navController: NavController) {
@@ -76,7 +84,6 @@ fun CheckEmailScreen(navController: NavController) {
             )
         },
         onButtonClick = {
-            navController.popBackStack()
             navController.navigate(Screen.Login.route) {
                 popUpTo(Screen.CheckEmail.route) { inclusive = true }
             }
@@ -84,3 +91,4 @@ fun CheckEmailScreen(navController: NavController) {
         onTabSelected = {}
     )
 }
+

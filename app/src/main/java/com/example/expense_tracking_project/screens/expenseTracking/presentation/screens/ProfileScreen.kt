@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignOutViewModel
 
+
 @Composable
 fun ProfileScreen(
     navController: NavController,

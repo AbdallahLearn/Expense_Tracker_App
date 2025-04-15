@@ -9,29 +9,41 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.navigation.AppNavigation
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.screens.authentication.data.model.AuthState
+import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
+import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.AuthState
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModelFactory
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
-    //    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        FirebaseApp.initializeApp(this)
 
         setContent {
             val navController = rememberNavController()
-            val signInViewModel: SignInViewModel = viewModel()
-            val authState by signInViewModel.authState.observeAsState()
+            val loginUseCase = remember {
+                LoginUseCase(AuthRepositoryImpl(FirebaseAuth.getInstance()))
+            }
+            val factory = remember { SignInViewModelFactory(loginUseCase) }
+            val signInViewModel: SignInViewModel = viewModel(factory = factory)
+
+
+            // Use collectAsState() for StateFlow
+            val authState by signInViewModel.authState.collectAsState()
 
             val themeViewModel: ThemeViewModel = viewModel()
             val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
@@ -77,9 +89,11 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(padding)
                     ) {
+                        // Here we compare using `is` to check the type
+                        val showOnboarding = authState is AuthState.Unauthenticated
                         AppNavigation(
                             navController = navController,
-                            showOnboarding = authState == AuthState.Unauthenticated,
+                            showOnboarding = showOnboarding,
                             onFinish = {
                                 navController.navigate(Screen.Login.route) {
                                     popUpTo(Screen.Onboarding.route) { inclusive = true }
@@ -88,10 +102,22 @@ class MainActivity : ComponentActivity() {
                             themeViewModel = themeViewModel,
                             isDarkTheme = isDarkTheme
                         )
-
                     }
                 }
             }
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
