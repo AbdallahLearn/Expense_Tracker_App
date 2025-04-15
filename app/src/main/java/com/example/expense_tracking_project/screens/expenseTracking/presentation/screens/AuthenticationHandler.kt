@@ -3,10 +3,13 @@ package com.example.expense_tracking_project.screens.expenseTracking.presentatio
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.screens.authentication.data.model.AuthState
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.AuthState
+
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
 
 @Composable
@@ -17,11 +20,14 @@ fun AuthenticationHandler(
 ) {
     val context = LocalContext.current
 
+    // Collect the password reset completion state
+    val isPasswordResetCompleted by signInViewModel.isPasswordResetCompleted.collectAsState()
+
     // Handle authentication state and navigation
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Authenticated -> {
-                if (signInViewModel.isPasswordResetCompleted()) {
+                if (isPasswordResetCompleted) {  // Use the collected value here
                     signInViewModel.authenticate(false)
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Onboarding.route) { inclusive = true }
