@@ -1,8 +1,6 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
 import android.os.Build
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -22,18 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.R
-import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
 import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenu
-import com.example.expense_tracking_project.screens.authentication.presentation.component.DesignScreen
-import com.example.expense_tracking_project.screens.authentication.presentation.component.FormField
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SelectTransaction
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
+import androidx.navigation.NavController
+import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.utils.isAtLeastOreo
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -48,6 +43,7 @@ fun AddExpenseScreen(
     var navigateToHome by remember { mutableStateOf(false) }
 
     // Calendar to choose the date (By default the date as current date)
+
     val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)
     val currentDate = LocalDate.now()
 
@@ -79,7 +75,7 @@ fun AddExpenseScreen(
             calendar.get(java.util.Calendar.DAY_OF_MONTH)
         )
     }
-
+    
     LaunchedEffect(navigateToHome) {
         if (navigateToHome) {
             navController.navigate(Screen.Home)
@@ -103,84 +99,83 @@ fun AddExpenseScreen(
         if (selectedTab == "Income") stringResource(R.string.incomeNote) else stringResource(R.string.expenseNote)
 
 
-        BackgroundLayout()
+    BackgroundLayout()
 
-        SelectTransaction(
-            showTabs = true,
-            tabOptions = listOf("Expenses", "Income"),
-            onTabSelected = { selectedTab = it }
-        )
+    SelectTransaction(
+        showTabs = true,
+        tabOptions = listOf("Expenses", "Income"),
+        onTabSelected = { selectedTab = it }
+    )
 
-        Spacer(modifier = Modifier.height(20.dp))
+    Spacer(modifier = Modifier.height(20.dp))
 
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Card(
+            shape = RoundedCornerShape(32.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .weight(1f)
         ) {
-            Card(
-                shape = RoundedCornerShape(32.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(18.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White)
-                        .padding(18.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
-                ) {
 
-                    Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(100.dp))
 
-                    SimpleTextField(
-                        title = amountLabel,
-                        value = amountState.value,
-                        onValueChange = { amountState.value = it })
+                SimpleTextField(
+                    title = amountLabel,
+                    value = amountState.value,
+                    onValueChange = { amountState.value = it })
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                    CustomDropdownMenu(
-                        categoryLabel,
-                        categoryOptions = if (selectedTab == "Income") {
-                            listOf("Salary", "Bonus", "Freelance", "Investment")
-                        } else {
-                            listOf("Food", "Shopping", "Entertainment", "Bills")
-                        },
-                        selectedOption = categoryState.value,
-                        onOptionSelected = { categoryState.value = it }
-                    )
+                CustomDropdownMenu(
+                    categoryLabel,
+                    categoryOptions = if (selectedTab == "Income") {
+                        listOf("Salary", "Bonus", "Freelance", "Investment")
+                    } else {
+                        listOf("Food", "Shopping", "Entertainment", "Bills")
+                    },
+                    selectedOption = categoryState.value,
+                    onOptionSelected = { categoryState.value = it }
+                )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                    SimpleTextField(
-                        title = dateLabel,
-                        value = dateState.value,
-                        onValueChange = { dateState.value = it },
-                        onIconClick = { datePickerDialog.show() }
-                    )
+                SimpleTextField(
+                    title = dateLabel,
+                    value = dateState.value,
+                    onValueChange = { dateState.value = it },
+                    onIconClick = { datePickerDialog.show() }
+                )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                    SimpleTextField(
-                        title = noteLabel,
-                        value = noteState.value,
-                        onValueChange = { noteState.value = it })
+                SimpleTextField(
+                    title = noteLabel,
+                    value = noteState.value,
+                    onValueChange = { noteState.value = it })
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                    // Button Save
-                    SimpleButton("Save") {}
+                // Button Save
+                SimpleButton("Save") {}
 
 
-                }
+            }
         }
     }
 }
-

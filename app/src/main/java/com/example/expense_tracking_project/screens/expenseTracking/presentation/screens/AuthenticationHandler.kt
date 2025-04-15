@@ -10,25 +10,25 @@ import androidx.navigation.NavController
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.AuthState
 
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.LoginViewModel
 
 @Composable
 fun AuthenticationHandler(
     authState: AuthState,
     navController: NavController,
-    signInViewModel: SignInViewModel
+    loginViewModel: LoginViewModel
 ) {
     val context = LocalContext.current
 
     // Collect the password reset completion state
-    val isPasswordResetCompleted by signInViewModel.isPasswordResetCompleted.collectAsState()
+    val isPasswordResetCompleted by loginViewModel.isPasswordResetCompleted.collectAsState()
 
     // Handle authentication state and navigation
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Authenticated -> {
                 if (isPasswordResetCompleted) {  // Use the collected value here
-                    signInViewModel.authenticate(false)
+                    loginViewModel.authenticate(false)
                     navController.navigate(Screen.Login) {
                         popUpTo(Screen.Onboarding) { inclusive = true }
                     }
