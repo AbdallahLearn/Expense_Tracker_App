@@ -8,8 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
 //import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.LoginScreen
+import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
 //import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.SignUpScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
@@ -88,12 +90,12 @@ fun AppNavigation(
             composable<Screen.Statistics> {
                 StatisticsScreen(navController)
             }
-//            composable<Screen.CheckEmail> {
-//                CheckEmailScreen(navController)
-//            }
-//            composable<Screen.ResetPassword> {
-//                ResetPasswordScreen(navController)
-//            }
+            composable<Screen.CheckEmail> {
+                CheckEmailScreen(navController)
+            }
+            composable<Screen.ResetPassword> {
+                ResetPasswordScreen(navController)
+            }
         }
     }
 }

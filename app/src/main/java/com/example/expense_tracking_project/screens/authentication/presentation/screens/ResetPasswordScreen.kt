@@ -31,11 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
-import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
-import com.example.expense_tracking_project.screens.authentication.presentation.component.DesignScreen
-import com.example.expense_tracking_project.screens.authentication.presentation.component.FormField
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.LoginViewModel
