@@ -12,22 +12,22 @@ import java.util.Date
     foreignKeys = [
         ForeignKey(
             entity = BudgetEntity::class,
-            parentColumns = ["budget_id"],
-            childColumns = ["budget_id"],
+            parentColumns = ["budgetId"],
+            childColumns = ["budgetId"],
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("budget_id")]
+    indices = [Index("budgetId")]
 )
 data class Category(
     @PrimaryKey(autoGenerate = true)
     val categoryId: Int,
-    val budget_id: Int,
-    val category_name: String,
+    val budgetId: Int,
+    val categoryName: String,
     val type: String, // "income" or "expense"
     val isDeleted: Boolean,
-    val created_at: Date,
-    val updated_at: Date
+    val createdAt: Date,
+    val updatedAt: Date
 )
 
 

@@ -22,6 +22,6 @@ interface BudgetDao {
     @Query("SELECT * FROM BudgetEntity WHERE isDeleted = 0")
     suspend fun getAllBudgets(): List<BudgetEntity>
 
-    @Query("SELECT * FROM BudgetEntity WHERE budget_id = :id")
+    @Query("SELECT * FROM BudgetEntity WHERE budgetId = :id")
     suspend fun getBudgetById(id: Int): BudgetEntity?
 }

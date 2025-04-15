@@ -8,7 +8,7 @@ import java.util.Date
 @Entity(tableName = "BudgetEntity")
 data class BudgetEntity(
     @PrimaryKey(autoGenerate = true)
-    val budget_id: Int = 0,
+    val budgetId: Int = 0,
 
     val name: String,
     val totalAmount: Double,
@@ -17,7 +17,7 @@ data class BudgetEntity(
     val endDate: Date,
 
     val isDeleted: Boolean = false,
-    val created_at: Date,
-    val updated_at: Date
+    val createdAt: Date,
+    val updatedAt: Date
 )
 
