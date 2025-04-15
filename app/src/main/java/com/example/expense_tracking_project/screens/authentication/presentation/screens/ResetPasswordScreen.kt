@@ -14,7 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
@@ -22,7 +21,7 @@ import com.example.expense_tracking_project.screens.authentication.data.reposito
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.presentation.component.DesignScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.FormField
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -35,7 +34,7 @@ fun ResetPasswordScreen(navController: NavController) {
     val loginUseCase = LoginUseCase(AuthRepositoryImpl(FirebaseAuth.getInstance()))
 
     // Use the ViewModel factory to pass LoginUseCase
-    val signInViewModel: SignInViewModel = hiltViewModel()
+    val loginViewModel: LoginViewModel = hiltViewModel()
 
     DesignScreen(
         title = "Reset Password",
@@ -51,7 +50,7 @@ fun ResetPasswordScreen(navController: NavController) {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT).show()
-                            signInViewModel.setPasswordResetCompleted(true)
+                            loginViewModel.setPasswordResetCompleted(true)
                             navController.navigate(Screen.CheckEmail)
                         } else {
                             Toast.makeText(context, "Failed to send reset email", Toast.LENGTH_SHORT).show()

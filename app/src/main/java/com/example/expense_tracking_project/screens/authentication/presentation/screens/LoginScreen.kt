@@ -29,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
@@ -37,20 +36,18 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.AuthState
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.LoginViewModel
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.ValidationInputViewModel
+import androidx.compose.material3.Checkbox
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    validationInputViewModel: ValidationInputViewModel = viewModel()
+    validationInputViewModel: ValidationInputViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val email = remember { mutableStateOf(validationInputViewModel.email) }
-    val password = remember { mutableStateOf(validationInputViewModel.password) }
-
-    val signInViewModel: SignInViewModel = hiltViewModel()
-    val authState by signInViewModel.authState.collectAsState()
+    val loginViewModel: LoginViewModel = hiltViewModel()
+    val authState by loginViewModel.authState.collectAsState()
 
     LaunchedEffect(authState) {
         when (authState) {
@@ -60,79 +57,112 @@ fun LoginScreen(
                     popUpTo(Screen.Login) { inclusive = true }
                 }
             }
+
             is AuthState.Error -> {
                 val message = (authState as AuthState.Error).message
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
+
             else -> Unit
         }
     }
-
-
-        BackgroundLayout("Login")
-        Column(
+    BackgroundLayout(title = stringResource(R.string.login))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Card(
+            shape = RoundedCornerShape(32.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .weight(1f)
         ) {
-            Card(
-                shape = RoundedCornerShape(32.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(18.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White)
-                        .padding(18.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top
+                Spacer(modifier = Modifier.height(10.dp))
+                SimpleTextField(
+                    title = stringResource(R.string.email),
+                    value = loginViewModel.email,
+                    onValueChange = { loginViewModel.email = it })
+                Spacer(modifier = Modifier.height(10.dp))
+                SimpleTextField(
+                    title = stringResource(R.string.password),
+                    value = loginViewModel.password,
+                    onValueChange = { loginViewModel.password = it },
+                    isPassword = true
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Spacer(modifier = Modifier.height(100.dp))
-                    SimpleTextField("Email", value = email.value, onValueChange = { email.value = it })
-                    Spacer(modifier = Modifier.height(20.dp))
-                    SimpleTextField("Password", value = password.value, onValueChange = { password.value = it }, isPassword = true)
-                    Spacer(modifier = Modifier.height(20.dp))
+                    val rememberMe = remember { mutableStateOf(false) }
 
-                    // Using SimpleButton with two parameters: title and onClick action
-                    SimpleButton("Save") {
-                        val emailInput = email.value.trim()
-                        val passwordInput = password.value.trim()
+                    Checkbox(
+                        checked = rememberMe.value,
+                        onCheckedChange = { rememberMe.value = it }
+                    )
+                    Text(
+                        text = stringResource(R.string.remember_me),
+                        color = Color.Black,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                }
 
-                        validationInputViewModel.email = emailInput
-                        validationInputViewModel.password = passwordInput
-                        validationInputViewModel.validateEmailAndPassword()
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = stringResource(R.string.forgot_password),
+                    color = Color(0xFF5C4DB7),
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .clickable {
+                            navController.navigate(Screen.ResetPassword)
+                        }
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                SimpleButton("Login") {
+                    val emailInput = loginViewModel.email.trim()
+                    val passwordInput = loginViewModel.password.trim()
 
-                        validationInputViewModel.emailAndPasswordError?.let {
-                            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                        } ?: signInViewModel.login(emailInput, passwordInput)
-                    }
-                     Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(text = stringResource(R.string.dont_have_account), color = Color.Black)
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.signup),
-                            color = Color(0xFF5C4DB7),
-                            modifier = Modifier.clickable {
-                                navController.navigate(Screen.SignUp)
-                            }
-                        )
-                    }
+                    validationInputViewModel.email = emailInput
+                    validationInputViewModel.password = passwordInput
+                    validationInputViewModel.validateEmailAndPassword()
+
+                    validationInputViewModel.emailAndPasswordError?.let {
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    } ?: loginViewModel.login(emailInput, passwordInput)
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(text = stringResource(R.string.dont_have_account), color = Color.Black)
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.signup),
+                        color = Color(0xFF5C4DB7),
+                        modifier = Modifier.clickable {
+                            navController.navigate(Screen.SignUp)
+                        }
+                    )
                 }
             }
-
-
-
         }
     }
+}
+
 
 
