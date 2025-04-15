@@ -7,6 +7,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
 
+    kotlin("plugin.serialization") version "1.5.31"
 
 }
 
@@ -87,10 +88,14 @@ dependencies {
     implementation(libs.androidx.room.ktx) // Kotlin extensions for Room
     ksp(libs.androidx.room.compiler) // Annotation processor for Room
 
+    //serialization
+    implementation(libs.jetbrains.kotlinx.serialization.json)
+
     implementation(libs.hilt.android) // DI
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 }
+
 kapt {
     correctErrorTypes = true
 }

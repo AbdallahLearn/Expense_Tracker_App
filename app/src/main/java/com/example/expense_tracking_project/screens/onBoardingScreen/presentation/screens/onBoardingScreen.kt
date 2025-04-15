@@ -45,14 +45,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
+import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
 
 
 @Composable
-fun onBoardingScreen(
+fun OnBoardingScreen(
     navController: NavController,
-    modifier: Modifier = Modifier,
-    onFinish: () -> Unit
 ) {
     val pagerState = rememberPagerState { 3 }
     val screenWidth = LocalConfiguration.current.screenWidthDp
@@ -74,11 +73,8 @@ fun onBoardingScreen(
                 state = pagerState,
                 modifier = Modifier.weight(1f)
             ) { page ->
-                OnboardingPageV2(page = page, isTablet = isTablet, navController = navController, onFinish = onFinish)
+                OnboardingPageV2(page = page, isTablet = isTablet, navController = navController)
             }
-
-
-
         }
     }
 }
@@ -88,7 +84,6 @@ fun OnboardingPageV2(
     page: Int,
     isTablet: Boolean,
     navController: NavController,
-    onFinish: () -> Unit
 ) {
     val titles = listOf(
         stringResource(R.string.onboarding_title_1),
@@ -176,19 +171,21 @@ fun OnboardingPageV2(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Spacer(modifier = Modifier.width(12.dp))
-                    Button(
-                        onClick = {
-                            onFinish()
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Text(text = stringResource(R.string.get_started))
-                    }
+                        Button(
+                            onClick = {
+                                navController.navigate(Screen.Login.route) {
+                                    popUpTo(Screen.Onboarding.route) { inclusive = false }
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(text = stringResource(R.string.get_started))
+                        }
                 }
             }
         }

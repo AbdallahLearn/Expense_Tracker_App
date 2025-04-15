@@ -25,10 +25,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 import androidx.compose.runtime.collectAsState
@@ -43,7 +46,12 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
 
 @Composable
-fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isDarkTheme: Boolean) {
+fun HomeScreen(
+    navController: NavController,
+    changeAppTheme: () -> Unit,
+    isDarkTheme: Boolean,
+    modifier: Modifier = Modifier,
+) {
     val context = LocalContext.current
 
     val transactionDao = AppDatabase.getDatabase(context).transactionDao()
@@ -82,7 +90,8 @@ fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isD
             TopSection(
                 name = "Abdullah",
                 isDarkTheme = isDarkTheme,
-                onToggleTheme = { themeViewModel.toggleTheme() })
+                onToggleTheme = { changeAppTheme() }
+            )
             BudgetCard(
                 income = transactionViewModel.income, expenses = transactionViewModel.expenses
             )
@@ -98,7 +107,9 @@ fun HomeScreen(navController: NavController, themeViewModel: ThemeViewModel, isD
 
 @Composable
 fun TopSection(
-    name: String, isDarkTheme: Boolean, onToggleTheme: () -> Unit
+    name: String,
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
@@ -124,7 +135,7 @@ fun TopSection(
             }
             IconButton(onClick = onToggleTheme) {
                 Icon(
-                    imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
+                    imageVector = ImageVector.vectorResource(R.drawable.sun),
                     contentDescription = stringResource(id = R.string.theme),
                     tint = Color.White
                 )
@@ -234,7 +245,7 @@ fun TimeTabSection() {
 fun RecentTransactions(
     navController: NavController,
     transactions: List<Transaction>,
-    transactionViewModel: TransactionViewModel
+    transactionViewModel: TransactionViewModel,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
