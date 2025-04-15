@@ -161,6 +161,7 @@ fun SimpleButton(title: String = "", onButtonClick: () -> Unit) {
     }
 }
 
+// Select Transaction Type
 @Composable
 fun SelectTransaction(
     showTabs: Boolean = false,
