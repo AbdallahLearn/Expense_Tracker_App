@@ -3,8 +3,6 @@ package com.example.expense_tracking_project.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,15 +30,21 @@ fun AppNavigation(
     val currentBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = currentBackStackEntry?.destination?.route
 
+    val showBottomBar = bottomBarScreens.any { screen ->
+        screen::class.qualifiedName == currentRoute
+    }
+
     Scaffold(
         bottomBar = {
-            if (currentRoute in bottomBarScreens.map { it.route }) {
+            if (showBottomBar) {
                 CustomBottomBar(
-                    selectedIndex = bottomBarScreens.indexOfFirst { it.route == currentRoute },
+                    selectedIndex = bottomBarScreens.indexOfFirst { screen ->
+                        screen::class.qualifiedName == currentRoute
+                    },
                     onItemSelected = { selectedIndex ->
-                        val selectedRoute = bottomBarScreens[selectedIndex].route
-                        navController.navigate(selectedRoute) {
-                            popUpTo(Screen.Home.route) { inclusive = false }
+                        val selectedScreen = bottomBarScreens[selectedIndex]
+                        navController.navigate(selectedScreen) {
+                            popUpTo(Screen.Home) { inclusive = false }
                             launchSingleTop = true
                         }
                     },
@@ -48,47 +52,46 @@ fun AppNavigation(
                 )
             }
         }
-
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Onboarding.route,
+            startDestination = Screen.Onboarding,
             modifier = Modifier.padding(padding)
         ) {
-            composable(Screen.Onboarding.route) {
+            composable<Screen.Onboarding> {
                 OnBoardingScreen(navController)
             }
-            composable(Screen.Login.route) {
+            composable<Screen.Login> {
                 LoginScreen(navController)
             }
-            composable(Screen.SignUp.route) {
+            composable<Screen.SignUp> {
                 SignUpScreen(navController)
             }
-            composable(Screen.Home.route) {
+            composable<Screen.Home> {
                 HomeScreen(
                     navController = navController,
                     changeAppTheme = changeAppTheme
                 )
             }
-            composable(Screen.AddTransaction.route) {
+            composable<Screen.AddTransaction> {
                 TransactionScreen(navController, isDarkTheme)
             }
-            composable(Screen.AddExpense.route) {
+            composable<Screen.AddExpense> {
                 AddExpenseScreen(navController)
             }
-            composable(Screen.Edit.route) {
+            composable<Screen.Edit> {
                 EditScreen(navController)
             }
-            composable(Screen.Profile.route) {
+            composable<Screen.Profile> {
                 ProfileScreen(navController)
             }
-            composable(Screen.Statistics.route) {
+            composable<Screen.Statistics> {
                 StatisticsScreen(navController)
             }
-            composable(Screen.CheckEmail.route) {
+            composable<Screen.CheckEmail> {
                 CheckEmailScreen(navController)
             }
-            composable(Screen.ResetPassword.route) {
+            composable<Screen.ResetPassword> {
                 ResetPasswordScreen(navController)
             }
         }
@@ -101,4 +104,3 @@ val bottomBarScreens = listOf(
     Screen.Edit,
     Screen.Profile
 )
-

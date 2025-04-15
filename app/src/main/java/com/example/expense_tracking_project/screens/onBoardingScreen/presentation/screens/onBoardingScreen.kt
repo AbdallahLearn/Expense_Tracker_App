@@ -173,8 +173,8 @@ fun OnboardingPageV2(
                     Spacer(modifier = Modifier.width(12.dp))
                         Button(
                             onClick = {
-                                navController.navigate(Screen.Login.route) {
-                                    popUpTo(Screen.Onboarding.route) { inclusive = false }
+                                navController.navigate(Screen.Login) {
+                                    popUpTo(Screen.Onboarding) { inclusive = false }
                                 }
                             },
                             modifier = Modifier.weight(1f),

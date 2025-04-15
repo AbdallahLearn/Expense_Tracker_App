@@ -29,19 +29,19 @@ fun AuthenticationHandler(
             is AuthState.Authenticated -> {
                 if (isPasswordResetCompleted) {  // Use the collected value here
                     signInViewModel.authenticate(false)
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Onboarding.route) { inclusive = true }
+                    navController.navigate(Screen.Login) {
+                        popUpTo(Screen.Onboarding) { inclusive = true }
                     }
                 } else {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Onboarding.route) { inclusive = true }
+                    navController.navigate(Screen.Home) {
+                        popUpTo(Screen.Onboarding) { inclusive = true }
                     }
                 }
             }
 
             is AuthState.Unauthenticated -> {
-                navController.navigate(Screen.Onboarding.route) {
-                    popUpTo(Screen.Home.route) { inclusive = true }
+                navController.navigate(Screen.Onboarding) {
+                    popUpTo(Screen.Home) { inclusive = true }
                 }
             }
 

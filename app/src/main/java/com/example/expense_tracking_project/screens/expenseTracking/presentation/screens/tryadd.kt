@@ -113,7 +113,7 @@ fun TransactionScreen(navController: NavHostController, isDarkTheme: Boolean) {
                     viewModel.onAmountChange("")
                     viewModel.onNoteChange("")
 
-                    navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.Home)
                 }
             }, modifier = Modifier.align(Alignment.End)
         ) {

@@ -48,8 +48,8 @@ fun SignUpScreen(navController: NavController) {
         when (authState) {
             is AuthState.Authenticated -> {
                 Toast.makeText(context, "Sign-up successful", Toast.LENGTH_SHORT).show()
-                navController.navigate(Screen.Login.route) {
-                    popUpTo(Screen.SignUp.route) { inclusive = true }
+                navController.navigate(Screen.Login) {
+                    popUpTo(Screen.SignUp) { inclusive = true }
                 }
             }
 
@@ -115,7 +115,7 @@ fun SignUpScreen(navController: NavController) {
                         text = stringResource(R.string.login),
                         color = Color(0xFF5C4DB7),
                         modifier = Modifier.clickable {
-                            navController.navigate(Screen.Login.route)
+                            navController.navigate(Screen.Login)
                         }
                     )
                 }

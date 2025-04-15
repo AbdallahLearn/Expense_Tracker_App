@@ -37,7 +37,7 @@ fun ProfileScreen(
             Button(
                 onClick = {
                     signOutViewModel.signout()
-                    navController.navigate(Screen.Login.route)
+                    navController.navigate(Screen.Login)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(vertical = 16.dp)
