@@ -1,18 +1,10 @@
 package com.example.expense_tracking_project.screens.expenseTracking.domain.repository
 
-import androidx.lifecycle.LiveData
 import com.example.expense_tracking_project.core.local.entities.Transaction
-import com.example.expense_tracking_project.core.local.dao.TransactionDao
+import kotlinx.coroutines.flow.Flow
 
-class TransactionRepository(private val transactionDao: TransactionDao) {
-
-    val allTransactions: LiveData<List<Transaction>> = transactionDao.getAllTransactions()
-
-    suspend fun insert(transaction: Transaction) {
-        transactionDao.insert(transaction)
-    }
-
-    suspend fun update(transaction: Transaction) {
-        transactionDao.update(transaction)
-    }
+interface TransactionRepository {
+    suspend fun allTransactions(): Flow<List<Transaction>>
+    suspend fun insert(transaction: Transaction)
+    suspend fun update(transaction: Transaction)
 }
