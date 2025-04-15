@@ -1,33 +1,21 @@
 package com.example.expense_tracking_project.navigation
 
+import kotlinx.serialization.Serializable
 
 //Type-Safe Navigation: Passing and Receiving Arguments with CustomNavType
+@Serializable
 sealed class Screen(val route: String) {
-    //@Serializable
-    object Onboarding : Screen("onboarding")
-    //@Serializable
-
-    object Login :
-        Screen("loginMouck") //change the name to go simple login page to test the navigations between screen
-
-    //@Serializable
-    object Home : Screen("home") // home screen
-
-    // Example with passing arguments using Kotlin serialization
-    //@Serializable
-    //data class UserProfile(val userId: Int) : Screen("userProfile/{userId}")
-    object SignUp : Screen("signup")
-    object ResetPassword : Screen("ResetPasswordScreen")
-    object CheckEmail : Screen("CheckEmailScreen")
-    object log : Screen("Login")
-    object Profile : Screen("profile") // profile screen
-    object Statistics : Screen("statistics") // statistic screen
-    object Edit : Screen("edit") // edit screen
-
-    object AddTransaction : Screen("TransactionScreen")
-    object AddExpense : Screen("addexpense")
-
-
+    @Serializable data object Onboarding : Screen("onboarding")
+    @Serializable data object Login : Screen("login")
+    @Serializable data object SignUp : Screen("signup")
+    @Serializable data object Home : Screen("home")
+    @Serializable data object AddTransaction : Screen("add_transaction")
+    @Serializable data object AddExpense : Screen("add_expense")
+    @Serializable data object Edit : Screen("edit")
+    @Serializable data object Profile : Screen("profile")
+    @Serializable data object Statistics : Screen("statistics")
+    @Serializable data object CheckEmail : Screen("check_email")
+    @Serializable data object ResetPassword : Screen("reset_password")
 }
 
 //@Serializable

@@ -152,7 +152,7 @@ fun DesignScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(top = 150.dp, start = 24.dp, end = 24.dp, bottom = 30.dp)
+                .padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -336,7 +336,7 @@ fun DesignScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     onClick = {
@@ -364,7 +364,7 @@ fun DesignScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 footerText?.invoke()
             }
         }
