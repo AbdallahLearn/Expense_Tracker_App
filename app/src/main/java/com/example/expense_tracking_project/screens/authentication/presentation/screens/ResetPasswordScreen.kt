@@ -34,18 +34,16 @@ import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.ForgotPasswordViewModel
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 
-
-
 @Composable
 fun ResetPasswordScreen(navController: NavController) {
-    val context = LocalContext.current
-    val emailState = remember { mutableStateOf("") }
 
-    // ViewModel from Hilt
-    val loginViewModel: LoginViewModel = hiltViewModel()
+    val context = LocalContext.current
+    val forgotPasswordViewModel: ForgotPasswordViewModel = hiltViewModel()
+    val emailState = remember { mutableStateOf(forgotPasswordViewModel.email) }
 
     BackgroundLayout(title = "Reset Password")
 
@@ -89,18 +87,17 @@ fun ResetPasswordScreen(navController: NavController) {
                     onButtonClick = {
                         val email = emailState.value.trim()
                         if (email.isNotEmpty()) {
+                            forgotPasswordViewModel.forgotPassword()
                             FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT).show()
-                                        loginViewModel.setPasswordResetCompleted(true)
-                                        navController.navigate(Screen.CheckEmail)
-                                    } else {
-                                        Toast.makeText(context, "Failed to send reset email", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
+                            Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT)
+                                .show()
+                            navController.navigate(Screen.CheckEmail)
                         } else {
-                            Toast.makeText(context, "Please enter an email", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Failed to send reset email",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 )
