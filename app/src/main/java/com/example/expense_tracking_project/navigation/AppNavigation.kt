@@ -1,30 +1,26 @@
 package com.example.expense_tracking_project.navigation
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
-import com.example.expense_tracking_project.screens.authentication.presentation.screens.LoginScreen
-import com.example.expense_tracking_project.screens.authentication.presentation.screens.SignUpScreen
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.TransactionScreen
+import com.example.expense_tracking_project.screens.authentication.presentation.screens.LoginScreen
+import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
+import com.example.expense_tracking_project.screens.authentication.presentation.screens.SignUpScreen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AddExpenseScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.EditScreen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.ProfileScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.StatisticsScreen
-import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
-import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.onBoardingScreen
-import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.TransactionScreen
 import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.OnBoardingScreen
 
 @Composable
@@ -35,7 +31,6 @@ fun AppNavigation(
 ) {
     val currentBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = currentBackStackEntry?.destination?.route
-    val showOnboarding = remember { mutableStateOf(true) }
 
     Scaffold(
         bottomBar = {
@@ -72,7 +67,6 @@ fun AppNavigation(
             composable(Screen.Home.route) {
                 HomeScreen(
                     navController = navController,
-                    isDarkTheme = isDarkTheme,
                     changeAppTheme = changeAppTheme
                 )
             }

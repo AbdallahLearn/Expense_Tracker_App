@@ -11,7 +11,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.expense_tracking_project.navigation.AppNavigation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val themeViewModel: ThemeViewModel by viewModels()
 
