@@ -20,6 +20,6 @@ interface UserDao {
     @Query("SELECT * FROM User WHERE userId = :id")
     suspend fun getUserById(id: Int): User?
 
-    @Query("SELECT * FROM User ORDER BY created_at DESC")
+    @Query("SELECT * FROM User ORDER BY createdAt DESC")
     fun getAllUsers(): LiveData<List<User>>
 }

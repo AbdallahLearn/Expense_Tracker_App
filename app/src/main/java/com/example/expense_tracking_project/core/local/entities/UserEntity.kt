@@ -10,6 +10,6 @@ data class User(
     @PrimaryKey(autoGenerate = true)
     val userId: Int = 0,
     val name: String,
-    val created_at: Date,
-    val updated_at: Date
+    val createdAt: Date,
+    val updatedAt: Date
 )

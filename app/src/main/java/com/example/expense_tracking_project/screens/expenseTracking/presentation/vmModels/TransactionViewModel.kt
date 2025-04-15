@@ -77,7 +77,7 @@ class TransactionViewModel(
             if (!transaction.isDeleted) {
                 try {
                     val deletedTransaction = transaction.copy(
-                        isDeleted = true, updated_at = Date()
+                        isDeleted = true, updatedAt = Date()
                     )
                     updateTransactionUseCase(deletedTransaction)
                     Log.d("TransactionDelete", "Soft delete applied to transaction.")

@@ -105,8 +105,8 @@ fun TransactionScreen(navController: NavHostController, isDarkTheme: Boolean) {
                             amount = amount,
                             date = Date(),
                             note = noteText,
-                            created_at = Date(),
-                            updated_at = Date()
+                            createdAt = Date(),
+                            updatedAt = Date()
                         )
                     )
 

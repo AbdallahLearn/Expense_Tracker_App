@@ -31,16 +31,16 @@ fun AddExpenseScreen(
     val currentDate = LocalDate.now()
 
     // Define the form fields for expenses
-    val expensesamountState = remember { mutableStateOf("") }
-    val expensescategoryState = remember { mutableStateOf("") }
-    val expensesdateState = remember { mutableStateOf(currentDate.format(formatter)) }
-    val expensesnoteState = remember { mutableStateOf("") }
+    val expensesAmountState = remember { mutableStateOf("") }
+    val expensesCategoryState = remember { mutableStateOf("") }
+    val expensesDateState = remember { mutableStateOf(currentDate.format(formatter)) }
+    val expensesNoteState = remember { mutableStateOf("") }
 
     // Define the form fields for income
-    val incomeamountState = remember { mutableStateOf("") }
-    val incomecategoryState = remember { mutableStateOf("") }
-    val incomedateState = remember { mutableStateOf(currentDate.format(formatter)) }
-    val incomenoteState = remember { mutableStateOf("") }
+    val incomeAmountState = remember { mutableStateOf("") }
+    val incomeCategoryState = remember { mutableStateOf("") }
+    val incomeDateState = remember { mutableStateOf(currentDate.format(formatter)) }
+    val incomeNoteState = remember { mutableStateOf("") }
 
     // DatePickerDialog
     val calendar = java.util.Calendar.getInstance()
@@ -49,8 +49,8 @@ fun AddExpenseScreen(
             context,
             { _, year, month, dayOfMonth ->
                 val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-                expensesdateState.value = selectedDate.format(formatter)
-                incomedateState.value = selectedDate.format(formatter)
+                expensesDateState.value = selectedDate.format(formatter)
+                incomeDateState.value = selectedDate.format(formatter)
             },
             calendar.get(java.util.Calendar.YEAR),
             calendar.get(java.util.Calendar.MONTH),
@@ -59,34 +59,34 @@ fun AddExpenseScreen(
     }
 
     val expensesFields = listOf(
-        FormField(label = stringResource(R.string.expenseAmount), value = expensesamountState.value),
-        FormField(label = stringResource(R.string.expenseCategory), value = expensescategoryState.value),
+        FormField(label = stringResource(R.string.expenseAmount), value = expensesAmountState.value),
+        FormField(label = stringResource(R.string.expenseCategory), value = expensesCategoryState.value),
         FormField(
             label = stringResource(R.string.expenseDate),
-            value = expensesdateState.value,
+            value = expensesDateState.value,
             onClick = {
                 datePickerDialog.show()
             }
         ),
-        FormField(label = stringResource(R.string.expenseNote), value = expensesnoteState.value),
+        FormField(label = stringResource(R.string.expenseNote), value = expensesNoteState.value),
     )
 
-    val expensesFieldStates = listOf(expensesamountState, expensescategoryState, expensesdateState, expensesnoteState)
+    val expensesFieldStates = listOf(expensesAmountState, expensesCategoryState, expensesDateState, expensesNoteState)
 
     val incomeFields = listOf(
-        FormField(label = stringResource(R.string.incomeAmount), value = incomeamountState.value),
-        FormField(label = stringResource(R.string.incomeCategory), value = incomecategoryState.value),
+        FormField(label = stringResource(R.string.incomeAmount), value = incomeAmountState.value),
+        FormField(label = stringResource(R.string.incomeCategory), value = incomeCategoryState.value),
         FormField(
             label = stringResource(R.string.incomeDate),
-            value = incomedateState.value,
+            value = incomeDateState.value,
             onClick = {
                 datePickerDialog.show()
             }
         ),
-        FormField(label = stringResource(R.string.incomeNote), value = incomenoteState.value),
+        FormField(label = stringResource(R.string.incomeNote), value = incomeNoteState.value),
     )
 
-    val incomeFieldStates = listOf(incomeamountState, incomecategoryState, incomedateState, incomenoteState)
+    val incomeFieldStates = listOf(incomeAmountState, incomeCategoryState, incomeDateState, incomeNoteState)
 
     // Track which tab is selected
     var selectedTab by remember { mutableStateOf("expenses") }
@@ -109,9 +109,9 @@ fun AddExpenseScreen(
         buttonText = stringResource(R.string.save),
         onButtonClick = {
             val requiredFields = if (selectedTab == "income") {
-                listOf(incomeamountState, incomecategoryState, incomedateState)
+                listOf(incomeAmountState, incomeCategoryState, incomeDateState)
             } else {
-                listOf(expensesamountState, expensescategoryState, expensesdateState)
+                listOf(expensesAmountState, expensesCategoryState, expensesDateState)
             }
                 if (requiredFields.all { it.value.isNotBlank() }) {
                 Toast.makeText(
