@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -20,13 +21,14 @@ import com.example.expense_tracking_project.screens.authentication.data.reposito
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.AuthState
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModel
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignInViewModelFactory
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.ThemeViewModel
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +40,8 @@ class MainActivity : ComponentActivity() {
             val loginUseCase = remember {
                 LoginUseCase(AuthRepositoryImpl(FirebaseAuth.getInstance()))
             }
-            val factory = remember { SignInViewModelFactory(loginUseCase) }
-            val signInViewModel: SignInViewModel = viewModel(factory = factory)
+
+            val signInViewModel: SignInViewModel = hiltViewModel()
 
 
             // Use collectAsState() for StateFlow

@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
     id("com.google.devtools.ksp")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+
 
 }
 
@@ -84,4 +87,10 @@ dependencies {
     implementation(libs.androidx.room.ktx) // Kotlin extensions for Room
     ksp(libs.androidx.room.compiler) // Annotation processor for Room
 
+    implementation(libs.hilt.android) // DI
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+}
+kapt {
+    correctErrorTypes = true
 }

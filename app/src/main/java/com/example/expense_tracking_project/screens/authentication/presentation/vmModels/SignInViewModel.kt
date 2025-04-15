@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed class AuthState {
     object Unauthenticated : AuthState()
@@ -14,8 +16,8 @@ sealed class AuthState {
     object Loading : AuthState()
     data class Error(val message: String) : AuthState()
 }
-
-class SignInViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
+@HiltViewModel
+class SignInViewModel @Inject constructor (private val loginUseCase: LoginUseCase) : ViewModel() {
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
     val authState: StateFlow<AuthState> = _authState
@@ -49,17 +51,17 @@ class SignInViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
 }
 
 
-// Factory class to create ViewModel with required dependencies
-class SignInViewModelFactory(
-    private val loginUseCase: LoginUseCase
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SignInViewModel::class.java)) {
-            return SignInViewModel(loginUseCase) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
+//// Factory class to create ViewModel with required dependencies
+//class SignInViewModelFactory(
+//    private val loginUseCase: LoginUseCase
+//) : ViewModelProvider.Factory {
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(SignInViewModel::class.java)) {
+//            return SignInViewModel(loginUseCase) as T
+//        }
+//        throw IllegalArgumentException("Unknown ViewModel class")
+//    }
+//}
 
 
 
