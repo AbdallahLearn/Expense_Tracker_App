@@ -25,6 +25,123 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expense_tracking_project.R
 
+//BackgroundLayout("Login")
+//Card(
+//shape = RoundedCornerShape(32.dp),
+//elevation = CardDefaults.cardElevation(8.dp),
+//colors = CardDefaults.cardColors(containerColor = Color.White),
+//modifier = Modifier
+//.fillMaxWidth()
+//.fillMaxHeight()
+//.padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp)
+//) {
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color.White)
+//            .padding(18.dp),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Top
+//    ) {
+//        Spacer(modifier = Modifier.height(100.dp))
+//        SimpleTextField("Email")
+//        Spacer(modifier = Modifier.height(20.dp))
+//        SimpleTextField("Password",true)
+//        Spacer(modifier = Modifier.height(20.dp))
+//        SimpleButton("save")
+//    }
+//}
+@Composable
+fun BackgroundLayout(
+    title: String = ""
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5))
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .background(
+                    Color(0xFF5C4DB7),
+                    shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
+                ),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Text(
+                text = title,
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 60.dp)
+            )
+        }
+
+
+    }
+}
+
+
+@Composable
+fun SimpleTextField(title: String = "", isPassword: Boolean = false) {
+    var text by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Text(
+            text = title,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.Gray,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        OutlinedTextField(
+            value = text,
+            onValueChange = { text = it },
+            label = { Text("") },
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+            trailingIcon = {
+                if (isPassword) {
+                    val icon = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    val description = if (passwordVisible) "Hide password" else "Show password"
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = icon, contentDescription = description)
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun SimpleButton(title: String = "") {
+    Button(
+        onClick = { },
+        shape = RoundedCornerShape(50),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5C4DB7)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .shadow(10.dp, shape = RoundedCornerShape(50))
+    ) {
+        Text(
+            text = title,
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+
 data class FormField(
     val label: String,
     var value: String = "",
