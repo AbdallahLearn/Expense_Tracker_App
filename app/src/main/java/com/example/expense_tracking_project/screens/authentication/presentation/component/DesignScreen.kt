@@ -85,8 +85,10 @@ fun BackgroundLayout(
 
 
 @Composable
-fun SimpleTextField(title: String = "", isPassword: Boolean = false) {
-    var text by remember { mutableStateOf("") }
+fun SimpleTextField(
+    title: String = "", isPassword: Boolean = false, value: String,
+    onValueChange: (String) -> Unit,
+) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
@@ -103,14 +105,15 @@ fun SimpleTextField(title: String = "", isPassword: Boolean = false) {
         )
 
         OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
+            value = value,
+            onValueChange = onValueChange,
             label = { Text("") },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             trailingIcon = {
                 if (isPassword) {
-                    val icon = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    val icon =
+                        if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                     val description = if (passwordVisible) "Hide password" else "Show password"
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(imageVector = icon, contentDescription = description)
@@ -122,9 +125,9 @@ fun SimpleTextField(title: String = "", isPassword: Boolean = false) {
 }
 
 @Composable
-fun SimpleButton(title: String = "") {
+fun SimpleButton(title: String = "", onButtonClick: () -> Unit) {
     Button(
-        onClick = { },
+        onClick = onButtonClick,
         shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5C4DB7)),
         modifier = Modifier
@@ -197,7 +200,7 @@ fun DesignScreen(
                 ),
             contentAlignment = Alignment.TopCenter
         ) {
-            if(showTabs) {
+            if (showTabs) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -312,7 +315,14 @@ fun DesignScreen(
                         val categoryOptions = if (activeButton == "Income") {
                             listOf("Salary", "Bonus", "Freelance", "Investment", "Other")
                         } else {
-                            listOf("Food", "Transport", "Entertainment", "Shopping", "Bills", "Other")
+                            listOf(
+                                "Food",
+                                "Transport",
+                                "Entertainment",
+                                "Shopping",
+                                "Bills",
+                                "Other"
+                            )
                         }
 
                         ExposedDropdownMenuBox(

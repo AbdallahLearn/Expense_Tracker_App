@@ -1,7 +1,6 @@
 package com.example.expense_tracking_project.screens.authentication.presentation.vmModels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,17 +50,6 @@ class SignInViewModel @Inject constructor (private val loginUseCase: LoginUseCas
 }
 
 
-//// Factory class to create ViewModel with required dependencies
-//class SignInViewModelFactory(
-//    private val loginUseCase: LoginUseCase
-//) : ViewModelProvider.Factory {
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(SignInViewModel::class.java)) {
-//            return SignInViewModel(loginUseCase) as T
-//        }
-//        throw IllegalArgumentException("Unknown ViewModel class")
-//    }
-//}
 
 
 
