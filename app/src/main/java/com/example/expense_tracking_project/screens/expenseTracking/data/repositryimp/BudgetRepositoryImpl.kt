@@ -3,9 +3,9 @@ package com.example.expense_tracking_project.screens.expenseTracking.data.reposi
 import com.example.expense_tracking_project.core.local.dao.BudgetDao
 import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 import com.example.expense_tracking_project.screens.expenseTracking.domain.repository.BudgetRepository
-import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class BudgetRepositoryImpl(private val budgetDao: BudgetDao) :
+class BudgetRepositoryImpl @Inject constructor(private val budgetDao: BudgetDao) :
     BudgetRepository {
     override suspend fun getAllbudgets(): List<BudgetEntity> {
        return budgetDao.getAllBudgets()
