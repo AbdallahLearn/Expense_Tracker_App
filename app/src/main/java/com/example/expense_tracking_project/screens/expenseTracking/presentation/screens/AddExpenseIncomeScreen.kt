@@ -121,12 +121,7 @@ fun AddExpenseScreen(
                 SimpleTextField(
                     title = amountLabel,
                     value = amountState.value,
-// <<<<<<< fixing-issue-icons-dialogs
-                    onValueChange = { amountState.value = it },
-                )
-// =======
                     onValueChange = { amountState.value = it })
-// >>>>>>> dev
 
                 Spacer(modifier = Modifier.height(20.dp))
 
