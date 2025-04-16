@@ -12,7 +12,9 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import com.example.expense_tracking_project.core.local.data.PredefinedCategoryProvider
 import com.example.expense_tracking_project.core.local.entities.Transaction
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetAllTransactionsUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.UpdateTransactionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.ZoneId
@@ -21,7 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 class AddTransactionViewModel @Inject constructor(
-    private val insertTransactionUseCase: InsertTransactionUseCase
+    private val insertTransactionUseCase: InsertTransactionUseCase,
+    private val updateTransactionUseCase: UpdateTransactionUseCase,
+    private val getAllTransactionsUseCase: GetAllTransactionsUseCase
 ) : ViewModel() {
 
     // Format the date (Mon, 14 Apr 2025)
@@ -87,8 +91,10 @@ class AddTransactionViewModel @Inject constructor(
 
     fun saveTransaction() {
         viewModelScope.launch {
+            val amount = getAmountState().value.toDouble()
+            val finalAmount = if (selectedTab.value == "Expenses") -amount else amount
             val transaction = Transaction(
-                amount = getAmountState().value.toDouble(),
+                amount = finalAmount, // Use the adjusted amount
                 categoryId = null,
                 date = date,
                 note = getNoteState().value,

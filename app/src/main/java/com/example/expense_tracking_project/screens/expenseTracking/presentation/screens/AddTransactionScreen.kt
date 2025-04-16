@@ -18,14 +18,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
-import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
 import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenu
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SelectTransaction
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
@@ -38,8 +35,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 @Composable
 fun AddExpenseScreen(
     navController: NavController,
-//    viewModel: AddTransactionViewModel = viewModel()
-    viewModel: AddTransactionViewModel = hiltViewModel()
+    viewModel: AddTransactionViewModel = hiltViewModel(),
 ) {
 
     // retrieve current context
@@ -83,9 +79,6 @@ fun AddExpenseScreen(
         if (viewModel.selectedTab.value == "Income") R.string.incomeNote else R.string.expenseNote
     )
 
-//    // Apply background layout color based on the theme
-//    BackgroundLayout()
-//
     SelectTransaction(
         showTabs = true,
         tabOptions = listOf("Expenses", "Income"),

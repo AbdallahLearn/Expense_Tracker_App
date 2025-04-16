@@ -22,4 +22,3 @@ data class Transaction(
     val createdAt: Date,
     val updatedAt: Date
 )
-

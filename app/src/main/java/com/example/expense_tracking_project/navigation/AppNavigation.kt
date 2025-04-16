@@ -22,7 +22,6 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.ProfileScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.StatisticsScreen
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.TransactionScreen
 import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.OnBoardingScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -79,9 +78,9 @@ fun AppNavigation(
                     isDarkTheme = isDarkTheme // 👈 here
                 )
             }
-            composable<Screen.AddTransaction> {
-                TransactionScreen(navController, isDarkTheme)
-            }
+//            composable<Screen.AddTransaction> {
+//                TransactionScreen(navController, isDarkTheme)
+//            }
             composable<Screen.AddExpense> {
                 AddExpenseScreen(navController)
             }
