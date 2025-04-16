@@ -61,6 +61,10 @@ fun AddExpenseScreen(
     val dateState = viewModel.getDateState()
     val noteState = viewModel.getNoteState()
 
+    // for the category options
+    val categoryOptions by remember(viewModel.selectedTab.value) {
+        mutableStateOf(viewModel.getCategoryOptions())
+    }
 
     // text fields based on the selected transaction type (Income / Expenses)
     val amountLabel = stringResource(
@@ -122,7 +126,7 @@ fun AddExpenseScreen(
 
                 CustomDropdownMenu(
                     categoryLabel,
-                    categoryOptions = viewModel.getCategoryOptions(),
+                    categoryOptions = categoryOptions,
                     selectedOption = categoryState.value,
                     onOptionSelected = { categoryState.value = it }
                 )

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import com.example.expense_tracking_project.core.local.data.PredefinedCategoryProvider
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AddTransactionViewModel : ViewModel() {
@@ -37,13 +38,9 @@ class AddTransactionViewModel : ViewModel() {
     fun getDateState() = if (selectedTab.value == "Income") incomeDate else expensesDate
     fun getNoteState() = if (selectedTab.value == "Income") incomeNote else expensesNote
 
-    // Predefined Categories
+    // Get the predefined categories
     fun getCategoryOptions(): List<String> {
-        return if (selectedTab.value == "Income") {
-            listOf("Salary", "Bonus", "Freelance", "Investment")
-        } else {
-            listOf("Food", "Shopping", "Entertainment", "Bills")
-        }
+        return PredefinedCategoryProvider.getCategoriesForType(selectedTab.value)
     }
 
     // Update the date by what the user choose using Calendar
