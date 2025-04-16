@@ -1,5 +1,6 @@
-package com.example.expense_tracking_project
+package com.example.expense_tracking_project.di
 
+import com.example.expense_tracking_project.screens.authentication.data.remote.FirebaseAuthDataSource
 import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
 import com.example.expense_tracking_project.screens.authentication.domain.repository.AuthRepository
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.ForgotPasswordUseCase
@@ -16,16 +17,18 @@ import dagger.hilt.components.SingletonComponent
 object AppModule {
 
     @Provides
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Provides
-    fun provideAuthRepository(
+    fun provideFirebaseAuthDataSource(
         firebaseAuth: FirebaseAuth
-    ): AuthRepository {
-        return AuthRepositoryImpl(firebaseAuth)
-    }
+    ): FirebaseAuthDataSource = FirebaseAuthDataSource(firebaseAuth)
+
+    @Provides
+    fun provideAuthRepository( //AuthRepository
+        firebaseAuthDataSource: FirebaseAuthDataSource
+    ): AuthRepository = AuthRepositoryImpl(firebaseAuthDataSource)
+
 
     @Provides
     fun provideLoginUseCase( // Sign In

@@ -1,10 +1,14 @@
 package com.example.expense_tracking_project.screens.authentication.presentation.vmModels
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,10 +34,6 @@ class LoginViewModel @Inject constructor (private val loginUseCase: LoginUseCase
     private val _isPasswordResetCompleted = MutableStateFlow(false)
     val isPasswordResetCompleted: StateFlow<Boolean> = _isPasswordResetCompleted
 
-    fun setPasswordResetCompleted(isCompleted: Boolean) {
-        _isPasswordResetCompleted.value = isCompleted
-    }
-
     fun authenticate(isAuthenticated: Boolean) {
         _authState.value = if (isAuthenticated) {
             AuthState.Authenticated
@@ -52,5 +52,26 @@ class LoginViewModel @Inject constructor (private val loginUseCase: LoginUseCase
                 onFailure = { AuthState.Error(it.message ?: "Login failed.") }
             )
         }
+    }
+}
+
+fun handleAuthStateLogin(
+    authState: AuthState,
+    context: Context,
+    navController: NavController
+) {
+    when (authState) {
+        is AuthState.Authenticated -> {
+            Toast.makeText(context, "Logged in successfully", Toast.LENGTH_SHORT).show()
+            navController.navigate(Screen.Home) {
+                popUpTo(Screen.Login) { inclusive = true }
+            }
+        }
+
+        is AuthState.Error -> {
+            Toast.makeText(context, authState.message, Toast.LENGTH_SHORT).show()
+        }
+
+        else -> Unit
     }
 }

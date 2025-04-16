@@ -35,10 +35,10 @@ import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.AuthState
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.LoginViewModel
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.ValidationInputViewModel
 import androidx.compose.material3.Checkbox
+import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.handleAuthStateLogin
 
 @Composable
 fun LoginScreen(
@@ -48,24 +48,10 @@ fun LoginScreen(
     val context = LocalContext.current
     val loginViewModel: LoginViewModel = hiltViewModel()
     val authState by loginViewModel.authState.collectAsState()
-
     LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                Toast.makeText(context, "Logged in successfully", Toast.LENGTH_SHORT).show()
-                navController.navigate(Screen.Home) {
-                    popUpTo(Screen.Login) { inclusive = true }
-                }
-            }
-
-            is AuthState.Error -> {
-                val message = (authState as AuthState.Error).message
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            }
-
-            else -> Unit
-        }
+        handleAuthStateLogin(authState, context, navController)
     }
+
     BackgroundLayout(title = stringResource(R.string.login))
     Column(
         modifier = Modifier
