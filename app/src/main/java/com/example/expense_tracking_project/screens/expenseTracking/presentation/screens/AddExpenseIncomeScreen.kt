@@ -89,7 +89,7 @@ fun AddExpenseScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
+            .padding(top = 120.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     )
@@ -111,13 +111,12 @@ fun AddExpenseScreen(
                 verticalArrangement = Arrangement.Top
             ) {
 
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 SimpleTextField(
                     title = amountLabel,
                     value = amountState.value,
                     onValueChange = { amountState.value = it })
-
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -147,10 +146,26 @@ fun AddExpenseScreen(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 SimpleButton("Save") {
-                    Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
-                    navigateToHome = true
+                    if (viewModel.isTransactionValid()) {
+                        Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
+                        navigateToHome = true
+                    } else {
+                        val amount = viewModel.getAmountState().value
+                        if (amount.isBlank() || amount.toDoubleOrNull() == null) {
+                            Toast.makeText(
+                                context,
+                                "Please enter a valid amount",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Please fill in all required fields",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
-
             }
         }
     }
