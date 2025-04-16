@@ -65,4 +65,14 @@ class AddTransactionViewModel : ViewModel() {
         )
     }
 
+    // Function to check the validation of the transaction
+    fun isTransactionValid(): Boolean {
+        val amount = getAmountState().value
+        val category = getCategoryState().value
+        val date = getDateState().value
+        // Check if amount is not blank and is a valid number
+        val isAmountValid = amount.isNotBlank() && amount.toDoubleOrNull() != null
+        return isAmountValid && category.isNotBlank() && date.isNotBlank()
+    }
+
 }

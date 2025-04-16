@@ -147,10 +147,26 @@ fun AddExpenseScreen(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 SimpleButton("Save") {
-                    Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
-                    navigateToHome = true
+                    if (viewModel.isTransactionValid()) {
+                        Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
+                        navigateToHome = true
+                    } else {
+                        val amount = viewModel.getAmountState().value
+                        if (amount.isBlank() || amount.toDoubleOrNull() == null) {
+                            Toast.makeText(
+                                context,
+                                "Please enter a valid amount",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Please fill in all required fields",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
-
             }
         }
     }
