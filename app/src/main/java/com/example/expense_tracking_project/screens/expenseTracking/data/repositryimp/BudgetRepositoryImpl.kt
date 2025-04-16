@@ -8,7 +8,7 @@ import javax.inject.Inject
 class BudgetRepositoryImpl @Inject constructor(private val budgetDao: BudgetDao) :
     BudgetRepository {
     override suspend fun getAllbudgets(): List<BudgetEntity> {
-       return budgetDao.getAllBudgets()
+        return budgetDao.getAllBudgets()
     }
 
     override suspend fun insertbudget(budget: BudgetEntity) {

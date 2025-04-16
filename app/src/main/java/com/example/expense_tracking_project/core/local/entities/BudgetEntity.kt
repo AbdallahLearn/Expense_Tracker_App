@@ -20,4 +20,3 @@ data class BudgetEntity(
     val createdAt: Date,
     val updatedAt: Date
 )
-
