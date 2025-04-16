@@ -29,7 +29,6 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditBudgetCategoryViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditScreenViewModel
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditScreen(
@@ -187,7 +186,6 @@ fun AddBudgetScreen(
         )
     }
 }
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

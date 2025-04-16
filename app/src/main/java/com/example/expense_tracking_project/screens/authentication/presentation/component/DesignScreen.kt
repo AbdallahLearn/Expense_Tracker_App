@@ -211,7 +211,7 @@ fun SelectTransaction(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomDropdownMenuBudget(
+fun CustomDropdownMenuBudget( // Drop down for Budget menu
     label: String,
     BudgetOptions: List<String>,
     selectedOption: String,
@@ -255,7 +255,7 @@ fun CustomDropdownMenuBudget(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomDropdownMenu(
+fun CustomDropdownMenu( // Drop down for Category menu
     label: String,
     categoryOptions: List<String>,
     selectedOption: String,

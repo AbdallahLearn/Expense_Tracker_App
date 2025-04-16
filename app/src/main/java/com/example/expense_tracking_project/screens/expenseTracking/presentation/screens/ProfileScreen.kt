@@ -22,7 +22,6 @@ import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.SignOutViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
 
-
 @Composable
 fun ProfileScreen(
     navController: NavController,

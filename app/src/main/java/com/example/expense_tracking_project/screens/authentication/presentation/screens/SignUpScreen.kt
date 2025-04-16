@@ -36,7 +36,6 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 
 @Composable
 fun SignUpScreen(navController: NavController) {
-
     val context = LocalContext.current
     val signUpViewModel: SignUpViewModel = hiltViewModel()
     val authState = signUpViewModel.authState.collectAsState().value

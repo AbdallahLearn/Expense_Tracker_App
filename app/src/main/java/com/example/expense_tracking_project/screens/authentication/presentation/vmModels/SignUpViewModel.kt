@@ -26,8 +26,6 @@ class SignUpViewModel @Inject constructor(
     var password by mutableStateOf("")
     var confirmPassword by mutableStateOf("")
 
-
-
     private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
     val authState: StateFlow<AuthState> = _authState
 

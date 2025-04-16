@@ -1,6 +1,5 @@
 package com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens
 
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -47,7 +46,6 @@ import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.ui.theme.Expense_Tracking_ProjectTheme
-
 
 @Composable
 fun OnBoardingScreen(

@@ -6,7 +6,6 @@ import javax.inject.Inject
 
 
 class AuthRepositoryImpl @Inject constructor(private val firebaseAuthDataSource: FirebaseAuthDataSource) : AuthRepository {
-
     override suspend fun signUp(name: String, email: String, password: String): Result<Unit> {
         return try {
             firebaseAuthDataSource.signUp(name, email, password)
@@ -15,7 +14,6 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuthDataSource:
             Result.failure(e)
         }
     }
-
 
     override suspend fun login(email: String, password: String): Result<Unit> {
         return try {

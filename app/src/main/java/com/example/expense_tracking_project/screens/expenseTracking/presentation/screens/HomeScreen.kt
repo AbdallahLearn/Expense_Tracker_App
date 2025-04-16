@@ -93,7 +93,6 @@ fun HomeScreen(
     }
 }
 
-
 @Composable
 fun TopSection(
     name: String,
@@ -137,7 +136,6 @@ fun TopSection(
         }
     }
 }
-
 
 @Composable
 fun BudgetCard(income: Double, expenses: Double) {

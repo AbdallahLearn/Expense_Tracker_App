@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 
 class ValidationInputViewModel : ViewModel() {
+
     var name by mutableStateOf("")
     var email by mutableStateOf("")
     var password by mutableStateOf("")

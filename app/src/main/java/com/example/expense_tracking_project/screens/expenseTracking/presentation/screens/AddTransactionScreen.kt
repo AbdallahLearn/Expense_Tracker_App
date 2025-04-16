@@ -37,7 +37,6 @@ fun AddExpenseScreen(
     navController: NavController,
     viewModel: AddTransactionViewModel = hiltViewModel(),
 ) {
-
     // retrieve current context
     val context = LocalContext.current
 

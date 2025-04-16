@@ -18,5 +18,4 @@ sealed class Screen {
     @Serializable data object AddBudget : Screen() // add budget screen
     @Serializable data object AddCategory : Screen() // add category screen
 
-
 }
