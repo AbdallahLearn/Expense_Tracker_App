@@ -89,7 +89,7 @@ fun AddExpenseScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
+            .padding(top = 120.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     )
@@ -117,7 +117,6 @@ fun AddExpenseScreen(
                     title = amountLabel,
                     value = amountState.value,
                     onValueChange = { amountState.value = it })
-
 
                 Spacer(modifier = Modifier.height(20.dp))
 
