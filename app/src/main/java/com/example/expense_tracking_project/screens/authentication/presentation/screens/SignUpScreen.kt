@@ -31,21 +31,8 @@ fun SignUpScreen(navController: NavController) {
     val signUpViewModel: SignUpViewModel = hiltViewModel()
     val authState = signUpViewModel.authState.collectAsState().value
 
-    // Listen to auth state
     LaunchedEffect(authState) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                Toast.makeText(context, "Sign-up successful", Toast.LENGTH_SHORT).show()
-                navController.navigate(Screen.Login) {
-                }
-            }
-
-            is AuthState.Error -> {
-                Toast.makeText(context, authState.message, Toast.LENGTH_SHORT).show()
-            }
-
-            else -> Unit
-        }
+        handleAuthStateSignUp(authState, context, navController)
     }
 
     BackgroundLayout(title = stringResource(R.string.signup))
