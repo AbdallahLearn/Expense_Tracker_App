@@ -6,13 +6,23 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import com.example.expense_tracking_project.core.local.data.PredefinedCategoryProvider
+import com.example.expense_tracking_project.core.local.entities.Transaction
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.InsertTransactionUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import java.time.ZoneId
+import javax.inject.Inject
 
+@HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
-class AddTransactionViewModel : ViewModel() {
+class AddTransactionViewModel @Inject constructor(
+    private val insertTransactionUseCase: InsertTransactionUseCase
+) : ViewModel() {
 
     // Format the date (Mon, 14 Apr 2025)
     private val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)
@@ -31,6 +41,9 @@ class AddTransactionViewModel : ViewModel() {
     val incomeCategory = mutableStateOf("")
     val incomeDate = mutableStateOf(LocalDate.now().format(formatter))
     val incomeNote = mutableStateOf("")
+
+    val localDate = LocalDate.parse(getDateState().value, formatter)
+    val date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
 
     // Get the State based on the selectedTab, either Income or Expenses
     fun getAmountState() = if (selectedTab.value == "Income") incomeAmount else expensesAmount
@@ -72,4 +85,17 @@ class AddTransactionViewModel : ViewModel() {
         return isAmountValid && category.isNotBlank() && date.isNotBlank()
     }
 
+    fun saveTransaction() {
+        viewModelScope.launch {
+            val transaction = Transaction(
+                amount = getAmountState().value.toDouble(),
+                categoryId = null,
+                date = date,
+                note = getNoteState().value,
+                createdAt = Date(),
+                updatedAt = Date()
+            )
+            insertTransactionUseCase(transaction)
+        }
+    }
 }

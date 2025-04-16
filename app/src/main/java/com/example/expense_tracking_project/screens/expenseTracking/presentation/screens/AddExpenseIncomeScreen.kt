@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
@@ -37,7 +38,8 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 @Composable
 fun AddExpenseScreen(
     navController: NavController,
-    viewModel: AddTransactionViewModel = viewModel()
+//    viewModel: AddTransactionViewModel = viewModel()
+    viewModel: AddTransactionViewModel = hiltViewModel()
 ) {
 
     // retrieve current context
@@ -153,6 +155,7 @@ fun AddExpenseScreen(
 
                 SimpleButton("Save") {
                     if (viewModel.isTransactionValid()) {
+                        viewModel.saveTransaction()
                         Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
                         navigateToHome = true
                     } else {

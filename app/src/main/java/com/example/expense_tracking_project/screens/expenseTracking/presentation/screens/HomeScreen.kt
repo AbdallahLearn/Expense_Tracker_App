@@ -63,7 +63,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 fun HomeScreen(
     navController: NavController,
     changeAppTheme: () -> Unit,
-    isDarkTheme: Boolean, // 👈 Add this
+    isDarkTheme: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
