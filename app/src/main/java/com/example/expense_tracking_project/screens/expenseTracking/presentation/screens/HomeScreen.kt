@@ -18,7 +18,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -55,10 +57,12 @@ import com.example.expense_tracking_project.screens.expenseTracking.domain.useca
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.UpdateTransactionUseCase
 
+
 @Composable
 fun HomeScreen(
     navController: NavController,
     changeAppTheme: () -> Unit,
+    isDarkTheme: Boolean, // 👈 Add this
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -76,6 +80,7 @@ fun HomeScreen(
             getAllTransactionsUseCase = getAllUseCase
         )
     }
+
     val transactions by transactionViewModel.allTransactions.collectAsState(emptyList())
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -98,10 +103,12 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(24.dp))
             TopSection(
                 name = "Abdullah",
-                onToggleTheme = { changeAppTheme() }
+                isDarkTheme = isDarkTheme,
+                onToggleTheme = changeAppTheme
             )
             BudgetCard(
-                income = transactionViewModel.income, expenses = transactionViewModel.expenses
+                income = transactionViewModel.income,
+                expenses = transactionViewModel.expenses
             )
             TimeTabSection()
             RecentTransactions(
@@ -113,13 +120,18 @@ fun HomeScreen(
     }
 }
 
+
 @Composable
 fun TopSection(
     name: String,
+    isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
 ) {
+    val themeIcon = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode
+
     Row(
-        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
             Text(
@@ -128,7 +140,9 @@ fun TopSection(
                 color = Color.White
             )
             Text(
-                text = name, style = MaterialTheme.typography.titleMedium, color = Color.White
+                text = name,
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.White
             )
         }
 
@@ -142,7 +156,7 @@ fun TopSection(
             }
             IconButton(onClick = onToggleTheme) {
                 Icon(
-                    painter = painterResource(id = R.drawable.icon_theme),
+                    imageVector = themeIcon,
                     contentDescription = stringResource(id = R.string.theme),
                     tint = Color.White
                 )
@@ -150,6 +164,7 @@ fun TopSection(
         }
     }
 }
+
 
 @Composable
 fun BudgetCard(income: Double, expenses: Double) {
@@ -303,6 +318,7 @@ fun RecentTransactions(
 @Composable
 fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionViewModel) {
 
+    var showDeleteDialog by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -327,11 +343,26 @@ fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionV
                 )
             }
 
-            IconButton(onClick = { transactionViewModel.hideTransaction(transaction) }) {
+            IconButton(onClick = {
+                showDeleteDialog = true
+            }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete Transaction",
                     tint = Color.Red
+                )
+            }
+            if (showDeleteDialog) {
+                ConfirmationDialog(
+                    title = "Confirm Deletion",
+                    message = "Are you sure you want to delete this transaction?",
+                    onConfirm = {
+                        transactionViewModel.hideTransaction(transaction)
+                        showDeleteDialog = false
+                    },
+                    onDismiss = {
+                        showDeleteDialog = false
+                    }
                 )
             }
         }
