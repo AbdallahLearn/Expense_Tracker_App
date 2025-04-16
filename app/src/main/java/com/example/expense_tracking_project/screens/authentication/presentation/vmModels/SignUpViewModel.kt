@@ -1,10 +1,14 @@
 package com.example.expense_tracking_project.screens.authentication.presentation.vmModels
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,13 +27,11 @@ class SignUpViewModel @Inject constructor(
     var confirmPassword by mutableStateOf("")
 
 
-    //var passwordVisibility by mutableStateOf(false)
-    //var confirmPasswordVisibility by mutableStateOf(false)
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
     val authState: StateFlow<AuthState> = _authState
 
-    fun signUp(name: String , email: String , password:String , confirmPassword:String) {
+    fun signUp(name: String, email: String, password: String, confirmPassword: String) {
 
         if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
             _authState.value = AuthState.Error("Fields can't be empty")
@@ -52,5 +54,27 @@ class SignUpViewModel @Inject constructor(
         }
     }
 }
+
+    fun handleAuthStateSignUp(
+        authState: AuthState,
+        context: Context,
+        navController: NavController
+    ) {
+        when (authState) {
+            is AuthState.Authenticated -> {
+                Toast.makeText(context, "Sign-Up successfully", Toast.LENGTH_SHORT).show()
+                navController.navigate(Screen.Home) {
+                    popUpTo(Screen.Login) { inclusive = true }
+                }
+            }
+
+            is AuthState.Error -> {
+                Toast.makeText(context, authState.message, Toast.LENGTH_SHORT).show()
+            }
+
+            else -> Unit
+        }
+    }
+
 
 
