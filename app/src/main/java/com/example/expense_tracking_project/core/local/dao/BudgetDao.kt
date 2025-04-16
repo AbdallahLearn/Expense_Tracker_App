@@ -1,7 +1,6 @@
 package com.example.expense_tracking_project.core.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -15,9 +14,6 @@ interface BudgetDao {
 
     @Update
     suspend fun updateBudget(budget: BudgetEntity)
-
-    @Delete
-    suspend fun deleteBudget(budget: BudgetEntity)
 
     @Query("SELECT * FROM BudgetEntity WHERE isDeleted = 0")
     suspend fun getAllBudgets(): List<BudgetEntity>

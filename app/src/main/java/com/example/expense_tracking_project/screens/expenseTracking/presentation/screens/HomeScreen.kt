@@ -51,9 +51,9 @@ import com.example.expense_tracking_project.core.local.entities.Transaction
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.TransactionRepositoryImpl
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.GetAllTransactionsUseCase
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.InsertTransactionUseCase
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.UpdateTransactionUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetAllTransactionsUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.UpdateTransactionUseCase
 
 @Composable
 fun HomeScreen(
