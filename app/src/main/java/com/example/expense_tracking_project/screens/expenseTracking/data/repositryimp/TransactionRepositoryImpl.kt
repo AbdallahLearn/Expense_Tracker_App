@@ -6,9 +6,10 @@ import com.example.expense_tracking_project.core.local.dao.TransactionDao
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import com.example.expense_tracking_project.screens.expenseTracking.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 
-class TransactionRepositoryImpl(private val transactionDao: TransactionDao) :
+class TransactionRepositoryImpl @Inject constructor(private val transactionDao: TransactionDao) :
     TransactionRepository {
 
     override suspend fun allTransactions(): Flow<List<Transaction>> {

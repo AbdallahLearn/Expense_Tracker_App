@@ -28,7 +28,7 @@ import androidx.navigation.NavHostController
 import com.example.expense_tracking_project.core.local.db.AppDatabase
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.presentation.vm.transaction_list.TransactionViewModel
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TransactionViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.TransactionRepositoryImpl
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetAllTransactionsUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase

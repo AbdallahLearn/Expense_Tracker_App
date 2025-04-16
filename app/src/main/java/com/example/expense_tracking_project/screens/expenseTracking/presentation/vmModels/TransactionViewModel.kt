@@ -1,4 +1,4 @@
-package com.example.expense_tracking_project.presentation.vm.transaction_list
+package com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -14,11 +14,11 @@ import com.example.expense_tracking_project.screens.expenseTracking.domain.useca
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
+import javax.inject.Inject
 
-class TransactionViewModel(
+class TransactionViewModel  @Inject constructor(
     private val insertTransactionUseCase: InsertTransactionUseCase,
     private val updateTransactionUseCase: UpdateTransactionUseCase,
     private val getAllTransactionsUseCase: GetAllTransactionsUseCase
