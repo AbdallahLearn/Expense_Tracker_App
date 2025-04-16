@@ -1,4 +1,4 @@
-package com.example.expense_tracking_project.screens.expenseTracking.domain.usecase
+package com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase
 
 
 

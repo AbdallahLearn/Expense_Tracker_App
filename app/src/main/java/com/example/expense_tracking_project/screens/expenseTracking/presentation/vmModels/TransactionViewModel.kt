@@ -8,10 +8,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expense_tracking_project.core.local.entities.Transaction
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.GetAllTransactionsUseCase
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.InsertTransactionUseCase
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.UpdateTransactionUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetAllTransactionsUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.UpdateTransactionUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -24,7 +25,7 @@ class TransactionViewModel(
 ) : ViewModel() {
 
     private val _allTransactions = MutableStateFlow<List<Transaction>>(emptyList())
-    val allTransactions: StateFlow<List<Transaction>> = _allTransactions
+    val allTransactions: Flow<List<Transaction>> = _allTransactions
 
     var income by mutableDoubleStateOf(0.0)
     var expenses by mutableDoubleStateOf(0.0)
