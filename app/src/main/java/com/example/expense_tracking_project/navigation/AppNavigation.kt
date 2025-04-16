@@ -17,6 +17,8 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 //import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.SignUpScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AddBudgetScreen
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AddCategoryScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AddExpenseScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.EditScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
@@ -98,6 +100,12 @@ fun AppNavigation(
             }
             composable<Screen.ResetPassword> {
                 ResetPasswordScreen(navController)
+            }
+            composable<Screen.AddBudget> {
+                AddBudgetScreen(navController)
+            }
+            composable<Screen.AddCategory> {
+                AddCategoryScreen(navController)
             }
         }
     }

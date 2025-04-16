@@ -13,7 +13,7 @@ data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val transactionId: Int = 0,
 
- //   val categoryId: Int,
+    //   val categoryId: Int,
     val categoryId: Int? = null, // make FK after screen add category
     val amount: Double,
     val date: Date,

@@ -16,4 +16,8 @@ sealed class Screen {
     @Serializable data object Statistics : Screen()
     @Serializable data object CheckEmail : Screen()
     @Serializable data object ResetPassword : Screen()
+    @Serializable data object AddBudget : Screen() // add budget screen
+    @Serializable data object AddCategory : Screen() // add category screen
+
+
 }

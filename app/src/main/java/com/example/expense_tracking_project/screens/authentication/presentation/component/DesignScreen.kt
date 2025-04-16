@@ -209,6 +209,51 @@ fun SelectTransaction(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDropdownMenuBudget(
+    label: String,
+    BudgetOptions: List<String>, // renamed from categoryOptions
+    selectedOption: String,
+    onOptionSelected: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+        OutlinedTextField(
+            value = selectedOption.ifBlank { "Select" },
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(label) },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth()
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            BudgetOptions.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(option) },
+                    onClick = {
+                        onOptionSelected(option)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -247,9 +292,70 @@ fun CustomDropdownMenu(
                     text = { Text(option) },
                     onClick = {
                         onOptionSelected(option)
-                        expanded = false 
+                        expanded = false
                     }
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun SelectEditingTab(
+    showTabs: Boolean = false,
+    tabOptions: List<String> = listOf(),
+    onTabSelected: (String) -> Unit
+) {
+    var activeButton by remember { mutableStateOf(tabOptions.first()) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5)) // should be in the colors file
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .background(
+                    Color(0xFF5C4DB7), // should be in the colors file
+                    shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
+                ),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            if (showTabs && tabOptions.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    tabOptions.forEach { option ->
+                        Button(
+                            onClick = {
+                                activeButton = option
+                                onTabSelected(option)
+                            },
+                            shape = RectangleShape,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (activeButton == option) Color.White else Color(
+                                    0xFFF4F6F6
+                                ) // should be in the colors file
+                            ),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(130.dp)
+                                .padding(bottom = 85.dp)
+                        ) {
+                            Text(
+                                text = option,
+                                color = Color(0xFF5C4DB7),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
             }
         }
     }
