@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import com.example.expense_tracking_project.core.local.data.PredefinedCategoryProvider
 import com.example.expense_tracking_project.core.local.entities.Transaction
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.InsertTransactionUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.ZoneId
