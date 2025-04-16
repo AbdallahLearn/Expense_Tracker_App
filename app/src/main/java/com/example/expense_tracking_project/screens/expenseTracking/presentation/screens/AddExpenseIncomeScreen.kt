@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,8 +81,9 @@ fun AddExpenseScreen(
         if (viewModel.selectedTab.value == "Income") R.string.incomeNote else R.string.expenseNote
     )
 
-    BackgroundLayout()
-
+//    // Apply background layout color based on the theme
+//    BackgroundLayout()
+//
     SelectTransaction(
         showTabs = true,
         tabOptions = listOf("Expenses", "Income"),
@@ -96,12 +98,11 @@ fun AddExpenseScreen(
             .padding(top = 120.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
-    )
-    {
+    ) {
         Card(
             shape = RoundedCornerShape(32.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), // Dynamic color
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -109,7 +110,7 @@ fun AddExpenseScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface) // Dynamic background color
                     .padding(18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
@@ -120,7 +121,12 @@ fun AddExpenseScreen(
                 SimpleTextField(
                     title = amountLabel,
                     value = amountState.value,
+// <<<<<<< fixing-issue-icons-dialogs
+                    onValueChange = { amountState.value = it },
+                )
+// =======
                     onValueChange = { amountState.value = it })
+// >>>>>>> dev
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -137,7 +143,7 @@ fun AddExpenseScreen(
                     title = dateLabel,
                     value = dateState.value,
                     onValueChange = { dateState.value = it },
-                    onIconClick = { datePickerDialog.show() }
+                    onIconClick = { datePickerDialog.show() },
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -145,7 +151,8 @@ fun AddExpenseScreen(
                 SimpleTextField(
                     title = noteLabel,
                     value = noteState.value,
-                    onValueChange = { noteState.value = it })
+                    onValueChange = { noteState.value = it },
+                )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
