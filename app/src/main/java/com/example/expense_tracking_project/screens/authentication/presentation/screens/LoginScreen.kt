@@ -20,8 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +35,6 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.LoginViewModel
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.ValidationInputViewModel
-import androidx.compose.material3.Checkbox
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.handleAuthStateLogin
 
 @Composable

@@ -9,7 +9,6 @@ sealed class Screen {
     @Serializable data object Login : Screen()
     @Serializable data object SignUp : Screen()
     @Serializable data object Home : Screen()
-//    @Serializable data object AddTransaction : Screen()
     @Serializable data object AddExpense : Screen()
     @Serializable data object Edit : Screen()
     @Serializable data object Profile : Screen()

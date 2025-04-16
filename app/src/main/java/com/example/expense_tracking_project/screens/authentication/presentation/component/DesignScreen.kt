@@ -158,7 +158,7 @@ fun SelectTransaction(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background) // 👈 dynamic background
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Box(
             modifier = Modifier
@@ -213,7 +213,7 @@ fun SelectTransaction(
 @Composable
 fun CustomDropdownMenuBudget(
     label: String,
-    BudgetOptions: List<String>, // renamed from categoryOptions
+    BudgetOptions: List<String>,
     selectedOption: String,
     onOptionSelected: (String) -> Unit
 ) {
@@ -252,9 +252,6 @@ fun CustomDropdownMenuBudget(
         }
     }
 }
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

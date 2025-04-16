@@ -35,7 +35,6 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
 import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.ForgotPasswordViewModel
-import com.example.expense_tracking_project.screens.authentication.presentation.vmModels.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
