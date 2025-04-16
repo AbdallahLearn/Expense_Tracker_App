@@ -1,6 +1,5 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,7 +21,6 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,7 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,47 +39,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
-import com.example.expense_tracking_project.core.local.db.AppDatabase
 import com.example.expense_tracking_project.core.local.entities.Transaction
-import com.example.expense_tracking_project.navigation.Screen
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TransactionViewModel
-import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.TransactionRepositoryImpl
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetAllTransactionsUseCase
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.UpdateTransactionUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
-
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.HomeViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     changeAppTheme: () -> Unit,
     isDarkTheme: Boolean,
-    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
 
-    val transactionDao = AppDatabase.getDatabase(context).transactionDao()
-    val repository = TransactionRepositoryImpl(transactionDao)
-    val insertUseCase = InsertTransactionUseCase(repository)
-    val updateUseCase = UpdateTransactionUseCase(repository)
-    val getAllUseCase = GetAllTransactionsUseCase(repository)
-
-    val transactionViewModel = remember {
-        TransactionViewModel(
-            insertTransactionUseCase = insertUseCase,
-            updateTransactionUseCase = updateUseCase,
-            getAllTransactionsUseCase = getAllUseCase
-        )
-    }
-
-    val transactions by transactionViewModel.allTransactions.collectAsState(emptyList())
+    val transactions by viewModel.transactions
 
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
@@ -107,15 +82,12 @@ fun HomeScreen(
                 isDarkTheme = isDarkTheme,
                 onToggleTheme = changeAppTheme
             )
-            BudgetCard(
-                income = transactionViewModel.income,
-                expenses = transactionViewModel.expenses
-            )
+            BudgetCard(income = viewModel.income.value, expenses = viewModel.expenses.value)
             TimeTabSection()
             RecentTransactions(
                 navController = navController,
                 transactions = transactions,
-                transactionViewModel = transactionViewModel
+                viewModel = viewModel
             )
         }
     }
@@ -268,8 +240,9 @@ fun TimeTabSection() {
 fun RecentTransactions(
     navController: NavController,
     transactions: List<Transaction>,
-    transactionViewModel: TransactionViewModel,
+    viewModel: HomeViewModel
 ) {
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
@@ -283,17 +256,7 @@ fun RecentTransactions(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable {
-                    navController.navigate(Screen.AddTransaction)
                 })
-        }
-
-        Button(
-            onClick = { navController.navigate(Screen.AddTransaction) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Text("Add Transaction")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -308,7 +271,7 @@ fun RecentTransactions(
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(transactions) { transaction ->
                     TransactionItem(
-                        transaction = transaction, transactionViewModel = transactionViewModel
+                        transaction = transaction, viewModel = viewModel
                     )
                 }
             }
@@ -317,8 +280,7 @@ fun RecentTransactions(
 }
 
 @Composable
-fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionViewModel) {
-
+fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltViewModel()) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -358,7 +320,7 @@ fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionV
                     title = "Confirm Deletion",
                     message = "Are you sure you want to delete this transaction?",
                     onConfirm = {
-                        transactionViewModel.hideTransaction(transaction)
+                        viewModel.softDeleteTransaction(transaction)
                         showDeleteDialog = false
                     },
                     onDismiss = {
@@ -369,6 +331,3 @@ fun TransactionItem(transaction: Transaction, transactionViewModel: TransactionV
         }
     }
 }
-
-
-
