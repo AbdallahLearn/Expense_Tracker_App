@@ -1,5 +1,7 @@
 package com.example.expense_tracking_project.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -23,6 +25,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.TransactionScreen
 import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.OnBoardingScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
     navController: NavHostController,
@@ -72,7 +75,8 @@ fun AppNavigation(
             composable<Screen.Home> {
                 HomeScreen(
                     navController = navController,
-                    changeAppTheme = changeAppTheme
+                    changeAppTheme = changeAppTheme,
+                    isDarkTheme = isDarkTheme // 👈 here
                 )
             }
             composable<Screen.AddTransaction> {

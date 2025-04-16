@@ -73,21 +73,21 @@ fun SignUpScreen(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 SimpleTextField( // name
                     title = stringResource(R.string.name),
                     value = signUpViewModel.name,
                     onValueChange = { signUpViewModel.name = it }
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 SimpleTextField( // email
                     title = stringResource(R.string.email),
                     value = signUpViewModel.email,
                     onValueChange = { signUpViewModel.email = it }
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 SimpleTextField( // password
                     title = stringResource(R.string.password),
@@ -95,7 +95,7 @@ fun SignUpScreen(navController: NavController) {
                     onValueChange = { signUpViewModel.password = it },
                     isPassword = true,
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 SimpleTextField( // confirm password
                     title = stringResource(R.string.confirm_password),
@@ -103,7 +103,7 @@ fun SignUpScreen(navController: NavController) {
                     onValueChange = { signUpViewModel.confirmPassword = it },
                     isPassword = true,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 SimpleButton("Sign Up") {
                     signUpViewModel.signUp(
@@ -114,7 +114,7 @@ fun SignUpScreen(navController: NavController) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     Modifier.fillMaxWidth(),

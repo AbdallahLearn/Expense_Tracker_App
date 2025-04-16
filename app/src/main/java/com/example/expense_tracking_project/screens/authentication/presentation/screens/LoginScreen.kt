@@ -104,24 +104,7 @@ fun LoginScreen(
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    val rememberMe = remember { mutableStateOf(false) }
 
-                    Checkbox(
-                        checked = rememberMe.value,
-                        onCheckedChange = { rememberMe.value = it }
-                    )
-                    Text(
-                        text = stringResource(R.string.remember_me),
-                        color = Color.Black,
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = stringResource(R.string.forgot_password),
                     color = Color(0xFF5C4DB7),

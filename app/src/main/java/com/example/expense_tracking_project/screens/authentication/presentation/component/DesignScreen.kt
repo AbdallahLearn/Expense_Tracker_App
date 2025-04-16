@@ -21,6 +21,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -83,7 +84,7 @@ fun SimpleTextField(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 0.dp)
     ) {
         Text(
             text = title,
@@ -157,14 +158,14 @@ fun SelectTransaction(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5)) // should be in the colors file
+            .background(MaterialTheme.colorScheme.background) // 👈 dynamic background
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(250.dp)
                 .background(
-                    Color(0xFF5C4DB7), // should be in the colors file
+                    color = Color(0xFF5C4DB7),
                     shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
                 ),
             contentAlignment = Alignment.TopCenter
@@ -184,9 +185,10 @@ fun SelectTransaction(
                             },
                             shape = RectangleShape,
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (activeButton == option) Color.White else Color(
-                                    0xFFF4F6F6
-                                ) // should be in the colors file
+                                containerColor = if (activeButton == option)
+                                    MaterialTheme.colorScheme.surface
+                                else
+                                    MaterialTheme.colorScheme.secondaryContainer
                             ),
                             modifier = Modifier
                                 .weight(1f)
@@ -195,7 +197,7 @@ fun SelectTransaction(
                         ) {
                             Text(
                                 text = option,
-                                color = Color(0xFF5C4DB7),
+                                color = MaterialTheme.colorScheme.primary,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -206,6 +208,7 @@ fun SelectTransaction(
         }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
