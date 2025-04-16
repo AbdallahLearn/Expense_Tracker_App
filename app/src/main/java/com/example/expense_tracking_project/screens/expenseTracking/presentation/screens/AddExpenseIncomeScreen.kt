@@ -62,6 +62,10 @@ fun AddExpenseScreen(
     val dateState = viewModel.getDateState()
     val noteState = viewModel.getNoteState()
 
+    // for the category options
+    val categoryOptions by remember(viewModel.selectedTab.value) {
+        mutableStateOf(viewModel.getCategoryOptions())
+    }
 
     // text fields based on the selected transaction type (Income / Expenses)
     val amountLabel = stringResource(
@@ -91,7 +95,7 @@ fun AddExpenseScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 100.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
+            .padding(top = 120.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -117,14 +121,18 @@ fun AddExpenseScreen(
                 SimpleTextField(
                     title = amountLabel,
                     value = amountState.value,
+// <<<<<<< fixing-issue-icons-dialogs
                     onValueChange = { amountState.value = it },
                 )
+// =======
+                    onValueChange = { amountState.value = it })
+// >>>>>>> dev
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 CustomDropdownMenu(
                     categoryLabel,
-                    categoryOptions = viewModel.getCategoryOptions(),
+                    categoryOptions = categoryOptions,
                     selectedOption = categoryState.value,
                     onOptionSelected = { categoryState.value = it }
                 )
@@ -149,8 +157,25 @@ fun AddExpenseScreen(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 SimpleButton("Save") {
-                    Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
-                    navigateToHome = true
+                    if (viewModel.isTransactionValid()) {
+                        Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
+                        navigateToHome = true
+                    } else {
+                        val amount = viewModel.getAmountState().value
+                        if (amount.isBlank() || amount.toDoubleOrNull() == null) {
+                            Toast.makeText(
+                                context,
+                                "Please enter a valid amount",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Please fill in all required fields",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
             }
         }
