@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonDefaults
@@ -27,15 +28,18 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -57,7 +61,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val transactions by viewModel.transactions
+    val transactions by viewModel.transactions.collectAsState(initial = emptyList())
 
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
@@ -241,6 +245,8 @@ fun RecentTransactions(
     viewModel: HomeViewModel
 ) {
 
+    val searchText by viewModel.searchText.collectAsState()
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
@@ -254,8 +260,21 @@ fun RecentTransactions(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable {
-                })
+                }
+            )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = { viewModel.updateSearch(it) },
+            placeholder = { Text("Search") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+                .clip(RoundedCornerShape(16.dp))
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -276,6 +295,8 @@ fun RecentTransactions(
         }
     }
 }
+
+
 
 @Composable
 fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltViewModel()) {
