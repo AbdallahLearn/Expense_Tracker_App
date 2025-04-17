@@ -93,6 +93,9 @@ dependencies {
 
     implementation(libs.retrofit) // retrofit dependency
     implementation(libs.converter.gson) // converter GSON
+
+    implementation(libs.mpandroidchart)
+
 }
 
 kapt {

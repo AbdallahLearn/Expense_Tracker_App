@@ -13,9 +13,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
+//import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.LoginScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
+//import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.SignUpScreen
+import com.example.expense_tracking_project.screens.dataVisualization.presentation.screens.StatisticsScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AddBudgetScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AddCategoryScreen
@@ -78,9 +81,12 @@ fun AppNavigation(
                 HomeScreen(
                     navController = navController,
                     changeAppTheme = changeAppTheme,
-                    isDarkTheme = isDarkTheme
+                    isDarkTheme = isDarkTheme // 👈 here
                 )
             }
+//            composable<Screen.AddTransaction> {
+//                TransactionScreen(navController, isDarkTheme)
+//            }
             composable<Screen.AddExpense> {
                 AddExpenseScreen(navController)
             }
