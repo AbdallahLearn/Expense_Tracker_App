@@ -90,6 +90,9 @@ dependencies {
     implementation(libs.hilt.android) // DI
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.mpandroidchart)
+
 }
 
 kapt {

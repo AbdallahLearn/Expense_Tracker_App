@@ -16,12 +16,12 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
 //import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.SignUpScreen
+import com.example.expense_tracking_project.screens.dataVisualization.presentation.screens.StatisticsScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.AddExpenseScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.EditScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.ProfileScreen
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.StatisticsScreen
 import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.OnBoardingScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
