@@ -167,7 +167,7 @@ fun BudgetCard(income: Double, expenses: Double) {
                     colorFilter = ColorFilter.tint(Color.White)
                 )
                 Text(
-                    text = "$${income - expenses}",
+                    text = "${income - expenses}",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(start = 8.dp)
@@ -186,7 +186,7 @@ fun BudgetCard(income: Double, expenses: Double) {
                         colorFilter = ColorFilter.tint(Color.White)
                     )
                     Text(
-                        text = "${stringResource(R.string.income)}\n $${income}",
+                        text = "${stringResource(R.string.income)}\n ${income}",
                         color = Color.White,
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -200,7 +200,7 @@ fun BudgetCard(income: Double, expenses: Double) {
                         colorFilter = ColorFilter.tint(Color.White)
                     )
                     Text(
-                        text = "${stringResource(R.string.expenses)}\n $${expenses}",
+                        text = "${stringResource(R.string.expenses)}\n ${expenses}",
                         color = Color.White,
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -297,10 +297,13 @@ fun RecentTransactions(
 }
 
 
-
 @Composable
 fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltViewModel()) {
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val transactionType = if (transaction.amount >= 0) "Income" else "Expenses"
+    val typeColor =
+        if (transaction.amount >= 0) Color(0xFF4CAF50) else Color(0xFFF44336)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -316,10 +319,15 @@ fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltVie
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    "Transaction: $transactionType",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = typeColor
+                )
                 Text("Amount: ${transaction.amount}", style = MaterialTheme.typography.bodyMedium)
                 Text("Note: ${transaction.note}", style = MaterialTheme.typography.bodySmall)
                 Text(
-                    "Date: ${transaction.date}",
+                    "Date: ${viewModel.formatDate(transaction.date)}",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )

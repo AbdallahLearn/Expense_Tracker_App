@@ -38,15 +38,15 @@ class HomeViewModel @Inject constructor(
         allTransactions,
         _searchText
     ) { transactions, search ->
-        if (search.isBlank()) {
+        val filteredList = if (search.isBlank()) {
             transactions
         } else {
             val lowerSearch = search.lowercase()
             transactions.filter { txn ->
-                txn.note.lowercase().contains(lowerSearch) ||
-                        txn.amount.toString().contains(lowerSearch)
+                txn.note.lowercase().contains(lowerSearch) || txn.amount.toString().contains(lowerSearch)
             }
         }
+        filteredList.sortedByDescending { it.createdAt }
     }
 
     init {
