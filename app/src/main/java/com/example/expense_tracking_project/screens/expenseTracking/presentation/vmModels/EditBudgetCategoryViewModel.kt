@@ -7,12 +7,14 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.expense_tracking_project.core.local.data.PredefinedBudgetProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
-
+import javax.inject.Inject
+@HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
-class EditBudgetCategoryViewModel : ViewModel() {
+class EditBudgetCategoryViewModel  @Inject constructor() : ViewModel() {
 
     // Formatter for displaying date
     private val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)

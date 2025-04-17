@@ -7,6 +7,10 @@ import com.example.expense_tracking_project.screens.authentication.domain.reposi
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.ForgotPasswordUseCase
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.SignUpUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.repository.BudgetRepository
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.GetAllbudgetsUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.InsertBudgetUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.UpdateBudgetUseCase
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -50,6 +54,27 @@ object AppModule {
         authRepository: AuthRepository
     ): ForgotPasswordUseCase {
         return ForgotPasswordUseCase(authRepository)
+    }
+
+    @Provides
+    fun provideGetAllBudgetsUseCase(
+        budgetRepository: BudgetRepository
+    ): GetAllbudgetsUseCase {
+        return GetAllbudgetsUseCase(budgetRepository)
+    }
+
+    @Provides
+    fun provideInsertBudgetUseCase(
+        budgetRepository: BudgetRepository
+    ): InsertBudgetUseCase {
+        return InsertBudgetUseCase(budgetRepository)
+    }
+
+    @Provides
+    fun provideUpdateBudgetUseCase(
+        budgetRepository: BudgetRepository
+    ): UpdateBudgetUseCase {
+        return UpdateBudgetUseCase(budgetRepository)
     }
 
 }

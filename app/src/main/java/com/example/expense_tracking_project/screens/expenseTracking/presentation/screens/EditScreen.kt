@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.core.local.data.PredefinedBudgetProvider
@@ -33,7 +34,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 @Composable
 fun EditScreen(
     navController: NavController,
-    viewModel: EditScreenViewModel = viewModel()
+    viewModel: EditScreenViewModel = hiltViewModel()
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
     val searchText by viewModel.searchText.collectAsState()
@@ -117,7 +118,7 @@ fun EditScreen(
 @Composable
 fun AddBudgetScreen(
     navController: NavController,
-    viewModel: EditBudgetCategoryViewModel = viewModel()
+    viewModel: EditBudgetCategoryViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
@@ -191,7 +192,7 @@ fun AddBudgetScreen(
 @Composable
 fun AddCategoryScreen(
     navController: NavController,
-    viewModel: EditBudgetCategoryViewModel = viewModel()
+    viewModel: EditBudgetCategoryViewModel = hiltViewModel()
 ) {
     BackgroundLayout("Edit Category")
 
