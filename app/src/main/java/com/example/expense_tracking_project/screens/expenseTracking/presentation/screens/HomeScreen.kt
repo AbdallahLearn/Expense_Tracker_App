@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonDefaults
@@ -62,6 +61,7 @@ fun HomeScreen(
 ) {
 
     val transactions by viewModel.transactions.collectAsState(initial = emptyList())
+    var showSearchField by remember { mutableStateOf(false) } // not visible
 
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
@@ -84,14 +84,16 @@ fun HomeScreen(
             TopSection(
                 name = "Abdullah",
                 isDarkTheme = isDarkTheme,
-                onToggleTheme = changeAppTheme
+                onToggleTheme = changeAppTheme,
+                onSearchClicked = { showSearchField = !showSearchField }
             )
             BudgetCard(income = viewModel.income.value, expenses = viewModel.expenses.value)
             TimeTabSection()
             RecentTransactions(
                 navController = navController,
                 transactions = transactions,
-                viewModel = viewModel
+                viewModel = viewModel,
+                showSearchField = showSearchField // send the state of search
             )
         }
     }
@@ -102,6 +104,7 @@ fun TopSection(
     name: String,
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
+    onSearchClicked: () -> Unit
 ) {
     val themeIcon = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode
 
@@ -123,7 +126,7 @@ fun TopSection(
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { /* Search action */ }) {
+            IconButton(onClick = onSearchClicked) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = stringResource(id = R.string.search),
@@ -242,7 +245,8 @@ fun TimeTabSection() {
 fun RecentTransactions(
     navController: NavController,
     transactions: List<Transaction>,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    showSearchField: Boolean
 ) {
 
     val searchText by viewModel.searchText.collectAsState()
@@ -266,15 +270,16 @@ fun RecentTransactions(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = searchText,
-            onValueChange = { viewModel.updateSearch(it) },
-            placeholder = { Text("Search") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .clip(RoundedCornerShape(16.dp))
-        )
+        if(showSearchField) // if clicked appear
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { viewModel.updateSearch(it) },
+                placeholder = { Text("Search") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .clip(RoundedCornerShape(16.dp))
+            )
 
         Spacer(modifier = Modifier.height(16.dp))
 
