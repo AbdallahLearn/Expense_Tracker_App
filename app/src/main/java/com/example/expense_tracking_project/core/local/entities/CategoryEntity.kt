@@ -9,20 +9,20 @@ import java.util.Date
 
 @Entity(
     tableName = "categories",
-    foreignKeys = [
-        ForeignKey(
-            entity = BudgetEntity::class,
-            parentColumns = ["budgetId"],
-            childColumns = ["budgetId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ],
+//    foreignKeys = [
+//        ForeignKey(
+//            entity = BudgetEntity::class,
+//            parentColumns = ["budgetId"],
+//            childColumns = ["budgetId"],
+//            onDelete = ForeignKey.CASCADE
+//        )
+//    ],
     indices = [Index("budgetId")]
 )
 data class Category(
     @PrimaryKey(autoGenerate = true)
     val categoryId: Int,
-    val budgetId: Int,
+    val budgetId: Int?,
     val categoryName: String,
     val type: String, // "income" or "expense"
     val isDeleted: Boolean,

@@ -20,13 +20,18 @@ import java.time.ZoneId.systemDefault
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
+
 @HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
-class EditBudgetCategoryViewModel  @Inject constructor(
-    private val insertBudgetUseCase: InsertBudgetUseCase,
-    private val getAllBudgetsUseCase: GetAllbudgetsUseCase,
-    private val updateBudgetUseCase : UpdateBudgetUseCase
-) : ViewModel() {
+// <<<<<<< SaveCategoryInDB
+class EditBudgetCategoryViewModel @Inject constructor() : ViewModel() {
+// =======
+// class EditBudgetCategoryViewModel  @Inject constructor(
+//     private val insertBudgetUseCase: InsertBudgetUseCase,
+//     private val getAllBudgetsUseCase: GetAllbudgetsUseCase,
+//     private val updateBudgetUseCase : UpdateBudgetUseCase
+// ) : ViewModel() {
+// >>>>>>> dev
 
     // Formatter for displaying date
     private val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)
@@ -37,12 +42,17 @@ class EditBudgetCategoryViewModel  @Inject constructor(
     val budgetAmount = mutableStateOf("")
     val startDate = mutableStateOf(LocalDate.now().format(formatter))
     val selectedInterval = mutableStateOf("")
-    val categoryName = mutableStateOf("")
-    val categoryType = mutableStateOf("")
-    val budget = mutableStateOf("")
+    val budget = mutableStateOf("") // This is the main budget field
     val note = mutableStateOf("")
 
+// <<<<<<< SaveCategoryInDB
+    // Provide predefined intervals (optional)
+    fun getOptionalBudgets(): List<String> {
+        return PredefinedBudgetProvider.getAllBudgets()
+    }
+// =======
 
+// >>>>>>> dev
 
     // Launch date picker
     fun getStartDatePicker(context: Context): DatePickerDialog {
@@ -66,7 +76,6 @@ class EditBudgetCategoryViewModel  @Inject constructor(
         )
     }
 
-
     private fun convertMonthNameToInt(month: String): Int {
         return when (month.lowercase(Locale.ENGLISH)) {
             "jan" -> 0
@@ -85,10 +94,13 @@ class EditBudgetCategoryViewModel  @Inject constructor(
         }
     }
 
-    // Save logic (stub)
+    // Save budget logic
     fun saveBudget(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         if (budgetAmount.value.isBlank() || selectedInterval.value.isBlank()) {
             onFailure("Please fill all fields")
+// <<<<<<< SaveCategoryInDB
+        } else {
+// =======
             return
         }
 
@@ -144,6 +156,7 @@ class EditBudgetCategoryViewModel  @Inject constructor(
             onFailure("Please fill required fields")
         } else {
 
+// >>>>>>> dev
             onSuccess()
         }
     }
