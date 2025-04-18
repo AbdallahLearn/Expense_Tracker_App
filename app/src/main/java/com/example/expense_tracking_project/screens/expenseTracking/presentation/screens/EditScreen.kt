@@ -67,8 +67,8 @@ fun EditScreen(
 // ) {
 //     val selectedTab by viewModel.selectedTab.collectAsState()
 //     val searchText by viewModel.searchText.collectAsState()
-//     val viewModeleditbudget: EditBudgetCategoryViewModel = hiltViewModel()
-//     val budgetList by viewModeleditbudget.budgetList
+     val viewModeleditbudget: EditBudgetCategoryViewModel = hiltViewModel()
+     val budgetList by viewModeleditbudget.budgetList
 // >>>>>>> dev
     Box(modifier = Modifier.fillMaxSize()) {
         SelectEditingTab(
@@ -183,27 +183,12 @@ fun EditScreen(
                 }
             }
             if (selectedTab == "Budget") {
-                Text(
-                    text = "you are in budget screen"
-                )
-// =======
-//             // Empty Data Placeholder
-//             Box(
-//                 modifier = Modifier
-//                     .fillMaxWidth()
-//                     .weight(1f), contentAlignment = Alignment.Center
-//             ) {
-//                 if (selectedTab == "Budget") {
-//                     if (budgetList.isNotEmpty()) {
-//                         DisplaySavedBudgets(budgetList)
-//                     } else {
-//                         Text("No budgets available", color = Color.Gray)
-//                     }
-//                 } else {
-//                     Text("No categories available", color = Color.Gray)
-//                 }
+                if (budgetList.isNotEmpty()) {
+                         DisplaySavedBudgets(budgetList)
+                     } else {
+                         Text("No budgets available", color = Color.Gray)
+                     }
 
-// >>>>>>> dev
             }
         }
 
@@ -216,7 +201,7 @@ fun EditScreen(
         ) {
             FloatingActionButton(
                 onClick = {
-// <<<<<<< SaveCategoryInDB
+
                     when (selectedTab) {
                         "Budget" -> navController.navigate(Screen.AddBudget)
                         "Category" -> {
@@ -227,14 +212,6 @@ fun EditScreen(
                     }
                 },
                 containerColor = Color(0xFF5C4DB7)
-// =======
-//                     if (selectedTab == "Budget") {
-//                         navController.navigate(Screen.AddBudget)
-//                     } else if (selectedTab == "Category") {
-//                         navController.navigate(Screen.AddCategory)
-//                     }
-//                 }, containerColor = Color(0xFF5C4DB7)
-// >>>>>>> dev
             ) {
                 Text("Add", color = Color.White, fontSize = 15.sp)
             }
@@ -253,22 +230,9 @@ fun EditScreen(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-// <<<<<<< SaveCategoryInDB
-fun AddBudgetScreen(
-    navController: NavController,
-    viewModel: EditBudgetCategoryViewModel = hiltViewModel(),
-) {
-    val context = LocalContext.current
-
-    BackgroundLayout("Edit Budget")
-
-    Column(
-// =======
-// fun DisplaySavedBudgets(budgetList: List<BudgetEntity>) {
-//     //val  budget: BudgetEntity
-//     val viewModel: EditBudgetCategoryViewModel = hiltViewModel()
-//     LazyColumn(
-// >>>>>>> dev
+ fun DisplaySavedBudgets(budgetList: List<BudgetEntity>) {
+     val viewModel: EditBudgetCategoryViewModel = hiltViewModel()
+     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp)
@@ -344,13 +308,10 @@ fun AddBudgetScreen(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddCategoryScreen(
-// <<<<<<< SaveCategoryInDB
     navController: NavController,
     categoryId: Int? = null,
     viewModel: EditCategoryViewModel = hiltViewModel(),
-// =======
-//     navController: NavController, viewModel: EditBudgetCategoryViewModel = hiltViewModel()
-// >>>>>>> dev
+
 ) {
     BackgroundLayout("Edit Category")
 
@@ -420,7 +381,6 @@ fun AddCategoryScreen(
                 SimpleTextField(
                     title = "Note",
                     value = viewModel.note.value,
-// <<<<<<< SaveCategoryInDB
                     onValueChange = { viewModel.note.value = it }
                 )
 
@@ -432,9 +392,6 @@ fun AddCategoryScreen(
                         modifier = Modifier.padding(8.dp)
                     )
                 }
-// =======
-//                     onValueChange = { viewModel.note.value = it })
-// >>>>>>> dev
             }
         }
 
@@ -443,7 +400,6 @@ fun AddCategoryScreen(
         SimpleButton(
             title = "Save", onButtonClick = {
                 viewModel.saveCategory(
-// <<<<<<< SaveCategoryInDB
                     onSuccess = {
                         navController.popBackStack()
                     },
@@ -451,10 +407,5 @@ fun AddCategoryScreen(
                 )
             }
         )
-// =======
-//                     onSuccess = { navController.popBackStack() },
-//                     onFailure = { })
-//             })
-// >>>>>>> dev
     }
 }

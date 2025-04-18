@@ -1,11 +1,14 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.component
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Category
@@ -24,51 +27,38 @@ import androidx.compose.ui.unit.dp
 fun DataCard(
     title: String,
     subtitleItems: List<String>,
-    trailingContent: @Composable (() -> Unit)? = null,
-    titleIcon: ImageVector = Icons.Outlined.Category, // Default icon
-    titleColor: Color = MaterialTheme.colorScheme.onBackground // Optional for amount color
+    titleColor: Color = Color.Black,
+    trailingContent: @Composable (() -> Unit)? = null
 ) {
+    val backgroundColor = MaterialTheme.colorScheme.surface
+    val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            .padding(8.dp)
+            .border(1.dp, borderColor, RoundedCornerShape(8.dp)),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-
-            // Title + Icons Row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Icon before the title
-                Icon(
-                    imageVector = titleIcon,
-                    contentDescription = "Transaction Icon",
-                    tint = titleColor,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-
-                // Title (amount)
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = titleColor,
-                    modifier = Modifier.weight(1f)
-                )
-
-                trailingContent?.let {
-                    it()
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title, style = MaterialTheme.typography.titleMedium, color = titleColor)
+                subtitleItems.forEach {
+                    Text(it, style = MaterialTheme.typography.bodySmall)
                 }
             }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Subtitle lines
-            subtitleItems.forEach { subtitle ->
-                Text(text = subtitle, style = MaterialTheme.typography.bodySmall)
+            if (trailingContent != null) {
+                trailingContent()
             }
         }
     }
 }
+
+

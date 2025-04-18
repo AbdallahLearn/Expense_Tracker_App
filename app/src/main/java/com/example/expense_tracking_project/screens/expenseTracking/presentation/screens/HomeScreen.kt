@@ -305,51 +305,20 @@ fun RecentTransactions(
     }
 }
 
-
 @Composable
 fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltViewModel()) {
     var showDeleteDialog by remember { mutableStateOf(false) }
-// <<<<<<< SaveCategoryInDB
-// =======
-//     val transactionType = if (transaction.amount >= 0) "Income" else "Expenses"
-//     val typeColor =
-//         if (transaction.amount >= 0) Color(0xFF4CAF50) else Color(0xFFF44336)
 
-//     Card(
-//         modifier = Modifier
-//             .fillMaxWidth()
-//             .padding(8.dp)
-//             .clickable { },
-//         shape = RoundedCornerShape(8.dp)
-//     ) {
-//         Row(
-//             modifier = Modifier
-//                 .padding(16.dp)
-//                 .fillMaxWidth(),
-//             horizontalArrangement = Arrangement.SpaceBetween,
-//             verticalAlignment = Alignment.CenterVertically
-//         ) {
-//             Column(modifier = Modifier.weight(1f)) {
-//                 Text(
-//                     "Transaction: $transactionType",
-//                     style = MaterialTheme.typography.bodyMedium,
-//                     color = typeColor
-//                 )
-//                 Text("Amount: ${transaction.amount}", style = MaterialTheme.typography.bodyMedium)
-//                 Text("Note: ${transaction.note}", style = MaterialTheme.typography.bodySmall)
-//                 Text(
-//                     "Date: ${viewModel.formatDate(transaction.date)}",
-//                     style = MaterialTheme.typography.bodySmall,
-//                     color = Color.Gray
-//                 )
-//             }
-// >>>>>>> dev
+    val transactionType = if (transaction.amount >= 0) "Income" else "Expenses"
+    val typeColor = if (transaction.amount >= 0) Color(0xFF4CAF50) else Color(0xFFF44336)
 
     DataCard(
         title = "${transaction.amount}",
+        titleColor = typeColor,
         subtitleItems = listOf(
+            "Transaction: $transactionType",
             "Note: ${transaction.note}",
-            "Date: ${transaction.date}"
+            "Date: ${viewModel.formatDate(transaction.date)}"
         ),
         trailingContent = {
             Row {
@@ -390,3 +359,4 @@ fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltVie
         )
     }
 }
+

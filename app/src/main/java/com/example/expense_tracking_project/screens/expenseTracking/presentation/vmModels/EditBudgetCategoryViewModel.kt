@@ -9,6 +9,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.expense_tracking_project.core.local.data.PredefinedBudgetProvider
 import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.GetAllbudgetsUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.InsertBudgetUseCase
@@ -23,15 +24,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
-// <<<<<<< SaveCategoryInDB
-class EditBudgetCategoryViewModel @Inject constructor() : ViewModel() {
-// =======
-// class EditBudgetCategoryViewModel  @Inject constructor(
-//     private val insertBudgetUseCase: InsertBudgetUseCase,
-//     private val getAllBudgetsUseCase: GetAllbudgetsUseCase,
-//     private val updateBudgetUseCase : UpdateBudgetUseCase
-// ) : ViewModel() {
-// >>>>>>> dev
+class EditBudgetCategoryViewModel @Inject constructor(
+    private val insertBudgetUseCase: InsertBudgetUseCase,
+    private val getAllBudgetsUseCase: GetAllbudgetsUseCase,
+    private val updateBudgetUseCase : UpdateBudgetUseCase
+) : ViewModel() {
 
     // Formatter for displaying date
     private val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)
@@ -44,15 +41,13 @@ class EditBudgetCategoryViewModel @Inject constructor() : ViewModel() {
     val selectedInterval = mutableStateOf("")
     val budget = mutableStateOf("") // This is the main budget field
     val note = mutableStateOf("")
+    val categoryName = mutableStateOf("")
+    val categoryType = mutableStateOf("")
 
-// <<<<<<< SaveCategoryInDB
     // Provide predefined intervals (optional)
     fun getOptionalBudgets(): List<String> {
         return PredefinedBudgetProvider.getAllBudgets()
     }
-// =======
-
-// >>>>>>> dev
 
     // Launch date picker
     fun getStartDatePicker(context: Context): DatePickerDialog {
@@ -98,9 +93,6 @@ class EditBudgetCategoryViewModel @Inject constructor() : ViewModel() {
     fun saveBudget(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         if (budgetAmount.value.isBlank() || selectedInterval.value.isBlank()) {
             onFailure("Please fill all fields")
-// <<<<<<< SaveCategoryInDB
-        } else {
-// =======
             return
         }
 
@@ -151,12 +143,13 @@ class EditBudgetCategoryViewModel @Inject constructor() : ViewModel() {
             loadBudgets() // Refresh list
         }
     }
+
+    // Save category logic (merged from SaveCategoryInDB)
     fun saveCategory(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         if (categoryName.value.isBlank() || categoryType.value.isBlank()) {
             onFailure("Please fill required fields")
         } else {
-
-// >>>>>>> dev
+            // Additional logic for saving category (if needed)
             onSuccess()
         }
     }
