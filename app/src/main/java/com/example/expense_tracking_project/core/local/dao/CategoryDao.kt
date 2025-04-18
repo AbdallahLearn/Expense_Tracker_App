@@ -27,4 +27,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM Categories WHERE budgetId = :budgetId")
     suspend fun getCategoriesByBudgetId(budgetId: Int): List<Category>
+
+    @Query("UPDATE Categories SET isDeleted = 1, updatedAt = :updatedAt WHERE categoryId = :categoryId")
+    suspend fun softDeleteCategory(categoryId: Int, updatedAt: java.util.Date)
 }

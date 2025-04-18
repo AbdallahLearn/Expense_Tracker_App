@@ -12,9 +12,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
+
 @HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
-class EditBudgetCategoryViewModel  @Inject constructor() : ViewModel() {
+class EditBudgetCategoryViewModel @Inject constructor() : ViewModel() {
 
     // Formatter for displaying date
     private val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)
@@ -23,14 +24,12 @@ class EditBudgetCategoryViewModel  @Inject constructor() : ViewModel() {
     val budgetAmount = mutableStateOf("")
     val startDate = mutableStateOf(LocalDate.now().format(formatter))
     val selectedInterval = mutableStateOf("")
-    val categoryName = mutableStateOf("")
-    val categoryType = mutableStateOf("")
-    val budget = mutableStateOf("")
+    val budget = mutableStateOf("") // This is the main budget field
     val note = mutableStateOf("")
 
     // Provide predefined intervals (optional)
     fun getOptionalBudgets(): List<String> {
-       return PredefinedBudgetProvider.getAllBudgets()
+        return PredefinedBudgetProvider.getAllBudgets()
     }
 
     // Launch date picker
@@ -55,7 +54,6 @@ class EditBudgetCategoryViewModel  @Inject constructor() : ViewModel() {
         )
     }
 
-
     private fun convertMonthNameToInt(month: String): Int {
         return when (month.lowercase(Locale.ENGLISH)) {
             "jan" -> 0
@@ -74,21 +72,11 @@ class EditBudgetCategoryViewModel  @Inject constructor() : ViewModel() {
         }
     }
 
-    // Save logic (stub)
+    // Save budget logic
     fun saveBudget(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         if (budgetAmount.value.isBlank() || selectedInterval.value.isBlank()) {
             onFailure("Please fill all fields")
         } else {
-
-            onSuccess()
-        }
-    }
-
-    fun saveCategory(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-        if (categoryName.value.isBlank() || categoryType.value.isBlank()) {
-            onFailure("Please fill required fields")
-        } else {
-
             onSuccess()
         }
     }

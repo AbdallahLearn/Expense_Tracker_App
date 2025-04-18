@@ -19,8 +19,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -47,6 +50,7 @@ import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.HomeViewModel
 
 @Composable
@@ -143,7 +147,7 @@ fun BudgetCard(income: Double, expenses: Double) {
         modifier = Modifier
             .fillMaxWidth()
             .height(210.dp)
-            .padding(16.dp),
+            .padding(8.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF5C4DB7))
@@ -277,55 +281,53 @@ fun RecentTransactions(
     }
 }
 
+
 @Composable
 fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltViewModel()) {
     var showDeleteDialog by remember { mutableStateOf(false) }
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { },
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text("Amount: ${transaction.amount}", style = MaterialTheme.typography.bodyMedium)
-                Text("Note: ${transaction.note}", style = MaterialTheme.typography.bodySmall)
-                Text(
-                    "Date: ${transaction.date}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-            }
 
-            IconButton(onClick = {
-                showDeleteDialog = true
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete Transaction",
-                    tint = Color.Red
-                )
-            }
-            if (showDeleteDialog) {
-                ConfirmationDialog(
-                    title = "Confirm Deletion",
-                    message = "Are you sure you want to delete this transaction?",
-                    onConfirm = {
-                        viewModel.softDeleteTransaction(transaction)
-                        showDeleteDialog = false
-                    },
-                    onDismiss = {
-                        showDeleteDialog = false
-                    }
-                )
+    DataCard(
+        title = "${transaction.amount}",
+        subtitleItems = listOf(
+            "Note: ${transaction.note}",
+            "Date: ${transaction.date}"
+        ),
+        trailingContent = {
+            Row {
+                IconButton(onClick = {
+                    // TODO: Handle Edit action here
+                }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = "Edit Transaction",
+                        tint = Color.Gray
+                    )
+                }
+
+                IconButton(onClick = {
+                    showDeleteDialog = true
+                }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Delete Transaction",
+                        tint = Color.Red
+                    )
+                }
             }
         }
+    )
+
+    if (showDeleteDialog) {
+        ConfirmationDialog(
+            title = "Confirm Deletion",
+            message = "Are you sure you want to delete this transaction?",
+            onConfirm = {
+                viewModel.softDeleteTransaction(transaction)
+                showDeleteDialog = false
+            },
+            onDismiss = {
+                showDeleteDialog = false
+            }
+        )
     }
 }

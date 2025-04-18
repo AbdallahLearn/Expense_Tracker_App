@@ -7,9 +7,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.LoginScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
@@ -23,6 +25,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.ProfileScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.StatisticsScreen
 import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.OnBoardingScreen
+import kotlinx.serialization.json.Json
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -99,9 +102,21 @@ fun AppNavigation(
             composable<Screen.AddBudget> {
                 AddBudgetScreen(navController)
             }
-            composable<Screen.AddCategory> {
-                AddCategoryScreen(navController)
+            composable<Screen.AddCategory> { backStackEntry ->
+                val categoryId = backStackEntry.arguments?.getInt("categoryId")
+                AddCategoryScreen(navController, categoryId = categoryId)
             }
+            composable(
+                route = "add_category?categoryData={categoryData}",
+                arguments = listOf(navArgument("categoryData") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val categoryData = backStackEntry.arguments?.getString("categoryData")
+                val category = categoryData?.let {
+                    Json.decodeFromString<Screen.AddCategory>(it)
+                }
+                AddCategoryScreen(navController, categoryId = category?.categoryId)
+            }
+
         }
     }
 }

@@ -1,12 +1,17 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.core.local.data.PredefinedBudgetProvider
 import com.example.expense_tracking_project.navigation.Screen
@@ -27,20 +31,34 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SelectEditingTab
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditBudgetCategoryViewModel
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditCategoryViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditScreenViewModel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
+@SuppressLint("WrongNavigateRouteType")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditScreen(
     navController: NavController,
-    viewModel: EditScreenViewModel = hiltViewModel()
+    viewModel: EditScreenViewModel = hiltViewModel(),
+    categoryViewModel: EditCategoryViewModel = hiltViewModel(),
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
     val searchText by viewModel.searchText.collectAsState()
+    val categories by categoryViewModel.categories
+
+    // Load categories when the tab is "Category"
+    LaunchedEffect(selectedTab) {
+        if (selectedTab == "Category") {
+            categoryViewModel.loadCategories()
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Background + Tabs
         SelectEditingTab(
             showTabs = true,
             tabOptions = listOf("Category", "Budget"),
@@ -78,16 +96,84 @@ fun EditScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Empty Data Placeholder
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
+            // Display category list or empty message
+            if (selectedTab == "Category") {
+                if (categories.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No data available",
+                            color = Color.Gray
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                    ) {
+                        items(categories) { category ->
+                            var showDeleteDialog by remember { mutableStateOf(false) }
+
+
+                            DataCard(
+                                title = " ${category.categoryName}",
+                                subtitleItems = listOf(
+                                    "Type: ${category.type}",
+                                    "Budget ID: ${category.categoryId}", //it should budget ID
+                                ),
+                                trailingContent = {
+                                    Row {
+                                        IconButton(onClick = {
+                                            navController.navigate(Screen.AddCategory(categoryId = category.categoryId))
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Edit,
+                                                contentDescription = "Edit Category",
+                                                tint = Color.Gray
+                                            )
+                                        }
+
+                                        IconButton(onClick = {
+                                            showDeleteDialog = true
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Delete,
+                                                contentDescription = "Delete Category",
+                                                tint = Color.Red
+                                            )
+                                        }
+                                    }
+                                }
+                            )
+
+                            if (showDeleteDialog) {
+                                ConfirmationDialog(
+                                    title = "Confirm Deletion",
+                                    message = "Are you sure you want to delete this category?",
+                                    onConfirm = {
+                                        categoryViewModel.softDeleteCategory(category.categoryId) {
+                                            showDeleteDialog = false
+                                        }
+                                    },
+                                    onDismiss = {
+                                        showDeleteDialog = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+
+                }
+            }
+            if (selectedTab == "Budget") {
                 Text(
-                    text = "No data available",
-                    color = Color.Gray
+                    text = "you are in budget screen"
                 )
             }
         }
@@ -96,29 +182,35 @@ fun EditScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 300.dp ,bottom = 10.dp),
+                .padding(start = 300.dp, bottom = 10.dp),
             contentAlignment = Alignment.BottomCenter
         ) {
             FloatingActionButton(
-                onClick = { if (selectedTab == "Budget") {
-                    navController.navigate(Screen.AddBudget)
-                } else if (selectedTab == "Category"){
-                    navController.navigate(Screen.AddCategory)
-                }
+                onClick = {
+                    when (selectedTab) {
+                        "Budget" -> navController.navigate(Screen.AddBudget)
+                        "Category" -> {
+                            val category = Screen.AddCategory(categoryId = 1)
+                            val categoryData = Json.encodeToString(category)
+                            navController.navigate("add_category?categoryData=$categoryData")
+                        }
+                    }
                 },
                 containerColor = Color(0xFF5C4DB7)
             ) {
                 Text("Add", color = Color.White, fontSize = 15.sp)
             }
+
         }
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddBudgetScreen(
     navController: NavController,
-    viewModel: EditBudgetCategoryViewModel = hiltViewModel()
+    viewModel: EditBudgetCategoryViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
 
@@ -192,9 +284,25 @@ fun AddBudgetScreen(
 @Composable
 fun AddCategoryScreen(
     navController: NavController,
-    viewModel: EditBudgetCategoryViewModel = hiltViewModel()
+    categoryId: Int? = null,
+    viewModel: EditCategoryViewModel = hiltViewModel(),
 ) {
     BackgroundLayout("Edit Category")
+
+    val errorMessage = remember { mutableStateOf("") }
+
+    LaunchedEffect(categoryId) {
+        if (categoryId != null) {
+            viewModel.loadCategoryById(categoryId)
+        } else {
+            // Reset fields for adding new category
+            viewModel.categoryName.value = ""
+            viewModel.categoryType.value = ""
+            viewModel.budget.value = ""
+            viewModel.note.value = ""
+            viewModel.editingCategoryId.value = null
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -252,6 +360,15 @@ fun AddCategoryScreen(
                     value = viewModel.note.value,
                     onValueChange = { viewModel.note.value = it }
                 )
+
+                // Display error message if any
+                if (errorMessage.value.isNotEmpty()) {
+                    Text(
+                        text = errorMessage.value,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
         }
 
@@ -261,8 +378,10 @@ fun AddCategoryScreen(
             title = "Save",
             onButtonClick = {
                 viewModel.saveCategory(
-                    onSuccess = { navController.popBackStack() },
-                    onFailure = {  }
+                    onSuccess = {
+                        navController.popBackStack()
+                    },
+                    onFailure = { errorMessage.value = it }
                 )
             }
         )

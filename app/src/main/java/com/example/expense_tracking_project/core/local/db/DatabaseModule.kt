@@ -2,15 +2,19 @@ package com.example.expense_tracking_project.core.local.db
 
 import android.content.Context
 import com.example.expense_tracking_project.core.local.dao.BudgetDao
+import com.example.expense_tracking_project.core.local.dao.CategoryDao
 import com.example.expense_tracking_project.core.local.dao.TransactionDao
 import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.BudgetRepositoryImpl
+import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.CategoryRepositoryImpl
 import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.TransactionRepositoryImpl
 import com.example.expense_tracking_project.screens.expenseTracking.domain.repository.BudgetRepository
+import com.example.expense_tracking_project.screens.expenseTracking.domain.repository.CategoryRepository
 import com.example.expense_tracking_project.screens.expenseTracking.domain.repository.TransactionRepository
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.GetAllbudgetsUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.InsertBudgetUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.UpdateBudgetUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.categoryusecase.InsertCategoryUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,4 +69,17 @@ object DatabaseModule {
     fun provideUpdateBudgetUseCase(budgetRepository: BudgetRepository): UpdateBudgetUseCase {
         return UpdateBudgetUseCase(budgetRepository)
     }
+    @Provides
+    fun provideInsertCategoryUseCase(categoryRepository: CategoryRepository): InsertCategoryUseCase {
+        return InsertCategoryUseCase(categoryRepository)
+    }
+
+    @Provides
+    fun provideCategoryDao(db: AppDatabase): CategoryDao = db.CategoryDao()
+
+    @Provides
+    fun provideCategoryRepository(categoryDao: CategoryDao): CategoryRepository {
+        return CategoryRepositoryImpl(categoryDao)
+    }
+
 }
