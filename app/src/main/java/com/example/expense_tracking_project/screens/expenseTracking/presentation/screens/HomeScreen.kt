@@ -30,15 +30,18 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -61,7 +64,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val transactions by viewModel.transactions
+    val transactions by viewModel.transactions.collectAsState(initial = emptyList())
+    var showSearchField by remember { mutableStateOf(false) } // not visible
 
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
@@ -84,14 +88,16 @@ fun HomeScreen(
             TopSection(
                 name = "Abdullah",
                 isDarkTheme = isDarkTheme,
-                onToggleTheme = changeAppTheme
+                onToggleTheme = changeAppTheme,
+                onSearchClicked = { showSearchField = !showSearchField }
             )
             BudgetCard(income = viewModel.income.value, expenses = viewModel.expenses.value)
             TimeTabSection()
             RecentTransactions(
                 navController = navController,
                 transactions = transactions,
-                viewModel = viewModel
+                viewModel = viewModel,
+                showSearchField = showSearchField // send the state of search
             )
         }
     }
@@ -102,6 +108,7 @@ fun TopSection(
     name: String,
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
+    onSearchClicked: () -> Unit
 ) {
     val themeIcon = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode
 
@@ -123,7 +130,7 @@ fun TopSection(
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { /* Search action */ }) {
+            IconButton(onClick = onSearchClicked) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = stringResource(id = R.string.search),
@@ -167,7 +174,7 @@ fun BudgetCard(income: Double, expenses: Double) {
                     colorFilter = ColorFilter.tint(Color.White)
                 )
                 Text(
-                    text = "$${income - expenses}",
+                    text = "${income - expenses}",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(start = 8.dp)
@@ -186,7 +193,7 @@ fun BudgetCard(income: Double, expenses: Double) {
                         colorFilter = ColorFilter.tint(Color.White)
                     )
                     Text(
-                        text = "${stringResource(R.string.income)}\n $${income}",
+                        text = "${stringResource(R.string.income)}\n ${income}",
                         color = Color.White,
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -200,7 +207,7 @@ fun BudgetCard(income: Double, expenses: Double) {
                         colorFilter = ColorFilter.tint(Color.White)
                     )
                     Text(
-                        text = "${stringResource(R.string.expenses)}\n $${expenses}",
+                        text = "${stringResource(R.string.expenses)}\n ${expenses}",
                         color = Color.White,
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -242,8 +249,11 @@ fun TimeTabSection() {
 fun RecentTransactions(
     navController: NavController,
     transactions: List<Transaction>,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    showSearchField: Boolean
 ) {
+
+    val searchText by viewModel.searchText.collectAsState()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -258,8 +268,22 @@ fun RecentTransactions(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable {
-                })
+                }
+            )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if(showSearchField) // if clicked appear
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { viewModel.updateSearch(it) },
+                placeholder = { Text("Search") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .clip(RoundedCornerShape(16.dp))
+            )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -285,6 +309,41 @@ fun RecentTransactions(
 @Composable
 fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltViewModel()) {
     var showDeleteDialog by remember { mutableStateOf(false) }
+// <<<<<<< SaveCategoryInDB
+// =======
+//     val transactionType = if (transaction.amount >= 0) "Income" else "Expenses"
+//     val typeColor =
+//         if (transaction.amount >= 0) Color(0xFF4CAF50) else Color(0xFFF44336)
+
+//     Card(
+//         modifier = Modifier
+//             .fillMaxWidth()
+//             .padding(8.dp)
+//             .clickable { },
+//         shape = RoundedCornerShape(8.dp)
+//     ) {
+//         Row(
+//             modifier = Modifier
+//                 .padding(16.dp)
+//                 .fillMaxWidth(),
+//             horizontalArrangement = Arrangement.SpaceBetween,
+//             verticalAlignment = Alignment.CenterVertically
+//         ) {
+//             Column(modifier = Modifier.weight(1f)) {
+//                 Text(
+//                     "Transaction: $transactionType",
+//                     style = MaterialTheme.typography.bodyMedium,
+//                     color = typeColor
+//                 )
+//                 Text("Amount: ${transaction.amount}", style = MaterialTheme.typography.bodyMedium)
+//                 Text("Note: ${transaction.note}", style = MaterialTheme.typography.bodySmall)
+//                 Text(
+//                     "Date: ${viewModel.formatDate(transaction.date)}",
+//                     style = MaterialTheme.typography.bodySmall,
+//                     color = Color.Gray
+//                 )
+//             }
+// >>>>>>> dev
 
     DataCard(
         title = "${transaction.amount}",

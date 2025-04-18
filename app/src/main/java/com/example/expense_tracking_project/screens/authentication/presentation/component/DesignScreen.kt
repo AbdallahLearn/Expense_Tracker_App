@@ -1,13 +1,17 @@
 package com.example.expense_tracking_project.screens.authentication.presentation.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -153,54 +157,65 @@ fun SelectTransaction(
     tabOptions: List<String> = listOf(),
     onTabSelected: (String) -> Unit
 ) {
-    var activeButton by remember { mutableStateOf(tabOptions.first()) }
+    var activeButton by remember { mutableStateOf(tabOptions.firstOrNull().orEmpty()) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color(0xFFF5F5F5))
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(250.dp)
                 .background(
-                    color = Color(0xFF5C4DB7),
+                    Color(0xFF5C4DB7),
                     shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
                 ),
             contentAlignment = Alignment.TopCenter
         ) {
             if (showTabs && tabOptions.isNotEmpty()) {
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(top = 64.dp)
+                        .width(320.dp)
+                        .height(50.dp)
+                        .background(
+                            color = Color(0xFFF0F0F0),
+                            shape = RoundedCornerShape(topStart = 20.dp, bottomEnd = 20.dp , topEnd = 20.dp , bottomStart = 20.dp)
+                        ),
+                    contentAlignment = Alignment.Center
                 ) {
-                    tabOptions.forEach { option ->
-                        Button(
-                            onClick = {
-                                activeButton = option
-                                onTabSelected(option)
-                            },
-                            shape = RectangleShape,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (activeButton == option)
-                                    MaterialTheme.colorScheme.surface
-                                else
-                                    MaterialTheme.colorScheme.secondaryContainer
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(130.dp)
-                                .padding(bottom = 85.dp)
-                        ) {
-                            Text(
-                                text = option,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(4.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        tabOptions.forEach { option ->
+                            val isSelected = activeButton == option
+
+                            Button(
+                                onClick = {
+                                    activeButton = option
+                                    onTabSelected(option)
+                                },
+                                shape = RoundedCornerShape(50), // rounded tab shape
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (isSelected) Color.White else Color.Transparent
+                                ),
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
+                            ) {
+                                Text(
+                                    text = option,
+                                    color = if (isSelected) Color(0xFF5C4DB7) else Color.Gray,
+                                    fontSize = 16.sp,
+                                )
+                            }
                         }
                     }
                 }
@@ -208,6 +223,7 @@ fun SelectTransaction(
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -303,53 +319,65 @@ fun SelectEditingTab(
     tabOptions: List<String> = listOf(),
     onTabSelected: (String) -> Unit
 ) {
-    var activeButton by remember { mutableStateOf(tabOptions.first()) }
+    var activeButton by remember { mutableStateOf(tabOptions.firstOrNull().orEmpty()) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5)) // should be in the colors file
+            .background(Color(0xFFF5F5F5))
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(250.dp)
                 .background(
-                    Color(0xFF5C4DB7), // should be in the colors file
+                    Color(0xFF5C4DB7),
                     shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
                 ),
             contentAlignment = Alignment.TopCenter
         ) {
             if (showTabs && tabOptions.isNotEmpty()) {
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(top = 64.dp)
+                        .width(320.dp)
+                        .height(50.dp)
+                        .background(
+                            color = Color(0xFFF0F0F0),
+                            shape = RoundedCornerShape(topStart = 20.dp, bottomEnd = 20.dp , topEnd = 20.dp , bottomStart = 20.dp)
+                        ),
+                    contentAlignment = Alignment.Center
                 ) {
-                    tabOptions.forEach { option ->
-                        Button(
-                            onClick = {
-                                activeButton = option
-                                onTabSelected(option)
-                            },
-                            shape = RectangleShape,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (activeButton == option) Color.White else Color(
-                                    0xFFF4F6F6
-                                ) // should be in the colors file
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(130.dp)
-                                .padding(bottom = 85.dp)
-                        ) {
-                            Text(
-                                text = option,
-                                color = Color(0xFF5C4DB7),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(4.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        tabOptions.forEach { option ->
+                            val isSelected = activeButton == option
+
+                            Button(
+                                onClick = {
+                                    activeButton = option
+                                    onTabSelected(option)
+                                },
+                                shape = RoundedCornerShape(50), // rounded tab shape
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (isSelected) Color.White else Color.Transparent
+                                ),
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
+                            ) {
+                                Text(
+                                    text = option,
+                                    color = if (isSelected) Color(0xFF5C4DB7) else Color.Gray,
+                                    fontSize = 16.sp,
+                                )
+                            }
                         }
                     }
                 }

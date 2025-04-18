@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
@@ -18,21 +19,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.core.local.data.PredefinedBudgetProvider
+import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
 import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenu
-import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenuBudget
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SelectEditingTab
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
+// <<<<<<< SaveCategoryInDB
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
+// =======
+// >>>>>>> dev
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditBudgetCategoryViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditCategoryViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditScreenViewModel
@@ -43,6 +46,7 @@ import kotlinx.serialization.json.Json
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditScreen(
+// <<<<<<< SaveCategoryInDB
     navController: NavController,
     viewModel: EditScreenViewModel = hiltViewModel(),
     categoryViewModel: EditCategoryViewModel = hiltViewModel(),
@@ -58,12 +62,19 @@ fun EditScreen(
         }
     }
 
+// =======
+//     navController: NavController, viewModel: EditScreenViewModel = hiltViewModel()
+// ) {
+//     val selectedTab by viewModel.selectedTab.collectAsState()
+//     val searchText by viewModel.searchText.collectAsState()
+//     val viewModeleditbudget: EditBudgetCategoryViewModel = hiltViewModel()
+//     val budgetList by viewModeleditbudget.budgetList
+// >>>>>>> dev
     Box(modifier = Modifier.fillMaxSize()) {
         SelectEditingTab(
             showTabs = true,
             tabOptions = listOf("Category", "Budget"),
-            onTabSelected = { viewModel.updateTab(it) }
-        )
+            onTabSelected = { viewModel.updateTab(it) })
 
         Column(
             modifier = Modifier
@@ -84,8 +95,7 @@ fun EditScreen(
                 placeholder = { Text("Search") },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.FilterList,
-                        contentDescription = "Filter"
+                        imageVector = Icons.Default.FilterList, contentDescription = "Filter"
                     )
                 },
                 modifier = Modifier
@@ -96,6 +106,7 @@ fun EditScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+// <<<<<<< SaveCategoryInDB
             // Display category list or empty message
             if (selectedTab == "Category") {
                 if (categories.isEmpty()) {
@@ -175,6 +186,24 @@ fun EditScreen(
                 Text(
                     text = "you are in budget screen"
                 )
+// =======
+//             // Empty Data Placeholder
+//             Box(
+//                 modifier = Modifier
+//                     .fillMaxWidth()
+//                     .weight(1f), contentAlignment = Alignment.Center
+//             ) {
+//                 if (selectedTab == "Budget") {
+//                     if (budgetList.isNotEmpty()) {
+//                         DisplaySavedBudgets(budgetList)
+//                     } else {
+//                         Text("No budgets available", color = Color.Gray)
+//                     }
+//                 } else {
+//                     Text("No categories available", color = Color.Gray)
+//                 }
+
+// >>>>>>> dev
             }
         }
 
@@ -187,6 +216,7 @@ fun EditScreen(
         ) {
             FloatingActionButton(
                 onClick = {
+// <<<<<<< SaveCategoryInDB
                     when (selectedTab) {
                         "Budget" -> navController.navigate(Screen.AddBudget)
                         "Category" -> {
@@ -197,17 +227,33 @@ fun EditScreen(
                     }
                 },
                 containerColor = Color(0xFF5C4DB7)
+// =======
+//                     if (selectedTab == "Budget") {
+//                         navController.navigate(Screen.AddBudget)
+//                     } else if (selectedTab == "Category") {
+//                         navController.navigate(Screen.AddCategory)
+//                     }
+//                 }, containerColor = Color(0xFF5C4DB7)
+// >>>>>>> dev
             ) {
                 Text("Add", color = Color.White, fontSize = 15.sp)
             }
 
         }
+
+        LaunchedEffect(selectedTab) {
+            if (selectedTab == "Budget") {
+                viewModeleditbudget.loadBudgets()
+            }
+        }
+
     }
 }
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
+// <<<<<<< SaveCategoryInDB
 fun AddBudgetScreen(
     navController: NavController,
     viewModel: EditBudgetCategoryViewModel = hiltViewModel(),
@@ -217,75 +263,94 @@ fun AddBudgetScreen(
     BackgroundLayout("Edit Budget")
 
     Column(
+// =======
+// fun DisplaySavedBudgets(budgetList: List<BudgetEntity>) {
+//     //val  budget: BudgetEntity
+//     val viewModel: EditBudgetCategoryViewModel = hiltViewModel()
+//     LazyColumn(
+// >>>>>>> dev
         modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 120.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxWidth()
+            .padding(top = 8.dp)
     ) {
-        Card(
-            shape = RoundedCornerShape(32.dp),
-            elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            Column(
+        items(budgetList) { budget ->
+            var showDeleteDialog by remember { mutableStateOf(false) }
+
+            Card(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(18.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
-
-                SimpleTextField(
-                    title = "Amount Budget",
-                    value = viewModel.budgetAmount.value,
-                    onValueChange = { viewModel.budgetAmount.value = it }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                SimpleTextField(
-                    title = "Start Date",
-                    value = viewModel.startDate.value,
-                    onValueChange = {},
-                    onIconClick = {
-                        viewModel.getStartDatePicker(context).show()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Amount: ${budget.totalAmount}",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "Start: ${budget.startDate}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.Gray
+                        )
+                        Text(
+                            text = "End: ${budget.endDate}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.Gray
+                        )
                     }
-                )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    IconButton(
+                        onClick = { showDeleteDialog = true }, modifier = Modifier
+                            .padding(top = 20.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete Budget",
+                            tint = Color.Red
+                        )
+                    }
+                }
 
-                CustomDropdownMenuBudget(
-                    label = "Interval",
-                    BudgetOptions = listOf("1 Month", "2 Month", "3 Month"),
-                    selectedOption = viewModel.selectedInterval.value,
-                    onOptionSelected = { viewModel.selectedInterval.value = it }
-                )
+                if (showDeleteDialog) {
+                    ConfirmationDialog(
+                        title = "Confirm Deletion",
+                        message = "Are you sure you want to delete this budget?",
+                        onConfirm = {
+                            viewModel.softDeleteBudget(budget)
+                            showDeleteDialog = false
+                        },
+                        onDismiss = {
+                            showDeleteDialog = false
+                        })
+                }
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        SimpleButton(
-            title = "Save",
-            onButtonClick = {
-
-            }
-        )
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddCategoryScreen(
+// <<<<<<< SaveCategoryInDB
     navController: NavController,
     categoryId: Int? = null,
     viewModel: EditCategoryViewModel = hiltViewModel(),
+// =======
+//     navController: NavController, viewModel: EditBudgetCategoryViewModel = hiltViewModel()
+// >>>>>>> dev
 ) {
     BackgroundLayout("Edit Category")
 
@@ -332,8 +397,7 @@ fun AddCategoryScreen(
                 SimpleTextField(
                     title = "Category Name",
                     value = viewModel.categoryName.value,
-                    onValueChange = { viewModel.categoryName.value = it }
-                )
+                    onValueChange = { viewModel.categoryName.value = it })
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -341,8 +405,7 @@ fun AddCategoryScreen(
                     label = "Category Type",
                     categoryOptions = listOf("Income", "Expense"),
                     selectedOption = viewModel.categoryType.value,
-                    onOptionSelected = { viewModel.categoryType.value = it }
-                )
+                    onOptionSelected = { viewModel.categoryType.value = it })
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -350,14 +413,14 @@ fun AddCategoryScreen(
                     label = "Budget (Optional)",
                     categoryOptions = PredefinedBudgetProvider.getAllBudgets(),
                     selectedOption = viewModel.budget.value,
-                    onOptionSelected = { viewModel.budget.value = it }
-                )
+                    onOptionSelected = { viewModel.budget.value = it })
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SimpleTextField(
                     title = "Note",
                     value = viewModel.note.value,
+// <<<<<<< SaveCategoryInDB
                     onValueChange = { viewModel.note.value = it }
                 )
 
@@ -369,15 +432,18 @@ fun AddCategoryScreen(
                         modifier = Modifier.padding(8.dp)
                     )
                 }
+// =======
+//                     onValueChange = { viewModel.note.value = it })
+// >>>>>>> dev
             }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
         SimpleButton(
-            title = "Save",
-            onButtonClick = {
+            title = "Save", onButtonClick = {
                 viewModel.saveCategory(
+// <<<<<<< SaveCategoryInDB
                     onSuccess = {
                         navController.popBackStack()
                     },
@@ -385,5 +451,10 @@ fun AddCategoryScreen(
                 )
             }
         )
+// =======
+//                     onSuccess = { navController.popBackStack() },
+//                     onFailure = { })
+//             })
+// >>>>>>> dev
     }
 }
