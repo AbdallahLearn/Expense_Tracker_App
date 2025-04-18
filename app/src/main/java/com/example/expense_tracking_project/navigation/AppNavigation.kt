@@ -99,8 +99,9 @@ fun AppNavigation(
             composable<Screen.ResetPassword> {
                 ResetPasswordScreen(navController)
             }
-            composable<Screen.AddBudget> {
-                AddBudgetScreen(navController)
+            composable<Screen.AddBudget> {backStackEntry ->
+                val budgetId = backStackEntry.arguments?.getInt("budgetId")
+                AddBudgetScreen(navController, budgetId = budgetId)
             }
             composable<Screen.AddCategory> { backStackEntry ->
                 val categoryId = backStackEntry.arguments?.getInt("categoryId")
@@ -115,6 +116,16 @@ fun AppNavigation(
                     Json.decodeFromString<Screen.AddCategory>(it)
                 }
                 AddCategoryScreen(navController, categoryId = category?.categoryId)
+            }
+            composable(
+                route = "add_budget?budgetData={budgetData}",
+                arguments = listOf(navArgument("budgetData") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val budgetData = backStackEntry.arguments?.getString("budgetData")
+                val budget = budgetData?.let {
+                    Json.decodeFromString<Screen.AddBudget>(it)
+                }
+                AddBudgetScreen(navController, budgetId = budget?.budgetId)
             }
 
         }
