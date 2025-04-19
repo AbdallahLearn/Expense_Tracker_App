@@ -1,6 +1,7 @@
 package com.example.expense_tracking_project.screens.authentication.presentation.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -43,6 +45,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TransactionTypeFilter
 
 
 @Composable
@@ -110,12 +113,14 @@ fun SimpleTextField(
             trailingIcon = {
                 when {
                     isPassword -> {
-                        val icon = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                        val icon =
+                            if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                         val description = if (passwordVisible) "Hide password" else "Show password"
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(imageVector = icon, contentDescription = description)
                         }
                     }
+
                     onIconClick != null -> {
                         IconButton(onClick = onIconClick) {
                             Icon(
@@ -182,7 +187,12 @@ fun SelectTransaction(
                         .height(50.dp)
                         .background(
                             color = Color(0xFFF0F0F0),
-                            shape = RoundedCornerShape(topStart = 20.dp, bottomEnd = 20.dp , topEnd = 20.dp , bottomStart = 20.dp)
+                            shape = RoundedCornerShape(
+                                topStart = 20.dp,
+                                bottomEnd = 20.dp,
+                                topEnd = 20.dp,
+                                bottomStart = 20.dp
+                            )
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -344,7 +354,12 @@ fun SelectEditingTab(
                         .height(50.dp)
                         .background(
                             color = Color(0xFFF0F0F0),
-                            shape = RoundedCornerShape(topStart = 20.dp, bottomEnd = 20.dp , topEnd = 20.dp , bottomStart = 20.dp)
+                            shape = RoundedCornerShape(
+                                topStart = 20.dp,
+                                bottomEnd = 20.dp,
+                                topEnd = 20.dp,
+                                bottomStart = 20.dp
+                            )
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -381,6 +396,40 @@ fun SelectEditingTab(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun DropdownFilter(
+    typeFilter: TransactionTypeFilter,
+    onTypeSelected: (TransactionTypeFilter) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(8.dp)
+            .clip(RoundedCornerShape(8.dp))
+    ) {
+        listOf(
+            TransactionTypeFilter.ALL to "All",
+            TransactionTypeFilter.INCOME to "Income",
+            TransactionTypeFilter.EXPENSES to "Expenses"
+        ).forEach { (filterType, label) ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onTypeSelected(filterType) }
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                androidx.compose.material3.Checkbox(
+                    checked = typeFilter == filterType,
+                    onCheckedChange = { onTypeSelected(filterType) }
+                )
+                Text(text = label, style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

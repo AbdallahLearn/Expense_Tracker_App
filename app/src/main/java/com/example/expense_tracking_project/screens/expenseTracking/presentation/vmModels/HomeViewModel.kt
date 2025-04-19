@@ -1,7 +1,6 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels
 
 import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expense_tracking_project.core.local.entities.Transaction
@@ -18,14 +17,21 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.combine
 
+enum class TransactionTypeFilter {
+    ALL, INCOME, EXPENSES
+}
+
+enum class TimeFilter {
+    TODAY, WEEK, MONTH, YEAR
+}
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAllTransactionsUseCase: GetAllTransactionsUseCase,
-    private val updateTransactionUseCase: UpdateTransactionUseCase
+    private val updateTransactionUseCase: UpdateTransactionUseCase,
 ) : ViewModel() {
 
     // State to hold the list of transactions
-//    val transactions = mutableStateOf<List<Transaction>>(emptyList())
     private val allTransactions = MutableStateFlow<List<Transaction>>(emptyList())
 
     val income = mutableDoubleStateOf(0.0)
@@ -34,19 +40,88 @@ class HomeViewModel @Inject constructor(
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String> = _searchText
 
+    private val _typeFilter = MutableStateFlow(TransactionTypeFilter.ALL)
+    val typeFilter: StateFlow<TransactionTypeFilter> = _typeFilter
+
+    private val _timeFilter = MutableStateFlow(TimeFilter.TODAY)
+    val timeFilter: StateFlow<TimeFilter> = _timeFilter
+
+    fun updateTypeFilter(type: TransactionTypeFilter) {
+        _typeFilter.value = type
+    }
+
+    fun updateTimeFilter(filter: TimeFilter) {
+        _timeFilter.value = filter
+    }
+
     val transactions: Flow<List<Transaction>> = combine(
         allTransactions,
-        _searchText
-    ) { transactions, search ->
-        val filteredList = if (search.isBlank()) {
-            transactions
-        } else {
-            val lowerSearch = search.lowercase()
-            transactions.filter { txn ->
-                txn.note.lowercase().contains(lowerSearch) || txn.amount.toString().contains(lowerSearch)
+        _searchText,
+        _typeFilter,
+        _timeFilter
+    ) { transactions, search, filter, timeFilter ->
+
+        val now = Date()
+        val calendar = java.util.Calendar.getInstance()
+
+        val filteredByTime = transactions.filter { txn ->
+            val txnDate = txn.date
+
+            when (timeFilter) {
+                TimeFilter.TODAY -> {
+                    calendar.time = now
+                    val todayYear = calendar.get(java.util.Calendar.YEAR)
+                    val todayDay = calendar.get(java.util.Calendar.DAY_OF_YEAR)
+
+                    calendar.time = txnDate
+                    todayYear == calendar.get(java.util.Calendar.YEAR) &&
+                            todayDay == calendar.get(java.util.Calendar.DAY_OF_YEAR)
+                }
+
+                TimeFilter.WEEK -> {
+                    calendar.time = now
+                    val currentWeek = calendar.get(java.util.Calendar.WEEK_OF_YEAR)
+                    val currentYear = calendar.get(java.util.Calendar.YEAR)
+
+                    calendar.time = txnDate
+                    currentWeek == calendar.get(java.util.Calendar.WEEK_OF_YEAR) &&
+                            currentYear == calendar.get(java.util.Calendar.YEAR)
+                }
+
+                TimeFilter.MONTH -> {
+                    calendar.time = now
+                    val currentMonth = calendar.get(java.util.Calendar.MONTH)
+                    val currentYear = calendar.get(java.util.Calendar.YEAR)
+
+                    calendar.time = txnDate
+                    currentMonth == calendar.get(java.util.Calendar.MONTH) &&
+                            currentYear == calendar.get(java.util.Calendar.YEAR)
+                }
+
+                TimeFilter.YEAR -> {
+                    calendar.time = now
+                    val currentYear = calendar.get(java.util.Calendar.YEAR)
+
+                    calendar.time = txnDate
+                    currentYear == calendar.get(java.util.Calendar.YEAR)
+                }
             }
         }
-        filteredList.sortedByDescending { it.createdAt }
+
+        val filteredByType = filteredByTime.filter { txn ->
+            when (filter) {
+                TransactionTypeFilter.ALL -> true
+                TransactionTypeFilter.INCOME -> txn.amount >= 0
+                TransactionTypeFilter.EXPENSES -> txn.amount < 0
+            }
+        }
+
+        val filteredBySearch = filteredByType.filter { txn ->
+            search.isBlank() || txn.note.lowercase().contains(search.lowercase()) ||
+                    txn.amount.toString().contains(search)
+        }
+
+        filteredBySearch.sortedByDescending { it.createdAt }
     }
 
     init {

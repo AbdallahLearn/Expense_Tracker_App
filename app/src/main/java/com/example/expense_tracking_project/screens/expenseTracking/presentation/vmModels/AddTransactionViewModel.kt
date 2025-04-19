@@ -46,8 +46,8 @@ class AddTransactionViewModel @Inject constructor(
     val incomeDate = mutableStateOf(LocalDate.now().format(formatter))
     val incomeNote = mutableStateOf("")
 
-    val localDate = LocalDate.parse(getDateState().value, formatter)
-    val date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+//    val localDate = LocalDate.parse(getDateState().value, formatter)
+//    val date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
 
     // Get the State based on the selectedTab, either Income or Expenses
     fun getAmountState() = if (selectedTab.value == "Income") incomeAmount else expensesAmount
@@ -93,10 +93,15 @@ class AddTransactionViewModel @Inject constructor(
         viewModelScope.launch {
             val amount = getAmountState().value.toDouble()
             val finalAmount = if (selectedTab.value == "Expenses") -amount else amount
+
+            // Convert the current selected date string to a Date object
+            val selectedLocalDate = LocalDate.parse(getDateState().value, formatter)
+            val convertedDate = Date.from(selectedLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+
             val transaction = Transaction(
                 amount = finalAmount, // Use the adjusted amount
                 categoryId = null,
-                date = date,
+                date = convertedDate,
                 note = getNoteState().value,
                 createdAt = Date(),
                 updatedAt = Date()
