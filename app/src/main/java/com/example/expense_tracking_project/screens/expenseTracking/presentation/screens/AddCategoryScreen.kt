@@ -42,17 +42,24 @@ fun AddCategoryScreen(
     BackgroundLayout("Edit Category")
 
     val errorMessage = remember { mutableStateOf("") }
+    val budgets = viewModel.budgetList.value // Room budget list
+    val selectedBudgetLabel = remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        viewModel.loadBudgets() // Load budgets from Room
+    }
 
     LaunchedEffect(categoryId) {
         if (categoryId != null) {
             viewModel.loadCategoryById(categoryId)
         } else {
+            viewModel.loadBudgets()
             // Reset fields for adding new category
             viewModel.categoryName.value = ""
             viewModel.categoryType.value = ""
             viewModel.budget.value = ""
             viewModel.note.value = ""
-            viewModel.editingCategoryId.value = null
+            viewModel.selectedBudgetId.value = null
         }
     }
 
@@ -98,9 +105,19 @@ fun AddCategoryScreen(
 
                 CustomDropdownMenu(
                     label = "Budget (Optional)",
-                    categoryOptions = PredefinedBudgetProvider.getAllBudgets(),
+                    categoryOptions = budgets.map { "ID: ${it.budgetId} • ${it.totalAmount}" },
                     selectedOption = viewModel.budget.value,
-                    onOptionSelected = { viewModel.budget.value = it })
+                    onOptionSelected = { selectedLabel ->
+                        viewModel.budget.value = selectedLabel
+
+                        //  Parse the selected budget
+                        val selectedBudget = budgets.find {
+                            "ID: ${it.budgetId} • ${it.totalAmount}" == selectedLabel
+                        }
+                        viewModel.selectedBudgetId.value = selectedBudget?.budgetId
+                    }
+                )
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 

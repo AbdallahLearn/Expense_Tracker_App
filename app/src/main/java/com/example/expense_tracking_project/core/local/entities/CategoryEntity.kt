@@ -9,14 +9,14 @@ import java.util.Date
 
 @Entity(
     tableName = "categories",
-//    foreignKeys = [
-//        ForeignKey(
-//            entity = BudgetEntity::class,
-//            parentColumns = ["budgetId"],
-//            childColumns = ["budgetId"],
-//            onDelete = ForeignKey.CASCADE
-//        )
-//    ],
+    foreignKeys = [
+        ForeignKey(
+            entity = BudgetEntity::class,
+            parentColumns = ["budgetId"],
+            childColumns = ["budgetId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
     indices = [Index("budgetId")]
 )
 data class Category(
