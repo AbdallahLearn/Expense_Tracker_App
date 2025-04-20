@@ -1,11 +1,13 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
+import android.R.attr.bottom
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,8 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Delete
@@ -54,9 +55,11 @@ import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import com.example.expense_tracking_project.screens.dataSynchronization.presentation.SyncViewModel
+import com.example.expense_tracking_project.screens.authentication.presentation.component.DropdownFilter
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.HomeViewModel
+import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TimeFilter
 
 @Composable
 fun HomeScreen(
@@ -82,42 +85,124 @@ fun HomeScreen(
         )
     }
 
+    var showSearchField by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 80.dp)
+    ) {
+        item {
+            Box(modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
-                .background(
-                    color = Color(0xFF5C4DB7),
-                    shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
+                .height(300.dp)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .background(
+                            color = Color(0xFF5C4DB7),
+                            shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
+                        )
                 )
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .padding(horizontal = 16.dp)
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            TopSection(
-                name = "Abdullah",
-                isDarkTheme = isDarkTheme,
-                onToggleTheme = changeAppTheme,
-                onSearchClicked = { showSearchField = !showSearchField }
-            )
-            BudgetCard(income = viewModel.income.value, expenses = viewModel.expenses.value)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp)
+                ) {
+                    TopSection(
+                        name = "Abdullah",
+                        isDarkTheme = isDarkTheme,
+                        onToggleTheme = changeAppTheme,
+                        onSearchClicked = { showSearchField = !showSearchField }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    BudgetCard(
+                        income = viewModel.income.value,
+                        expenses = viewModel.expenses.value
+                    )
+                }
+            }
+        }
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
             TimeTabSection()
-            RecentTransactions(
-                navController = navController,
-                transactions = transactions,
-                viewModel = viewModel,
-                showSearchField = showSearchField // send the state of search
-            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        item {
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                TransactionsSection(
+                    navController = navController,
+                    transactions = transactions,
+                    viewModel = viewModel,
+                    showSearchField = showSearchField // send the state of search
+                )
+            }
         }
     }
 }
+
+@Composable
+fun TransactionsSection(
+    transactions: List<Transaction>,
+    showSearchField: Boolean,
+    viewModel: HomeViewModel,
+    navController: NavController
+) {
+    val searchText by viewModel.searchText.collectAsState()
+    val typeFilter by viewModel.typeFilter.collectAsState()
+    var showDropdown by remember { mutableStateOf(false) }
+
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(R.string.recent_transactions),
+                style = MaterialTheme.typography.titleSmall
+            )
+        }
+
+        if (showSearchField) {
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { viewModel.updateSearch(it) },
+                placeholder = { Text("Search") },
+                trailingIcon = {
+                    IconButton(onClick = { showDropdown = !showDropdown }) {
+                        Icon(Icons.Default.FilterList, contentDescription = "Filter")
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .clip(RoundedCornerShape(16.dp))
+            )
+        }
+
+        if (showDropdown) {
+            DropdownFilter(typeFilter = typeFilter) {
+                viewModel.updateTypeFilter(it)
+                showDropdown = false
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (transactions.isEmpty()) {
+            Text(
+                stringResource(R.string.no_data_available),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
+        } else {
+            transactions.forEach { transaction ->
+                TransactionItem(transaction = transaction, viewModel = viewModel)
+            }
+        }
+    }
+}
+
 
 @Composable
 fun TopSection(
@@ -234,13 +319,14 @@ fun BudgetCard(income: Double, expenses: Double) {
 }
 
 @Composable
-fun TimeTabSection() {
-    var selectedTab by remember { mutableStateOf("Today") }
+fun TimeTabSection(viewModel: HomeViewModel = hiltViewModel()) {
+    var selectedTab by remember { mutableStateOf(TimeFilter.TODAY) }
+
     val tabs = listOf(
-        stringResource(id = R.string.today),
-        stringResource(id = R.string.week),
-        stringResource(id = R.string.month),
-        stringResource(id = R.string.year)
+        TimeFilter.TODAY to stringResource(id = R.string.today),
+        TimeFilter.WEEK to stringResource(id = R.string.week),
+        TimeFilter.MONTH to stringResource(id = R.string.month),
+        TimeFilter.YEAR to stringResource(id = R.string.year)
     )
 
     Row(
@@ -249,13 +335,17 @@ fun TimeTabSection() {
             .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        tabs.forEach { tab ->
+        tabs.forEach { (filter, label) ->
             TextButton(
-                onClick = { selectedTab = tab }, colors = ButtonDefaults.textButtonColors(
-                    containerColor = if (tab == selectedTab) Color(0xFFFFEBCD) else Color.Transparent
+                onClick = {
+                    selectedTab = filter
+                    viewModel.updateTimeFilter(filter)
+                },
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = if (filter == selectedTab) Color(0xFFFFEBCD) else Color.Transparent
                 )
             ) {
-                Text(text = tab, color = if (tab == selectedTab) Color.Black else Color.Gray)
+                Text(text = label, color = if (filter == selectedTab) Color.Black else Color.Gray)
             }
         }
     }
@@ -270,6 +360,8 @@ fun RecentTransactions(
 ) {
 
     val searchText by viewModel.searchText.collectAsState()
+    val typeFilter by viewModel.typeFilter.collectAsState()
+    var showDropdown by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -279,43 +371,52 @@ fun RecentTransactions(
                 stringResource(R.string.recent_transactions),
                 style = MaterialTheme.typography.titleSmall
             )
-            Text(
-                stringResource(R.string.see_all),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable {
-                }
-            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if(showSearchField) // if clicked appear
+        if (showSearchField) // if clicked appear
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { viewModel.updateSearch(it) },
                 placeholder = { Text("Search") },
+                trailingIcon = {
+                    IconButton(onClick = { showDropdown = !showDropdown }) {
+                        Icon(
+                            imageVector = Icons.Default.FilterList,
+                            contentDescription = "Filter"
+                        )
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
                     .clip(RoundedCornerShape(16.dp))
             )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        // Dropdown for filtering by transaction type
+        if (showDropdown) {
+            DropdownFilter(typeFilter = typeFilter) { newType ->
+                viewModel.updateTypeFilter(newType)
+                showDropdown = false
+            }
+        }
+    }
 
-        if (transactions.isEmpty()) {
-            Text(
-                stringResource(R.string.no_data_available),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
-        } else {
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(transactions) { transaction ->
-                    TransactionItem(
-                        transaction = transaction, viewModel = viewModel
-                    )
-                }
+    Spacer(modifier = Modifier.height(16.dp))
+
+    if (transactions.isEmpty()) {
+        Text(
+            stringResource(R.string.no_data_available),
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Gray
+        )
+    } else {
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            items(transactions) { transaction ->
+                TransactionItem(
+                    transaction = transaction, viewModel = viewModel
+                )
             }
         }
     }
