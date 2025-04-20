@@ -23,7 +23,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.EditScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.ProfileScreen
-import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.StatisticsScreen
+import com.example.expense_tracking_project.screens.dataVisualization.presentation.screens.StatisticsScreen
 import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.OnBoardingScreen
 import kotlinx.serialization.json.Json
 

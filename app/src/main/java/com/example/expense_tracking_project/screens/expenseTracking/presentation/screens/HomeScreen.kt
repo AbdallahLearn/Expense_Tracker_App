@@ -71,7 +71,6 @@ fun HomeScreen(
 ) {
 
     val transactions by viewModel.transactions.collectAsState(initial = emptyList())
-    var showSearchField by remember { mutableStateOf(false) } // not visible
     val syncStatus by syncViewModel.syncStatus.collectAsState()
 
     LaunchedEffect(Unit) {

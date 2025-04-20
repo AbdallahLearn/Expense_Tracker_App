@@ -1,4 +1,4 @@
-package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
+package com.example.expense_tracking_project.screens.dataVisualization.presentation.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
