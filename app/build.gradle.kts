@@ -92,7 +92,9 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.retrofit) // retrofit dependency
-    implementation(libs.converter.gson) // converter GSON
+    implementation(libs.converter.gson)
+    implementation(libs.mpandroidchart)
+
 }
 
 kapt {
