@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 import com.example.expense_tracking_project.core.local.entities.Category
 
 @Dao
@@ -25,8 +26,11 @@ interface CategoryDao {
     @Query("SELECT * FROM Categories WHERE categoryId = :id")
     suspend fun getCategoryById(id: Int): Category?
 
-    @Query("SELECT * FROM Categories WHERE budgetId = :budgetId")
-    suspend fun getCategoriesByBudgetId(budgetId: Int): List<Category>
+    @Query("SELECT * FROM Categories WHERE isSynced = 0 AND isDeleted = 0") // sync new items
+    suspend fun getUnsyncedCategories(): List<Category>
+
+    @Query("UPDATE Categories SET isSynced = 1 WHERE budgetId = :id") //
+    suspend fun markCategoriesAsSynced(id: Int)
 
     @Query("UPDATE Categories SET isDeleted = 1, updatedAt = :updatedAt WHERE categoryId = :categoryId")
     suspend fun softDeleteCategory(categoryId: Int, updatedAt: java.util.Date)
