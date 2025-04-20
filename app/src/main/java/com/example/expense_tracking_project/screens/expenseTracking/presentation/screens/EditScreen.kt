@@ -148,7 +148,7 @@ fun EditScreen(
                                     title = "Confirm Deletion",
                                     message = "Are you sure you want to delete this category?",
                                     onConfirm = {
-                                        categoryViewModel.softDeleteCategory(category.categoryId) {
+                                        categoryViewModel.softDeleteCategory(category.categoryId!!) {
                                             showDeleteDialog = false
                                         }
                                     },

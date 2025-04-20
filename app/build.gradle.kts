@@ -90,6 +90,9 @@ dependencies {
     implementation(libs.hilt.android) // DI
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.retrofit) // retrofit dependency
+    implementation(libs.converter.gson) // converter GSON
 }
 
 kapt {

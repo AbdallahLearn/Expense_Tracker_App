@@ -18,6 +18,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +32,7 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenuBudget
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
+import com.example.expense_tracking_project.screens.dataSynchronization.presentation.SyncViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditBudgetViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -37,10 +40,12 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 fun AddBudgetScreen(
     navController: NavController,
     budgetId: Int? = null,
-    viewModel: EditBudgetViewModel = hiltViewModel()
+    viewModel: EditBudgetViewModel = hiltViewModel(),
+    syncViewModel: SyncViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val errorMessage = remember { mutableStateOf("") }
+    val status by syncViewModel.syncStatus.collectAsState()
 
     LaunchedEffect(budgetId) {
         if (budgetId != null) {
@@ -130,5 +135,8 @@ fun AddBudgetScreen(
                 )
             }
         )
+        status?.let {
+            Text(text = it, color = MaterialTheme.colorScheme.primary)
+        }
     }
 }

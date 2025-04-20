@@ -17,6 +17,7 @@ data class BudgetEntity(
     val endDate: Date,
 
     val isDeleted: Boolean = false,
+    val isSynced: Boolean = false , // add flag
     val createdAt: Date,
     val updatedAt: Date
 )

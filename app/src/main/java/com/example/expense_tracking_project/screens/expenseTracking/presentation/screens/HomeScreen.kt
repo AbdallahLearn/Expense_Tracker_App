@@ -35,6 +35,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.core.local.entities.Transaction
+import com.example.expense_tracking_project.screens.dataSynchronization.presentation.SyncViewModel
 import com.example.expense_tracking_project.screens.authentication.presentation.component.DropdownFilter
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
@@ -64,10 +66,25 @@ fun HomeScreen(
     navController: NavController,
     changeAppTheme: () -> Unit,
     isDarkTheme: Boolean,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    syncViewModel: SyncViewModel = hiltViewModel()
 ) {
 
     val transactions by viewModel.transactions.collectAsState(initial = emptyList())
+    var showSearchField by remember { mutableStateOf(false) } // not visible
+    val syncStatus by syncViewModel.syncStatus.collectAsState()
+
+    LaunchedEffect(Unit) {
+        syncViewModel.syncNow() // Auto-sync when HomeScreen opens
+    }
+    syncStatus?.let {
+        Text(
+            text = it,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+    }
+
     var showSearchField by remember { mutableStateOf(false) }
 
     LazyColumn(
