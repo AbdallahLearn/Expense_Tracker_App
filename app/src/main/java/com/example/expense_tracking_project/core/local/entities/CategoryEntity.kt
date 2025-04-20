@@ -25,7 +25,9 @@ data class Category(
     val budgetId: Int?,
     val categoryName: String,
     val type: String, // "income" or "expense"
+    val color: String,
     val isDeleted: Boolean,
+    val isSynced: Boolean = false , // add flag
     val createdAt: Date,
     val updatedAt: Date
 )

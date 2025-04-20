@@ -93,6 +93,11 @@ fun AddCategoryScreen(
                     value = viewModel.categoryName.value,
                     onValueChange = { viewModel.categoryName.value = it })
 
+                SimpleTextField(
+                    title = "Category Color",
+                    value = viewModel.categoryColor.value,
+                    onValueChange = { viewModel.categoryColor.value = it })
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 CustomDropdownMenu(
@@ -121,11 +126,11 @@ fun AddCategoryScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                SimpleTextField(
-                    title = "Note",
-                    value = viewModel.note.value,
-                    onValueChange = { viewModel.note.value = it }
-                )
+//                SimpleTextField(
+//                    title = "Note",
+//                    value = viewModel.note.value,
+//                    onValueChange = { viewModel.note.value = it }
+//                )
 
                 // Display error message if any
                 if (errorMessage.value.isNotEmpty()) {

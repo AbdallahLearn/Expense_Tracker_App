@@ -1,7 +1,6 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
-import android.R.attr.bottom
-import android.content.Context
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -84,8 +83,6 @@ fun HomeScreen(
             modifier = Modifier.padding(vertical = 8.dp)
         )
     }
-
-    var showSearchField by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
