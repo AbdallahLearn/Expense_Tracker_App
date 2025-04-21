@@ -57,13 +57,15 @@ class AddTransactionViewModel @Inject constructor(
     val incomeDate = mutableStateOf(LocalDate.now().format(formatter))
     val incomeNote = mutableStateOf("")
 
+    val categoryList = mutableStateOf<List<Category>>(emptyList()) // <- List of categories
+
     private val _categories = mutableStateOf<List<Category>>(emptyList())
     val categories: State<List<Category>> = _categories
 
 
     init {
         viewModelScope.launch {
-            _categories.value = categoryDao.getAllCategories()
+            categoryList.value = categoryDao.getAllCategories()
         }
     }
 
@@ -120,22 +122,18 @@ class AddTransactionViewModel @Inject constructor(
             val selectedLocalDate = LocalDate.parse(getDateState().value, formatter)
             val convertedDate = Date.from(selectedLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
 
+            val selectedCategoryName = getCategoryState().value
+            val selectedCategoryId = categoryList.value.firstOrNull { it.categoryName == selectedCategoryName }?.categoryId
+
             val transaction = Transaction(
                 amount = finalAmount,
-                categoryId = getSelectedCategoryId(),
+                categoryId = selectedCategoryId,
                 date = convertedDate,
                 note = getNoteState().value,
                 createdAt = Date(),
                 updatedAt = Date()
             )
-
             insertTransactionUseCase(transaction)
-
-            try {
-                syncTransactionUseCase.execute()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
         }
     }
 }
