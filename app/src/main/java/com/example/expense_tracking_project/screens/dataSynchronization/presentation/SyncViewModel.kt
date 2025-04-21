@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncViewModel @Inject constructor(
     private val syncBudgetsUseCase: SyncBudgetsUseCase,
-    private val networkObserver : NetworkConnectivityObserver
+    private val networkObserver : NetworkConnectivityObserver,
     private val syncCategoryUseCase: SyncCategoryUseCase,
     private val syncTransactionUseCase: SyncTransactionUseCase
 ) : ViewModel() {

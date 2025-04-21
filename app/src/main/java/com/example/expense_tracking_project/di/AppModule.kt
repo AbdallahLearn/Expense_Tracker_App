@@ -110,6 +110,7 @@ object AppModule {
         return NetworkConnectivityObserver(context)
     } // using ApplicationContext to allow the observer to work across the whole app lifecycle
 
+    @Provides
     fun provideCategoryApi(retrofit: Retrofit): CategoryApi {
         return retrofit.create(CategoryApi::class.java)
     }

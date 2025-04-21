@@ -29,7 +29,7 @@ interface CategoryDao {
     @Query("SELECT * FROM Categories WHERE isSynced = 0 AND isDeleted = 0") // sync new items
     suspend fun getUnsyncedCategories(): List<Category>
 
-    @Query("UPDATE Categories SET isSynced = 1 WHERE budgetId = :id") //
+    @Query("UPDATE Categories SET isSynced = 1 WHERE categoryId = :id") //
     suspend fun markCategoriesAsSynced(id: Int)
 
     @Query("UPDATE Categories SET isDeleted = 1, updatedAt = :updatedAt WHERE categoryId = :categoryId")
