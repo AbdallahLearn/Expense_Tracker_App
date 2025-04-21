@@ -73,9 +73,6 @@ fun HomeScreen(
     val transactions by viewModel.transactions.collectAsState(initial = emptyList())
     val syncStatus by syncViewModel.syncStatus.collectAsState()
 
-    LaunchedEffect(Unit) {
-        syncViewModel.syncNow() // Auto-sync when HomeScreen opens
-    }
     syncStatus?.let {
         Text(
             text = it,

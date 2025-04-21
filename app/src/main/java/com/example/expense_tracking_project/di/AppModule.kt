@@ -1,5 +1,7 @@
 package com.example.expense_tracking_project.di
 
+import android.content.Context
+import com.example.expense_tracking_project.core.connectivity.NetworkConnectivityObserver
 import com.example.expense_tracking_project.core.local.dao.BudgetDao
 import com.example.expense_tracking_project.screens.authentication.data.remote.FirebaseAuthDataSource
 import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
@@ -14,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -77,4 +80,9 @@ object AppModule {
     fun provideBudgetApi(retrofit: Retrofit): BudgetApi {
         return retrofit.create(BudgetApi::class.java)
     }
+
+    @Provides
+    fun provideNetworkObserver( @ApplicationContext context: Context): NetworkConnectivityObserver {
+        return NetworkConnectivityObserver(context)
+    } // using ApplicationContext to allow the observer to work across the whole app lifecycle
 }
