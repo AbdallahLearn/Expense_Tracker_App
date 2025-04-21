@@ -2,6 +2,7 @@ package com.example.expense_tracking_project.di
 
 import com.example.expense_tracking_project.core.local.dao.BudgetDao
 import com.example.expense_tracking_project.core.local.dao.CategoryDao
+import com.example.expense_tracking_project.core.local.dao.TransactionDao
 import com.example.expense_tracking_project.screens.authentication.data.remote.FirebaseAuthDataSource
 import com.example.expense_tracking_project.screens.authentication.data.repository.AuthRepositoryImpl
 import com.example.expense_tracking_project.screens.authentication.domain.repository.AuthRepository
@@ -10,9 +11,12 @@ import com.example.expense_tracking_project.screens.authentication.domain.usecas
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.SignUpUseCase
 import com.example.expense_tracking_project.screens.dataSynchronization.data.SyncCategoryRepositoryImpl
 import com.example.expense_tracking_project.screens.dataSynchronization.data.SyncRepositoryImpl
+import com.example.expense_tracking_project.screens.dataSynchronization.data.SyncTransactionRepositoryImpl
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncCategoryRepository
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncRepository
+import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncTransactionRepository
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.BudgetApi
+import com.example.expense_tracking_project.screens.expenseTracking.data.remote.TransactionApi
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.sync.CategoryApi
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
@@ -78,6 +82,14 @@ object AppModule {
     }
 
     @Provides
+    fun provideSyncTransactionRepository(
+        transactionDao: TransactionDao,
+        transactionApi: TransactionApi
+    ): SyncTransactionRepository {
+        return SyncTransactionRepositoryImpl(transactionDao, transactionApi)
+    }
+
+    @Provides
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://project-1-admissions3.replit.app")
@@ -93,5 +105,10 @@ object AppModule {
     @Provides
     fun provideCategoryApi(retrofit: Retrofit): CategoryApi {
         return retrofit.create(CategoryApi::class.java)
+    }
+
+    @Provides
+    fun provideTransactionApi(retrofit: Retrofit): TransactionApi {
+        return retrofit.create(TransactionApi::class.java)
     }
 }
