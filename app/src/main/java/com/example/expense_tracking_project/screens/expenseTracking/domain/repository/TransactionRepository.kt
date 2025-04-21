@@ -7,4 +7,5 @@ interface TransactionRepository {
     suspend fun allTransactions(): Flow<List<Transaction>>
     suspend fun insert(transaction: Transaction)
     suspend fun update(transaction: Transaction)
+    suspend fun softDeleteTransaction(transactionId: Int)
 }

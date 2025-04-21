@@ -34,6 +34,7 @@ class EditCategoryViewModel @Inject constructor(
     val budget = mutableStateOf("")
 
     val categoryName = mutableStateOf("")
+    val categoryColor= mutableStateOf("")
     val categoryType = mutableStateOf("")
     val note = mutableStateOf("")
     val editingCategoryId = mutableStateOf<Int?>(null)
@@ -51,6 +52,7 @@ class EditCategoryViewModel @Inject constructor(
             budgetId = selectedBudgetId.value,
             categoryName = categoryName.value,
             type = categoryType.value,
+            color = categoryColor.value,
             isDeleted = false,
             createdAt = Date(),
             updatedAt = Date()
@@ -84,6 +86,7 @@ class EditCategoryViewModel @Inject constructor(
             category?.let {
                 editingCategoryId.value = it.categoryId
                 categoryName.value = it.categoryName
+                categoryColor.value = it.color
                 categoryType.value = it.type
                 budget.value = it.budgetId.toString()
                 // note.value = it.note ?: ""
