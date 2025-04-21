@@ -71,10 +71,12 @@ fun HomeScreen(
 
     val transactions by viewModel.transactions.collectAsState(initial = emptyList())
     val syncStatus by syncViewModel.syncStatus.collectAsState()
+
     var showSearchField by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        syncViewModel.syncNow() // Auto-sync when HomeScreen opens
-    }
+//     LaunchedEffect(Unit) {
+//         syncViewModel.syncNow() // Auto-sync when HomeScreen opens
+//     }
+
     syncStatus?.let {
         Text(
             text = it,
