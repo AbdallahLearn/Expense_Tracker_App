@@ -6,17 +6,16 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-interface BudgetApi { // remote API interface ( how the app communicate with server )
+interface TransactionApi { // remote API interface ( how the app communicate with server )
 
-    @POST("/budgets") // convert BudgetDto -> JSON
-    suspend fun createBudget(
+    @POST("/expenses") // convert TransactionDto -> JSON
+    suspend fun createTransaction(
         @Header("Authorization") token: String,
-        @Body budget: BudgetDto
+        @Body transaction: TransactionDto
     ): Response<Unit>
 
-    @GET("/budgets")
-    suspend fun getBudgets(
+    @GET("/expenses")
+    suspend fun getTransaction(
         @Header("Authorization") token: String
-    ): Response<BudgetResponse>
-
+    ): Response<List<TransactionDto>>
 }

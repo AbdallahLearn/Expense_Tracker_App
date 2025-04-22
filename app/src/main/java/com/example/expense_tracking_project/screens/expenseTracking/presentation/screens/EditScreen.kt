@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SelectEditingTab
+import com.example.expense_tracking_project.screens.dataSynchronization.presentation.SyncViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditBudgetViewModel
@@ -38,20 +39,22 @@ fun EditScreen(
     navController: NavController,
     viewModel: EditScreenViewModel = hiltViewModel(),
     categoryViewModel: EditCategoryViewModel = hiltViewModel(),
+    budgetViewModel: EditBudgetViewModel = hiltViewModel()
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
     val searchText by viewModel.searchText.collectAsState()
     val categories by categoryViewModel.categories
+    val budgetList by budgetViewModel.budgetList
 
     // Load categories when the tab is "Category"
     LaunchedEffect(selectedTab) {
         if (selectedTab == "Category") {
             categoryViewModel.loadCategories()
+        } else if (selectedTab == "Budget"){
+            budgetViewModel.loadBudgets()
         }
     }
 
-    val viewModeleditbudget: EditBudgetViewModel = hiltViewModel()
-    val budgetList by viewModeleditbudget.budgetList
     Box(modifier = Modifier.fillMaxSize()) {
         SelectEditingTab(
             showTabs = true,
@@ -206,7 +209,7 @@ fun EditScreen(
 
         LaunchedEffect(selectedTab) {
             if (selectedTab == "Budget") {
-                viewModeleditbudget.loadBudgets()
+                budgetViewModel.loadBudgets()
             }
         }
 

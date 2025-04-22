@@ -22,10 +22,23 @@ fun Date.toSimpleDate(): String {
     sdf.timeZone = TimeZone.getTimeZone("UTC")
     return sdf.format(this)
 }
-
-// Helper: yyyy-MM-dd → Date
+// Mapping from API to Entity
+fun BudgetDto.toEntity(): BudgetEntity{
+    val now = Date()
+    return BudgetEntity(
+        name = name,
+        totalAmount = amount,
+        startDate = start_date.toDate(),
+        endDate = end_date.toDate(),
+        createdAt = now,
+        updatedAt = now,
+        isSynced = true
+    )
+}
+// String -> Date
 fun String.toDate(): Date {
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     sdf.timeZone = TimeZone.getTimeZone("UTC")
-    return sdf.parse(this)!!
+    return sdf.parse(this) ?: Date()
 }
+

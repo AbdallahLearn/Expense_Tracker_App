@@ -6,7 +6,8 @@ import javax.inject.Inject
 class SyncBudgetsUseCase @Inject constructor( // get unsynced budgets from Room , send them , marks them as synced, downloads budget from server and stores them locally
     private val syncRepository: SyncRepository
 ) {
-    suspend fun execute() {
+    suspend fun execute(token : String) {
         syncRepository.syncBudgets()
+        syncRepository.getBudgetsFromApi(token)
     }
 }
