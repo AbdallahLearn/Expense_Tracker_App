@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.expense_tracking_project.core.local.data.PredefinedBudgetProvider
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
 import com.example.expense_tracking_project.screens.authentication.presentation.component.ColorPickerDialog
 import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenu

@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 import com.example.expense_tracking_project.core.local.entities.Category
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.GetAllbudgetsUseCase
@@ -13,7 +12,6 @@ import com.example.expense_tracking_project.screens.expenseTracking.domain.useca
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.categoryusecase.InsertCategoryUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.categoryusecase.SoftDeleteCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -90,7 +88,6 @@ class EditCategoryViewModel @Inject constructor(
                 categoryColor.value = it.color
                 categoryType.value = it.type
                 budget.value = it.budgetId.toString()
-                // note.value = it.note ?: ""
             }
         }
     }
@@ -100,8 +97,6 @@ class EditCategoryViewModel @Inject constructor(
             budgetList.value = getAllbudgetsUseCase()
         }
     }
-
-
 }
 
 
