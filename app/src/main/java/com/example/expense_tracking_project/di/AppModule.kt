@@ -1,7 +1,10 @@
 package com.example.expense_tracking_project.di
 
 import android.content.Context
+import com.example.expense_tracking_project.core.TokenProvider
+import com.example.expense_tracking_project.core.connectivity.AuthInterceptor
 import com.example.expense_tracking_project.core.connectivity.NetworkConnectivityObserver
+import com.example.expense_tracking_project.core.connectivity.OkHTTPBuilder
 import com.example.expense_tracking_project.core.local.dao.BudgetDao
 import com.example.expense_tracking_project.core.local.dao.CategoryDao
 import com.example.expense_tracking_project.core.local.dao.TransactionDao
@@ -24,11 +27,11 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -41,6 +44,11 @@ object AppModule {
     fun provideFirebaseAuthDataSource(
         firebaseAuth: FirebaseAuth
     ): FirebaseAuthDataSource = FirebaseAuthDataSource(firebaseAuth)
+
+    @Provides
+    fun provideTokenProvider(
+        firebaseAuth: FirebaseAuth
+    ): TokenProvider = TokenProvider(firebaseAuth)
 
     @Provides
     fun provideAuthRepository( //AuthRepository
@@ -94,8 +102,21 @@ object AppModule {
     }
 
     @Provides
-    fun provideRetrofit(): Retrofit {
+    @Singleton
+    fun provideAuthInterceptor(
+        tokenProvider: TokenProvider
+    ): AuthInterceptor = AuthInterceptor(tokenProvider)
+
+    @Provides
+    @Singleton
+    fun provideOkHTTPBuilder(
+        authInterceptor: AuthInterceptor
+    ): OkHTTPBuilder = OkHTTPBuilder(authInterceptor)
+
+    @Provides
+    fun provideRetrofit(okHTTPBuilder: OkHTTPBuilder): Retrofit {
         return Retrofit.Builder()
+            .client(okHTTPBuilder.getUnsafeOkHttpClient())
             .baseUrl("https://project-1-admissions3.replit.app")
             .addConverterFactory(GsonConverterFactory.create())
             .build()

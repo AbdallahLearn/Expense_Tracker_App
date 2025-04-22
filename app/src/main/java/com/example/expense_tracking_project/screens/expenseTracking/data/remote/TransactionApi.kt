@@ -10,7 +10,6 @@ interface TransactionApi { // remote API interface ( how the app communicate wit
 
     @POST("/expenses") // convert TransactionDto -> JSON
     suspend fun createTransaction(
-        @Header("Authorization") token: String,
         @Body transaction: TransactionDto
     ): Response<Unit>
 

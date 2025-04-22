@@ -4,8 +4,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import com.example.expense_tracking_project.core.TokenProvider
-
 
 class FirebaseAuthDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth
@@ -22,21 +20,7 @@ class FirebaseAuthDataSource @Inject constructor(
     suspend fun login(email: String, password: String): Boolean {
         firebaseAuth.signInWithEmailAndPassword(email, password).await()
         val user = firebaseAuth.currentUser
-        if (user == null) {
-            return false
-        } else {
-
-            val tokenProvider = TokenProvider()
-            val token = tokenProvider.getToken()
-
-            if (token != null) {
-                println("Token: $token")
-                return true
-            } else {
-                println("Token not found")
-                return false
-            }
-        }
+        return user != null
     }
 
     suspend fun sendPasswordResetEmail(email: String) {
