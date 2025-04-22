@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 import com.example.expense_tracking_project.core.local.entities.Category
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoryDao {

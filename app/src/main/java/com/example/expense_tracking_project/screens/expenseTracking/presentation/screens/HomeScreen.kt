@@ -432,6 +432,7 @@ fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltVie
         titleColor = typeColor,
         subtitleItems = listOf(
             "Transaction: $transactionType",
+            "Category : ${transaction.categoryId}",
             "Note: ${transaction.note}",
             "Date: ${viewModel.formatDate(transaction.date)}"
         ),
