@@ -118,7 +118,7 @@ class EditBudgetViewModel @Inject constructor(
         val parts = startDate.value.split(", ", " ").filter { it.isNotBlank() }
         if (parts.size >= 4) {
             calendar.set(Calendar.DAY_OF_MONTH, parts[1].toInt())
-            calendar.set(Calendar.MONTH, convertMonthNameToInt(parts[2]))
+            //calendar.set(Calendar.MONTH, convertMonthNameToInt(parts[2]))
             calendar.set(Calendar.YEAR, parts[3].toInt())
         }
 
@@ -133,22 +133,4 @@ class EditBudgetViewModel @Inject constructor(
         )
     }
 
-    private fun convertMonthNameToInt(month: String): Int {
-        return listOf(
-            "jan",
-            "feb",
-            "mar",
-            "apr",
-            "may",
-            "jun",
-            "jul",
-            "aug",
-            "sep",
-            "oct",
-            "nov",
-            "dec"
-        )
-            .indexOf(month.lowercase(Locale.ENGLISH))
-            .coerceAtLeast(0)
-    }
 }

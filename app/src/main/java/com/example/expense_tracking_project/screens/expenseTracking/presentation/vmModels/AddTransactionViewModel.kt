@@ -15,20 +15,12 @@ import java.util.*
 import com.example.expense_tracking_project.core.local.data.PredefinedCategoryProvider
 import com.example.expense_tracking_project.core.local.entities.Category
 import com.example.expense_tracking_project.core.local.entities.Transaction
-// <<<<<<< LYM-72-Display-expense-categories-in-a-pie-chart
-//import com.example.expense_tracking_project.screens.dataSynchronization.domain.usecase.SyncTransactionUseCase
-// =======
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.usecase.SyncTransactionUseCase
-// >>>>>>> dev
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetAllTransactionsUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.UpdateTransactionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
 import java.time.ZoneId
 import javax.inject.Inject
@@ -39,11 +31,7 @@ class AddTransactionViewModel @Inject constructor(
     private val insertTransactionUseCase: InsertTransactionUseCase,
     private val updateTransactionUseCase: UpdateTransactionUseCase,
     private val getAllTransactionsUseCase: GetAllTransactionsUseCase,
-// <<<<<<< LYM-72-Display-expense-categories-in-a-pie-chart
-//    private val syncTransactionUseCase: SyncTransactionUseCase,
-// =======
     private val syncTransactionUseCase: SyncTransactionUseCase,
-// >>>>>>> dev
     private val categoryDao: CategoryDao
 ) : ViewModel() {
 

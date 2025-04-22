@@ -73,9 +73,6 @@ fun HomeScreen(
     val syncStatus by syncViewModel.syncStatus.collectAsState()
 
     var showSearchField by remember { mutableStateOf(false) }
-//     LaunchedEffect(Unit) {
-//         syncViewModel.syncNow() // Auto-sync when HomeScreen opens
-//     }
 
     syncStatus?.let {
         Text(
@@ -439,7 +436,7 @@ fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltVie
         trailingContent = {
             Row {
                 IconButton(onClick = {
-                    // TODO: Handle Edit action here
+
                 }) {
                     Icon(
                         imageVector = Icons.Outlined.Edit,

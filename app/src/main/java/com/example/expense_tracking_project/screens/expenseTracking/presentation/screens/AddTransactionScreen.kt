@@ -60,8 +60,13 @@ fun AddExpenseScreen(
     val noteState = viewModel.getNoteState()
 
     // for the category options
-    val categoryOptions by remember(viewModel.categoryList.value) {
-        mutableStateOf(viewModel.categoryList.value.map { it.categoryName })
+    val categoryOptions by remember(
+        viewModel.categoryList.value,
+        viewModel.selectedTab.value
+    ) {
+        mutableStateOf(
+            viewModel.getCategoryOptions() + viewModel.categoryList.value.map { it.categoryName }
+        )
     }
 
     // text fields based on the selected transaction type (Income / Expenses)

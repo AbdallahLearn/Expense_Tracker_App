@@ -2,8 +2,10 @@ package com.example.expense_tracking_project.screens.dataSynchronization.data
 
 import android.util.Log
 import com.example.expense_tracking_project.core.local.dao.CategoryDao
+import com.example.expense_tracking_project.core.local.entities.Category
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncCategoryRepository
 import com.example.expense_tracking_project.screens.expenseTracking.data.mapper.toDto
+import com.example.expense_tracking_project.screens.expenseTracking.data.mapper.toEntity
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.sync.CategoryApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,4 +35,26 @@ class SyncCategoryRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getCategoryFromApi(token: String): List<Category> {
+        val response = categoryApi.getCategory(token)
+        val remoteCategory = response.body()?.categories?.map { it.toEntity() } ?: emptyList()
+
+        return withContext(Dispatchers.IO) {
+            try {
+                if (response.isSuccessful) {
+                    remoteCategory.forEach { category ->
+                        categoryDao.insertCategory(category)
+                    }
+                    Log.d("SYNC", "Fetched ${remoteCategory.size} categories from server")
+                    remoteCategory
+                } else {
+                    Log.e("SYNC", "Failed to fetch category: ${response.code()}")
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emptyList()
+            }
+        }
+    }
 }
