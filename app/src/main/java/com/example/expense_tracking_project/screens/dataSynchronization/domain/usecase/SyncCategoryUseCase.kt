@@ -8,9 +8,9 @@ import javax.inject.Inject
 class SyncCategoryUseCase @Inject constructor(
     private val syncCategoryRepository: SyncCategoryRepository
 ) {
-    suspend fun execute(token : String) {
+    suspend fun execute() {
         syncCategoryRepository.syncCategory()
-        syncCategoryRepository.getCategoryFromApi(token)
+        syncCategoryRepository.getCategoryFromApi()
     }
 }
 

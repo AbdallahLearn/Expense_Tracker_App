@@ -1,4 +1,4 @@
-package com.example.expense_tracking_project.screens.dataSynchronization.data
+package com.example.expense_tracking_project.screens.dataSynchronization.data.repositryimp
 
 import android.util.Log
 import com.example.expense_tracking_project.core.local.dao.CategoryDao
@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 class SyncCategoryRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao, // local room database
-    private val categoryApi: CategoryApi // remote server
+    private val categoryApi: CategoryApi,
+    // remote server
 ) : SyncCategoryRepository {
 
     override suspend fun syncCategory(): Unit = withContext(Dispatchers.IO) {
@@ -35,8 +36,8 @@ class SyncCategoryRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCategoryFromApi(token: String): List<Category> {
-        val response = categoryApi.getCategory(token)
+    override suspend fun getCategoryFromApi(): List<Category> {
+        val response = categoryApi.getCategory()
         val remoteCategory = response.body()?.categories?.map { it.toEntity() } ?: emptyList()
 
         return withContext(Dispatchers.IO) {
@@ -58,3 +59,4 @@ class SyncCategoryRepositoryImpl @Inject constructor(
         }
     }
 }
+
