@@ -116,7 +116,7 @@ fun EditScreen(
                                 title = " ${category.categoryName}",
                                 subtitleItems = listOf(
                                     "Type: ${category.type}",
-                                    "Budget ID: ${category.categoryId}", //it should budget ID
+                                    "Budget ID: ${category.budgetId}", //it should budget ID
                                 ),
                                 trailingContent = {
                                     Row {

@@ -3,7 +3,9 @@ package com.example.expense_tracking_project.screens.expenseTracking.presentatio
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,36 +19,39 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.core.local.data.PredefinedBudgetProvider
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
+import com.example.expense_tracking_project.screens.authentication.presentation.component.ColorPickerDialog
 import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenu
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditCategoryViewModel
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddCategoryScreen(
     navController: NavController,
     categoryId: Int? = null,
     viewModel: EditCategoryViewModel = hiltViewModel(),
-
-    ) {
+) {
     BackgroundLayout("Edit Category")
 
     val errorMessage = remember { mutableStateOf("") }
-    val budgets = viewModel.budgetList.value // Room budget list
+    val budgets = viewModel.budgetList.value
     val selectedBudgetLabel = remember { mutableStateOf("") }
+    var showColorPicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.loadBudgets() // Load budgets from Room
+        viewModel.loadBudgets()
     }
 
     LaunchedEffect(categoryId) {
@@ -54,7 +59,6 @@ fun AddCategoryScreen(
             viewModel.loadCategoryById(categoryId)
         } else {
             viewModel.loadBudgets()
-            // Reset fields for adding new category
             viewModel.categoryName.value = ""
             viewModel.categoryType.value = ""
             viewModel.budget.value = ""
@@ -77,6 +81,11 @@ fun AddCategoryScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .border(
+                    width = 1.dp,
+                    color = Color.White,
+                    shape = RoundedCornerShape(30.dp)
+                )
         ) {
             Column(
                 modifier = Modifier
@@ -91,12 +100,26 @@ fun AddCategoryScreen(
                 SimpleTextField(
                     title = "Category Name",
                     value = viewModel.categoryName.value,
-                    onValueChange = { viewModel.categoryName.value = it })
+                    onValueChange = { viewModel.categoryName.value = it }
+                )
 
                 SimpleTextField(
                     title = "Category Color",
                     value = viewModel.categoryColor.value,
-                    onValueChange = { viewModel.categoryColor.value = it })
+                    onValueChange = {}, // Read-only
+                    onIconClick = { showColorPicker = true }
+                )
+
+                if (showColorPicker) {
+                    ColorPickerDialog(
+                        selectedColor = viewModel.categoryColor.value,
+                        onColorSelected = {
+                            viewModel.categoryColor.value = it
+                            showColorPicker = false
+                        },
+                        onDismiss = { showColorPicker = false }
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -104,7 +127,8 @@ fun AddCategoryScreen(
                     label = "Category Type",
                     categoryOptions = listOf("Income", "Expense"),
                     selectedOption = viewModel.categoryType.value,
-                    onOptionSelected = { viewModel.categoryType.value = it })
+                    onOptionSelected = { viewModel.categoryType.value = it }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -114,8 +138,6 @@ fun AddCategoryScreen(
                     selectedOption = viewModel.budget.value,
                     onOptionSelected = { selectedLabel ->
                         viewModel.budget.value = selectedLabel
-
-                        //  Parse the selected budget
                         val selectedBudget = budgets.find {
                             "ID: ${it.budgetId} • ${it.totalAmount}" == selectedLabel
                         }
@@ -123,16 +145,8 @@ fun AddCategoryScreen(
                     }
                 )
 
-
                 Spacer(modifier = Modifier.height(16.dp))
 
-//                SimpleTextField(
-//                    title = "Note",
-//                    value = viewModel.note.value,
-//                    onValueChange = { viewModel.note.value = it }
-//                )
-
-                // Display error message if any
                 if (errorMessage.value.isNotEmpty()) {
                     Text(
                         text = errorMessage.value,
@@ -146,7 +160,8 @@ fun AddCategoryScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         SimpleButton(
-            title = "Save", onButtonClick = {
+            title = "Save",
+            onButtonClick = {
                 viewModel.saveCategory(
                     onSuccess = {
                         navController.popBackStack()

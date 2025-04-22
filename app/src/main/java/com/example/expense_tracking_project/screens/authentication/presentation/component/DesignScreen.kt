@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -46,16 +49,17 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TransactionTypeFilter
+import androidx.core.graphics.toColorInt
 
 
 @Composable
 fun BackgroundLayout(
-    title: String = ""
+    title: String = "",
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Box(
             modifier = Modifier
@@ -84,7 +88,7 @@ fun SimpleTextField(
     isPassword: Boolean = false,
     value: String,
     onValueChange: (String) -> Unit,
-    onIconClick: (() -> Unit)? = null // trigger for calendar icon
+    onIconClick: (() -> Unit)? = null, // trigger for calendar icon
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -136,6 +140,46 @@ fun SimpleTextField(
 }
 
 @Composable
+fun ColorPickerDialog(
+    selectedColor: String,
+    onColorSelected: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val colors = listOf(
+        "#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5",
+        "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50",
+        "#8BC34A", "#CDDC39", "#FFC107", "#FF9800", "#FF5722"
+    )
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {},
+        title = { Text("Choose Category Color") },
+        text = {
+            Column {
+                colors.chunked(5).forEach { row ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        row.forEach { colorHex ->
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .padding(4.dp)
+                                    .background(Color(colorHex.toColorInt()), shape = CircleShape)
+                                    .clickable { onColorSelected(colorHex) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    )
+}
+
+
+@Composable
 fun SimpleButton(title: String = "", onButtonClick: () -> Unit) {
     Button(
         onClick = onButtonClick,
@@ -160,14 +204,14 @@ fun SimpleButton(title: String = "", onButtonClick: () -> Unit) {
 fun SelectTransaction(
     showTabs: Boolean = false,
     tabOptions: List<String> = listOf(),
-    onTabSelected: (String) -> Unit
+    onTabSelected: (String) -> Unit,
 ) {
     var activeButton by remember { mutableStateOf(tabOptions.firstOrNull().orEmpty()) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Box(
             modifier = Modifier
@@ -176,7 +220,8 @@ fun SelectTransaction(
                 .background(
                     Color(0xFF5C4DB7),
                     shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
-                ),
+                )
+            ,
             contentAlignment = Alignment.TopCenter
         ) {
             if (showTabs && tabOptions.isNotEmpty()) {
@@ -237,11 +282,12 @@ fun SelectTransaction(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomDropdownMenuBudget( // Drop down for Budget menu
+fun CustomDropdownMenuBudget(
+    // Drop down for Budget menu
     label: String,
     BudgetOptions: List<String>,
     selectedOption: String,
-    onOptionSelected: (String) -> Unit
+    onOptionSelected: (String) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -281,11 +327,12 @@ fun CustomDropdownMenuBudget( // Drop down for Budget menu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomDropdownMenu( // Drop down for Category menu
+fun CustomDropdownMenu(
+    // Drop down for Category menu
     label: String,
     categoryOptions: List<String>,
     selectedOption: String,
-    onOptionSelected: (String) -> Unit
+    onOptionSelected: (String) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -327,14 +374,14 @@ fun CustomDropdownMenu( // Drop down for Category menu
 fun SelectEditingTab(
     showTabs: Boolean = false,
     tabOptions: List<String> = listOf(),
-    onTabSelected: (String) -> Unit
+    onTabSelected: (String) -> Unit,
 ) {
     var activeButton by remember { mutableStateOf(tabOptions.firstOrNull().orEmpty()) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Box(
             modifier = Modifier
@@ -404,7 +451,7 @@ fun SelectEditingTab(
 @Composable
 fun DropdownFilter(
     typeFilter: TransactionTypeFilter,
-    onTypeSelected: (TransactionTypeFilter) -> Unit
+    onTypeSelected: (TransactionTypeFilter) -> Unit,
 ) {
     Column(
         modifier = Modifier

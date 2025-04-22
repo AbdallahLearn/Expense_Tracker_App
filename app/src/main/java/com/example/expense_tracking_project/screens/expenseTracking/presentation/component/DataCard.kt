@@ -26,7 +26,7 @@ fun DataCard(
     subtitleItems: List<String>,
     dateStart: Date? = null,
     dateEnd: Date? = null,
-    titleColor: Color = Color.Black,
+    titleColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     trailingContent: @Composable (() -> Unit)? = null
 ) {
     val backgroundColor = MaterialTheme.colorScheme.surface
