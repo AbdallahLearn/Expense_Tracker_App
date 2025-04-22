@@ -15,10 +15,10 @@ class AuthRepositoryImpl @Inject constructor(private val firebaseAuthDataSource:
         }
     }
 
-    override suspend fun login(email: String, password: String): Result<Unit> {
+    override suspend fun login(email: String, password: String): Result<Boolean> {
         return try {
-            firebaseAuthDataSource.login(email, password)
-            Result.success(Unit)
+            val isLoginSuccessful = firebaseAuthDataSource.login(email, password)
+            Result.success(isLoginSuccessful)
         } catch (e: Exception) {
             Result.failure(e)
         }
