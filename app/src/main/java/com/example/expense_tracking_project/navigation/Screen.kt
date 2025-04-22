@@ -9,7 +9,6 @@ sealed class Screen {
     @Serializable data object Login : Screen()
     @Serializable data object SignUp : Screen()
     @Serializable data object Home : Screen()
-    @Serializable data object AddExpense : Screen()
     @Serializable data object Edit : Screen()
     @Serializable data object Profile : Screen()
     @Serializable data object Statistics : Screen()
@@ -20,4 +19,7 @@ sealed class Screen {
 
     @Serializable
     data class AddCategory(val categoryId: Int? = null) : Screen()
+
+    @Serializable data object AddExpense : Screen()
+
 }

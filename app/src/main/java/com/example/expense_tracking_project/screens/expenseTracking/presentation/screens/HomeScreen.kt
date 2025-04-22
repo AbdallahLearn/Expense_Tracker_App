@@ -53,6 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.core.local.entities.Transaction
+import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.dataSynchronization.presentation.SyncViewModel
 import com.example.expense_tracking_project.screens.authentication.presentation.component.DropdownFilter
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
@@ -195,7 +196,11 @@ fun TransactionsSection(
             )
         } else {
             transactions.forEach { transaction ->
-                TransactionItem(transaction = transaction, viewModel = viewModel)
+                TransactionItem(
+                    transaction = transaction,
+                    navController = navController, // ✅ Add this
+                    viewModel = viewModel
+                )
             }
         }
     }
@@ -413,7 +418,9 @@ fun RecentTransactions(
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(transactions) { transaction ->
                 TransactionItem(
-                    transaction = transaction, viewModel = viewModel
+                    transaction = transaction,
+                    navController = navController,
+                    viewModel = viewModel
                 )
             }
         }
@@ -421,7 +428,9 @@ fun RecentTransactions(
 }
 
 @Composable
-fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltViewModel()) {
+fun TransactionItem(transaction: Transaction,
+                    navController: NavController,
+                    viewModel: HomeViewModel = hiltViewModel()) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     val transactionType = if (transaction.amount >= 0) "Income" else "Expenses"
@@ -439,7 +448,8 @@ fun TransactionItem(transaction: Transaction, viewModel: HomeViewModel = hiltVie
         trailingContent = {
             Row {
                 IconButton(onClick = {
-                    // TODO: Handle Edit action here
+                    navController.navigate("add_expense?transactionId=${transaction.transactionId}")
+
                 }) {
                     Icon(
                         imageVector = Icons.Outlined.Edit,

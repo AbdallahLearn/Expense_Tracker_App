@@ -26,7 +26,6 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.EditScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.ProfileScreen
-import com.example.expense_tracking_project.screens.dataVisualization.presentation.screens.StatisticsScreen
 import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.OnBoardingScreen
 import kotlinx.serialization.json.Json
 
@@ -81,12 +80,9 @@ fun AppNavigation(
                 HomeScreen(
                     navController = navController,
                     changeAppTheme = changeAppTheme,
-                    isDarkTheme = isDarkTheme // 👈 here
+                    isDarkTheme = isDarkTheme
                 )
             }
-//            composable<Screen.AddTransaction> {
-//                TransactionScreen(navController, isDarkTheme)
-//            }
             composable<Screen.AddExpense> {
                 AddExpenseScreen(navController)
             }
@@ -113,16 +109,24 @@ fun AppNavigation(
                 val categoryId = backStackEntry.arguments?.getInt("categoryId")
                 AddCategoryScreen(navController, categoryId = categoryId)
             }
+
+
             composable(
-                route = "add_category?categoryData={categoryData}",
-                arguments = listOf(navArgument("categoryData") { type = NavType.StringType })
+                "add_expense?transactionId={transactionId}",
+                arguments = listOf(navArgument("transactionId") {
+                    type = NavType.IntType
+                    defaultValue = -1
+                })
             ) { backStackEntry ->
-                val categoryData = backStackEntry.arguments?.getString("categoryData")
-                val category = categoryData?.let {
-                    Json.decodeFromString<Screen.AddCategory>(it)
-                }
-                AddCategoryScreen(navController, categoryId = category?.categoryId)
+                val transactionId = backStackEntry.arguments?.getInt("transactionId")
+                AddExpenseScreen(
+                    navController = navController,
+                    transactionId = if (transactionId == -1) null else transactionId
+                )
             }
+
+
+
             composable(
                 route = "add_budget?budgetData={budgetData}",
                 arguments = listOf(navArgument("budgetData") { type = NavType.StringType })
@@ -133,6 +137,23 @@ fun AppNavigation(
                 }
                 AddBudgetScreen(navController, budgetId = budget?.budgetId)
             }
+            composable(
+                route = "add_category?categoryData={categoryData}",
+                arguments = listOf(navArgument("categoryData") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val categoryData = backStackEntry.arguments?.getString("categoryData")
+                val category = categoryData?.let {
+                    Json.decodeFromString<Screen.AddCategory>(it)
+                }
+                AddCategoryScreen(navController, categoryId = category?.categoryId)
+            }
+
+
+
+
+
+
+
 
         }
     }

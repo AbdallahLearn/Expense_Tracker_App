@@ -1,5 +1,6 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -18,6 +19,7 @@ import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 
+@SuppressLint("WrongNavigateRouteType")
 @Composable
 fun CustomBottomBar(
     selectedIndex: Int,
@@ -70,14 +72,13 @@ fun CustomBottomBar(
 
         // Floating Action Button in the center
         FloatingActionButton(
-//            onClick = onFabClick,
             onClick = {
-                navController.navigate(Screen.AddExpense) // Navigate to AddExpense screen when FAB is clicked
+                navController.navigate(Screen.AddExpense)
             },
             containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier
-                .align(Alignment.Center) // Center the FAB in the BottomAppBar
-                .offset(y = -28.dp) // Adjust to center vertically
+                .align(Alignment.Center)
+                .offset(y = -28.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Add,

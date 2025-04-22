@@ -30,11 +30,11 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.AddTransactionViewModel
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddExpenseScreen(
     navController: NavController,
+    transactionId: Int? = null,
     viewModel: AddTransactionViewModel = hiltViewModel(),
 ) {
     // retrieve current context
@@ -52,12 +52,22 @@ fun AddExpenseScreen(
             navController.navigate(Screen.Home)
         }
     }
+    LaunchedEffect(transactionId) {
+        if (transactionId != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                viewModel.loadTransactionById(transactionId)
+            }
+        } else {
+            viewModel.resetForm()
+        }
+    }
 
     // Observe State from the ViewModel
-    val amountState = viewModel.getAmountState()
-    val categoryState = viewModel.getCategoryState()
-    val dateState = viewModel.getDateState()
-    val noteState = viewModel.getNoteState()
+    val amount = viewModel.amount
+    val categoryName = viewModel.categoryName
+    val date = viewModel.date
+    val note = viewModel.note
+    val selectedTab = viewModel.selectedTab
 
     // for the category options
     val categoryOptions by remember(
@@ -71,16 +81,16 @@ fun AddExpenseScreen(
 
     // text fields based on the selected transaction type (Income / Expenses)
     val amountLabel = stringResource(
-        if (viewModel.selectedTab.value == "Income") R.string.incomeAmount else R.string.expenseAmount
+        if (selectedTab.value == "Income") R.string.incomeAmount else R.string.expenseAmount
     )
     val categoryLabel = stringResource(
-        if (viewModel.selectedTab.value == "Income") R.string.incomeCategory else R.string.expenseCategory
+        if (selectedTab.value == "Income") R.string.incomeCategory else R.string.expenseCategory
     )
     val dateLabel = stringResource(
-        if (viewModel.selectedTab.value == "Income") R.string.incomeDate else R.string.expenseDate
+        if (selectedTab.value == "Income") R.string.incomeDate else R.string.expenseDate
     )
     val noteLabel = stringResource(
-        if (viewModel.selectedTab.value == "Income") R.string.incomeNote else R.string.expenseNote
+        if (selectedTab.value == "Income") R.string.incomeNote else R.string.expenseNote
     )
 
     SelectTransaction(
@@ -101,7 +111,7 @@ fun AddExpenseScreen(
         Card(
             shape = RoundedCornerShape(32.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), // Dynamic color
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -109,34 +119,33 @@ fun AddExpenseScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface) // Dynamic background color
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-
                 Spacer(modifier = Modifier.height(20.dp))
 
                 SimpleTextField(
                     title = amountLabel,
-                    value = amountState.value,
-                    onValueChange = { amountState.value = it })
+                    value = amount.value,
+                    onValueChange = { amount.value = it })
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 CustomDropdownMenu(
                     categoryLabel,
                     categoryOptions = categoryOptions,
-                    selectedOption = categoryState.value,
-                    onOptionSelected = { categoryState.value = it }
+                    selectedOption = categoryName.value,
+                    onOptionSelected = { categoryName.value = it }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 SimpleTextField(
                     title = dateLabel,
-                    value = dateState.value,
-                    onValueChange = { dateState.value = it },
+                    value = date.value,
+                    onValueChange = { date.value = it },
                     onIconClick = { datePickerDialog.show() },
                 )
 
@@ -144,20 +153,24 @@ fun AddExpenseScreen(
 
                 SimpleTextField(
                     title = noteLabel,
-                    value = noteState.value,
-                    onValueChange = { noteState.value = it },
+                    value = note.value,
+                    onValueChange = { note.value = it },
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 SimpleButton("Save") {
                     if (viewModel.isTransactionValid()) {
-                        viewModel.saveTransaction()
-                        Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
-                        navigateToHome = true
+                        viewModel.saveTransaction {
+                            Toast.makeText(
+                                context,
+                                if (transactionId != null) "Updated successfully!" else "Added successfully!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navigateToHome = true
+                        }
                     } else {
-                        val amount = viewModel.getAmountState().value
-                        if (amount.isBlank() || amount.toDoubleOrNull() == null) {
+                        if (amount.value.isBlank() || amount.value.toDoubleOrNull() == null) {
                             Toast.makeText(
                                 context,
                                 "Please enter a valid amount",
