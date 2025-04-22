@@ -10,3 +10,11 @@ class GetAllTransactionsUseCase @Inject constructor(private val repository: Tran
         return repository.allTransactions()
     }
 }
+
+class GetTransactionByIdUseCase @Inject constructor(
+    private val repository: TransactionRepository
+) {
+    suspend operator fun invoke(transactionId: Int): Transaction? {
+        return repository.getTransactionById(transactionId)
+    }
+}

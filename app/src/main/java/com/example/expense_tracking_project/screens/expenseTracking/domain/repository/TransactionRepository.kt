@@ -8,4 +8,6 @@ interface TransactionRepository {
     suspend fun insert(transaction: Transaction)
     suspend fun update(transaction: Transaction)
     suspend fun softDeleteTransaction(transactionId: Int)
+    suspend fun getTransactionById(transactionId: Int): Transaction?
+
 }

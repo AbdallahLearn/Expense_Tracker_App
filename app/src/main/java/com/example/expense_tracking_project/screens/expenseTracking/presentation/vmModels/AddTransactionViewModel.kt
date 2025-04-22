@@ -3,12 +3,10 @@ package com.example.expense_tracking_project.screens.expenseTracking.presentatio
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.expense_tracking_project.core.local.dao.CategoryDao
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -16,60 +14,82 @@ import com.example.expense_tracking_project.core.local.data.PredefinedCategoryPr
 import com.example.expense_tracking_project.core.local.entities.Category
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.usecase.SyncTransactionUseCase
-import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetAllTransactionsUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.InsertTransactionUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.UpdateTransactionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import androidx.compose.runtime.State
+import com.example.expense_tracking_project.core.local.dao.TransactionDao
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.categoryusecase.GetAllCategoriesUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetTransactionByIdUseCase
 import kotlinx.coroutines.launch
 import java.time.ZoneId
 import javax.inject.Inject
+import kotlin.math.abs
 
 @HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 class AddTransactionViewModel @Inject constructor(
     private val insertTransactionUseCase: InsertTransactionUseCase,
     private val updateTransactionUseCase: UpdateTransactionUseCase,
-    private val getAllTransactionsUseCase: GetAllTransactionsUseCase,
+    private val getTransactionByIdUseCase: GetTransactionByIdUseCase,
+    private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
     private val syncTransactionUseCase: SyncTransactionUseCase,
-    private val categoryDao: CategoryDao
+    private val dao: TransactionDao
 ) : ViewModel() {
 
     // Format the date (Mon, 14 Apr 2025)
     private val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy", Locale.ENGLISH)
 
+    // Editing state
+    val editingTransactionId = mutableStateOf<Int?>(null)
+
     // Default selection type is Expenses
     val selectedTab = mutableStateOf("Expenses")
 
-    // Expense transaction state variables
-    val expensesAmount = mutableStateOf("")
-    val expensesCategory = mutableStateOf("")
-    val expensesDate = mutableStateOf(LocalDate.now().format(formatter))
-    val expensesNote = mutableStateOf("")
+    // Transaction state variables
+    val amount = mutableStateOf("")
+    val categoryName = mutableStateOf("")
+    val date = mutableStateOf(LocalDate.now().format(formatter))
+    val note = mutableStateOf("")
 
-    // Income transaction state variables
-    val incomeAmount = mutableStateOf("")
-    val incomeCategory = mutableStateOf("")
-    val incomeDate = mutableStateOf(LocalDate.now().format(formatter))
-    val incomeNote = mutableStateOf("")
-
-    val categoryList = mutableStateOf<List<Category>>(emptyList()) // <- List of categories
-
-    private val _categories = mutableStateOf<List<Category>>(emptyList())
-    val categories: State<List<Category>> = _categories
+    val categoryList = mutableStateOf<List<Category>>(emptyList())
 
 
     init {
         viewModelScope.launch {
-            categoryList.value = categoryDao.getAllCategories()
+            categoryList.value = getAllCategoriesUseCase()
         }
     }
 
-    // Get the State based on the selectedTab, either Income or Expenses
-    fun getAmountState() = if (selectedTab.value == "Income") incomeAmount else expensesAmount
-    fun getCategoryState() = if (selectedTab.value == "Income") incomeCategory else expensesCategory
-    fun getDateState() = if (selectedTab.value == "Income") incomeDate else expensesDate
-    fun getNoteState() = if (selectedTab.value == "Income") incomeNote else expensesNote
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    fun loadTransactionById(id: Int) {
+        viewModelScope.launch {
+            val transaction = getTransactionByIdUseCase(id)
+            transaction?.let {
+                editingTransactionId.value = id
+                amount.value = abs(it.amount).toString()
+                note.value = it.note ?: ""
+                date.value = LocalDate.ofInstant(it.date.toInstant(), ZoneId.systemDefault())
+                    .format(formatter)
+                selectedTab.value = if (it.amount >= 0) "Income" else "Expenses"
+
+                // Load category name
+                it.categoryId?.let { categoryId ->
+                    categoryName.value = categoryList.value
+                        .firstOrNull { cat -> cat.categoryId == categoryId }
+                        ?.categoryName ?: ""
+                }
+            }
+        }
+    }
+
+    fun resetForm() {
+        editingTransactionId.value = null
+        selectedTab.value = "Expenses"
+        amount.value = ""
+        categoryName.value = ""
+        date.value = LocalDate.now().format(formatter)
+        note.value = ""
+    }
 
     // Get the predefined categories
     fun getCategoryOptions(): List<String> {
@@ -82,12 +102,7 @@ class AddTransactionViewModel @Inject constructor(
         return DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                val selectedDate = LocalDate.of(year, month + 1, dayOfMonth).format(formatter)
-                if (selectedTab.value == "Income") {
-                    incomeDate.value = selectedDate
-                } else {
-                    expensesDate.value = selectedDate
-                }
+                date.value = LocalDate.of(year, month + 1, dayOfMonth).format(formatter)
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -95,41 +110,50 @@ class AddTransactionViewModel @Inject constructor(
         )
     }
 
-    // Function to check the validation of the transaction
-    fun isTransactionValid(): Boolean {
-        val amount = getAmountState().value
-        val category = getCategoryState().value
-        val date = getDateState().value
-        // Check if amount is not blank and is a valid number
-        val isAmountValid = amount.isNotBlank() && amount.toDoubleOrNull() != null
-        return isAmountValid && category.isNotBlank() && date.isNotBlank()
-    }
-
     private fun getSelectedCategoryId(): Int? {
-        val categoryName = getCategoryState().value
-        return _categories.value.firstOrNull { it.categoryName.equals(categoryName, ignoreCase = true) }?.categoryId
+        return categoryList.value.firstOrNull {
+            it.categoryName.equals(categoryName.value, ignoreCase = true)
+        }?.categoryId
     }
 
-    fun saveTransaction() {
-        viewModelScope.launch {
-            val amount = getAmountState().value.toDouble()
-            val finalAmount = if (selectedTab.value == "Expenses") -amount else amount
+    fun isTransactionValid(): Boolean {
+        return amount.value.isNotBlank() &&
+                amount.value.toDoubleOrNull() != null &&
+                categoryName.value.isNotBlank() &&
+                date.value.isNotBlank()
+    }
 
-            val selectedLocalDate = LocalDate.parse(getDateState().value, formatter)
+    fun saveTransaction(onSuccess: () -> Unit = {}) {
+        viewModelScope.launch {
+            if (!isTransactionValid()) return@launch
+
+            val amountValue = amount.value.toDouble()
+            val finalAmount = if (selectedTab.value == "Expenses") -amountValue else amountValue
+
+            val selectedLocalDate = LocalDate.parse(date.value, formatter)
             val convertedDate = Date.from(selectedLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
 
-            val selectedCategoryName = getCategoryState().value
-            val selectedCategoryId = categoryList.value.firstOrNull { it.categoryName == selectedCategoryName }?.categoryId
-
             val transaction = Transaction(
+                transactionId = editingTransactionId.value ?: 0,
                 amount = finalAmount,
-                categoryId = selectedCategoryId,
+                categoryId = getSelectedCategoryId(),
                 date = convertedDate,
-                note = getNoteState().value,
-                createdAt = Date(),
+                note = note.value,
+                isDeleted = false,
+                isSynced = editingTransactionId.value != null,
+                createdAt = if (editingTransactionId.value == null) Date() else Date(),
                 updatedAt = Date()
             )
-            insertTransactionUseCase(transaction)
+
+            if (editingTransactionId.value != null) {
+                updateTransactionUseCase(transaction)
+            } else {
+                insertTransactionUseCase(transaction)
+            }
+
+            resetForm()
+            onSuccess()
         }
     }
+
 }

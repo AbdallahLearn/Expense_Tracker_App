@@ -32,4 +32,7 @@ class TransactionRepositoryImpl @Inject constructor(private val transactionDao: 
             transactionDao.update(updatedTransaction)
         }
     }
+    override suspend fun getTransactionById(transactionId: Int): Transaction? {
+        return transactionDao.geTransactionById(transactionId)
+    }
 }
