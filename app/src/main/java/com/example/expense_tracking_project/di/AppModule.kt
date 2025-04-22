@@ -14,12 +14,16 @@ import com.example.expense_tracking_project.screens.authentication.domain.reposi
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.ForgotPasswordUseCase
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.SignUpUseCase
-import com.example.expense_tracking_project.screens.dataSynchronization.data.SyncCategoryRepositoryImpl
-import com.example.expense_tracking_project.screens.dataSynchronization.data.SyncRepositoryImpl
-import com.example.expense_tracking_project.screens.dataSynchronization.data.SyncTransactionRepositoryImpl
+import com.example.expense_tracking_project.screens.dataSynchronization.data.repositryimp.SyncCategoryRepositoryImpl
+import com.example.expense_tracking_project.screens.dataSynchronization.data.repositryimp.SyncRepositoryImpl
+import com.example.expense_tracking_project.screens.dataSynchronization.data.repositryimp.SyncTransactionRepositoryImpl
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncCategoryRepository
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncRepository
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncTransactionRepository
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.DataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.LocalDataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.RemoteCategoryDataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.RemoteDataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.BudgetApi
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.TransactionApi
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.sync.CategoryApi
@@ -128,7 +132,7 @@ object AppModule {
     }
 
     @Provides
-    fun provideNetworkObserver( @ApplicationContext context: Context): NetworkConnectivityObserver {
+    fun provideNetworkObserver(@ApplicationContext context: Context): NetworkConnectivityObserver {
         return NetworkConnectivityObserver(context)
     } // using ApplicationContext to allow the observer to work across the whole app lifecycle
 
@@ -140,6 +144,16 @@ object AppModule {
     @Provides
     fun provideTransactionApi(retrofit: Retrofit): TransactionApi {
         return retrofit.create(TransactionApi::class.java)
+    }
+
+    @Provides
+    fun provideLocalDataSource(categoryDao: CategoryDao): DataSource {
+        return LocalDataSource(categoryDao)
+    }
+
+    @Provides
+    fun provideRemoteDataSource(categoryApi: CategoryApi): RemoteCategoryDataSource {
+        return RemoteDataSource(categoryApi)
     }
 
 }

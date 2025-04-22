@@ -1,4 +1,4 @@
-package com.example.expense_tracking_project.screens.dataSynchronization.data
+package com.example.expense_tracking_project.screens.dataSynchronization.data.repositryimp
 
 import android.util.Log
 import com.example.expense_tracking_project.core.local.dao.TransactionDao

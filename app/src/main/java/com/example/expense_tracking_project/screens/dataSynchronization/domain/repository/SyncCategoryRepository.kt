@@ -4,6 +4,6 @@ import com.example.expense_tracking_project.core.local.entities.Category
 
 interface SyncCategoryRepository {
     suspend fun syncCategory(): Unit
-    suspend fun getCategoryFromApi(token: String) : List <Category>
+    suspend fun getCategoryFromApi() : List <Category>
 
 }
