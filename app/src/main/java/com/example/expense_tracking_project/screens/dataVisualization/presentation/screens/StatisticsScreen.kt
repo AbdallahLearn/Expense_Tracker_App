@@ -56,17 +56,10 @@ fun StatisticsScreen(navController: NavController, modifier: Modifier = Modifier
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(top = 150.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Statistics",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         PieChartComposable(
             pieData = if (selectedTab.value == "Expenses") expenseData else incomeData,
