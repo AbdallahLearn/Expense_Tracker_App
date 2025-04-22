@@ -45,9 +45,9 @@ class LoginViewModel @Inject constructor (private val loginUseCase: LoginUseCase
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            val result = loginUseCase(email, password)
+            val isLoginSuccessful = loginUseCase(email, password)
 
-            _authState.value = result.fold(
+            _authState.value = isLoginSuccessful.fold(
                 onSuccess = { AuthState.Authenticated },
                 onFailure = { AuthState.Error(it.message ?: "Login failed.") }
             )

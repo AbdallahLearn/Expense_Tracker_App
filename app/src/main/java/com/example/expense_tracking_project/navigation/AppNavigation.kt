@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.example.expense_tracking_project.core.TokenProvider
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
 //import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.LoginScreen
@@ -27,7 +28,10 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.ProfileScreen
 import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.OnBoardingScreen
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -62,9 +66,17 @@ fun AppNavigation(
             }
         }
     ) { padding ->
+        val tokenProvider = TokenProvider(FirebaseAuth.getInstance())
+        val token = runBlocking {
+            tokenProvider.getToken()
+        }
         NavHost(
             navController = navController,
-            startDestination = Screen.Onboarding,
+            startDestination = if (token.isEmpty()) {
+                Screen.Onboarding
+            } else {
+                Screen.Home
+            },
             modifier = Modifier.padding(padding)
         ) {
             composable<Screen.Onboarding> {
@@ -101,7 +113,7 @@ fun AppNavigation(
             composable<Screen.ResetPassword> {
                 ResetPasswordScreen(navController)
             }
-            composable<Screen.AddBudget> {backStackEntry ->
+            composable<Screen.AddBudget> { backStackEntry ->
                 val budgetId = backStackEntry.arguments?.getInt("budgetId")
                 AddBudgetScreen(navController, budgetId = budgetId)
             }

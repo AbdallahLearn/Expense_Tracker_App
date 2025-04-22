@@ -1,7 +1,10 @@
 package com.example.expense_tracking_project.di
 
 import android.content.Context
+import com.example.expense_tracking_project.core.TokenProvider
+import com.example.expense_tracking_project.core.connectivity.AuthInterceptor
 import com.example.expense_tracking_project.core.connectivity.NetworkConnectivityObserver
+import com.example.expense_tracking_project.core.connectivity.OkHTTPBuilder
 import com.example.expense_tracking_project.core.local.dao.BudgetDao
 import com.example.expense_tracking_project.core.local.dao.CategoryDao
 import com.example.expense_tracking_project.core.local.dao.TransactionDao
@@ -11,12 +14,16 @@ import com.example.expense_tracking_project.screens.authentication.domain.reposi
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.ForgotPasswordUseCase
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.SignUpUseCase
-import com.example.expense_tracking_project.screens.dataSynchronization.data.SyncCategoryRepositoryImpl
-import com.example.expense_tracking_project.screens.dataSynchronization.data.SyncRepositoryImpl
-import com.example.expense_tracking_project.screens.dataSynchronization.data.SyncTransactionRepositoryImpl
+import com.example.expense_tracking_project.screens.dataSynchronization.data.repositryimp.SyncCategoryRepositoryImpl
+import com.example.expense_tracking_project.screens.dataSynchronization.data.repositryimp.SyncRepositoryImpl
+import com.example.expense_tracking_project.screens.dataSynchronization.data.repositryimp.SyncTransactionRepositoryImpl
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncCategoryRepository
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncRepository
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncTransactionRepository
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.DataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.LocalDataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.RemoteCategoryDataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.RemoteDataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.BudgetApi
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.TransactionApi
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.sync.CategoryApi
@@ -28,6 +35,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -40,6 +48,11 @@ object AppModule {
     fun provideFirebaseAuthDataSource(
         firebaseAuth: FirebaseAuth
     ): FirebaseAuthDataSource = FirebaseAuthDataSource(firebaseAuth)
+
+    @Provides
+    fun provideTokenProvider(
+        firebaseAuth: FirebaseAuth
+    ): TokenProvider = TokenProvider(firebaseAuth)
 
     @Provides
     fun provideAuthRepository( //AuthRepository
@@ -93,8 +106,21 @@ object AppModule {
     }
 
     @Provides
-    fun provideRetrofit(): Retrofit {
+    @Singleton
+    fun provideAuthInterceptor(
+        tokenProvider: TokenProvider
+    ): AuthInterceptor = AuthInterceptor(tokenProvider)
+
+    @Provides
+    @Singleton
+    fun provideOkHTTPBuilder(
+        authInterceptor: AuthInterceptor
+    ): OkHTTPBuilder = OkHTTPBuilder(authInterceptor)
+
+    @Provides
+    fun provideRetrofit(okHTTPBuilder: OkHTTPBuilder): Retrofit {
         return Retrofit.Builder()
+            .client(okHTTPBuilder.getUnsafeOkHttpClient())
             .baseUrl("https://project-1-admissions3.replit.app")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -106,7 +132,7 @@ object AppModule {
     }
 
     @Provides
-    fun provideNetworkObserver( @ApplicationContext context: Context): NetworkConnectivityObserver {
+    fun provideNetworkObserver(@ApplicationContext context: Context): NetworkConnectivityObserver {
         return NetworkConnectivityObserver(context)
     } // using ApplicationContext to allow the observer to work across the whole app lifecycle
 
@@ -118,6 +144,16 @@ object AppModule {
     @Provides
     fun provideTransactionApi(retrofit: Retrofit): TransactionApi {
         return retrofit.create(TransactionApi::class.java)
+    }
+
+    @Provides
+    fun provideLocalDataSource(categoryDao: CategoryDao): DataSource {
+        return LocalDataSource(categoryDao)
+    }
+
+    @Provides
+    fun provideRemoteDataSource(categoryApi: CategoryApi): RemoteCategoryDataSource {
+        return RemoteDataSource(categoryApi)
     }
 
 }

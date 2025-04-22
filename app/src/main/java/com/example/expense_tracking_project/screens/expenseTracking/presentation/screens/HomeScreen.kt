@@ -74,9 +74,6 @@ fun HomeScreen(
     val syncStatus by syncViewModel.syncStatus.collectAsState()
 
     var showSearchField by remember { mutableStateOf(false) }
-//     LaunchedEffect(Unit) {
-//         syncViewModel.syncNow() // Auto-sync when HomeScreen opens
-//     }
 
     syncStatus?.let {
         Text(
@@ -449,6 +446,7 @@ fun TransactionItem(transaction: Transaction,
             Row {
                 IconButton(onClick = {
                     navController.navigate("add_expense?transactionId=${transaction.transactionId}")
+
 
                 }) {
                     Icon(

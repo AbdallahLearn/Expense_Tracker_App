@@ -1,9 +1,11 @@
 package com.example.expense_tracking_project.core.local.db
 
 import android.content.Context
+import com.example.expense_tracking_project.core.connectivity.NetworkConnectivityObserver
 import com.example.expense_tracking_project.core.local.dao.BudgetDao
 import com.example.expense_tracking_project.core.local.dao.CategoryDao
 import com.example.expense_tracking_project.core.local.dao.TransactionDao
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.DataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.BudgetRepositoryImpl
 import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.CategoryRepositoryImpl
 import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.TransactionRepositoryImpl
@@ -78,8 +80,8 @@ object DatabaseModule {
     fun provideCategoryDao(db: AppDatabase): CategoryDao = db.CategoryDao()
 
     @Provides
-    fun provideCategoryRepository(categoryDao: CategoryDao): CategoryRepository {
-        return CategoryRepositoryImpl(categoryDao)
+    fun provideCategoryRepository(networkConnectivityObserver: NetworkConnectivityObserver,localDataSource: DataSource,remoteDataSource: DataSource): CategoryRepository {
+        return CategoryRepositoryImpl(networkConnectivityObserver ,localDataSource,remoteDataSource)
     }
 
 }

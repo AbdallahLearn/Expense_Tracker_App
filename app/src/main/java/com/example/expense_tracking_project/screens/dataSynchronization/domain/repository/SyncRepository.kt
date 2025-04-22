@@ -5,5 +5,5 @@ import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 
 interface SyncRepository {
     suspend fun syncBudgets() : Unit
-    suspend fun getBudgetsFromApi(token: String) : List <BudgetEntity>
+    suspend fun getBudgetsFromApi() : List <BudgetEntity>
 }
