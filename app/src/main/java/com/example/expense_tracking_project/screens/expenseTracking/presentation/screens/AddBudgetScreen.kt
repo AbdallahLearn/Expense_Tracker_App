@@ -45,7 +45,7 @@ fun AddBudgetScreen(
 ) {
     val context = LocalContext.current
     val errorMessage = remember { mutableStateOf("") }
-    val status by syncViewModel.syncStatus.collectAsState()
+
 
     LaunchedEffect(budgetId) {
         if (budgetId != null) {
@@ -135,8 +135,6 @@ fun AddBudgetScreen(
                 )
             }
         )
-        status?.let {
-            Text(text = it, color = MaterialTheme.colorScheme.primary)
+
         }
     }
-}

@@ -17,6 +17,6 @@ interface BudgetApi { // remote API interface ( how the app communicate with ser
     @GET("/budgets")
     suspend fun getBudgets(
         @Header("Authorization") token: String
-    ): Response<List<BudgetDto>>
+    ): Response<BudgetResponse>
 
 }
