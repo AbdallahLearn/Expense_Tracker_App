@@ -5,8 +5,13 @@ import com.example.expense_tracking_project.core.connectivity.NetworkConnectivit
 import com.example.expense_tracking_project.core.local.dao.BudgetDao
 import com.example.expense_tracking_project.core.local.dao.CategoryDao
 import com.example.expense_tracking_project.core.local.dao.TransactionDao
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.BudgetDataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.DataSource
-import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.BudgetRepositoryImpl
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.RemoteBudgetDataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.local.LocalBudgetDataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.remote.RemoteBudgetDataSourceImpl
+import com.example.expense_tracking_project.screens.expenseTracking.data.remote.BudgetApi
+import com.example.expense_tracking_project.screens.expenseTracking.data.repositoryimpl.BudgetRepositoryImpl
 import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.CategoryRepositoryImpl
 import com.example.expense_tracking_project.screens.expenseTracking.data.repositryimp.TransactionRepositoryImpl
 import com.example.expense_tracking_project.screens.expenseTracking.domain.repository.BudgetRepository
@@ -53,8 +58,12 @@ object DatabaseModule {
     fun provideBudgetDao(db: AppDatabase): BudgetDao = db.BudgetDao()
 
     @Provides
-    fun provideBudgetRepository(budgetDao: BudgetDao): BudgetRepository {
-        return BudgetRepositoryImpl(budgetDao)
+    fun provideBudgetRepository(
+        networkConnectivityObserver: NetworkConnectivityObserver,
+        localDataSource: BudgetDataSource,
+        remoteDataSource: RemoteBudgetDataSource
+    ): BudgetRepository {
+        return BudgetRepositoryImpl(networkConnectivityObserver, localDataSource,remoteDataSource)
     }
 
     @Provides
@@ -82,6 +91,16 @@ object DatabaseModule {
     @Provides
     fun provideCategoryRepository(networkConnectivityObserver: NetworkConnectivityObserver,localDataSource: DataSource,remoteDataSource: DataSource): CategoryRepository {
         return CategoryRepositoryImpl(networkConnectivityObserver ,localDataSource,remoteDataSource)
+    }
+
+    @Provides
+    fun provideLocalBudgetDataSource(budgetDao: BudgetDao): BudgetDataSource {
+        return LocalBudgetDataSource(budgetDao)
+    }
+
+    @Provides
+    fun provideRemoteBudgetDataSource(budgetApi: BudgetApi): RemoteBudgetDataSource {
+        return RemoteBudgetDataSourceImpl(budgetApi)
     }
 
 }

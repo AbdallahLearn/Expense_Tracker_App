@@ -4,8 +4,8 @@ import com.example.expense_tracking_project.core.local.dao.CategoryDao
 import com.example.expense_tracking_project.core.local.entities.Category
 import javax.inject.Inject
 
-class LocalDataSource @Inject constructor(
-    private val categoryDao: CategoryDao
+class CategoryLocalDataSource @Inject constructor(
+    private val categoryDao: CategoryDao,
 ) : DataSource {
 
     override suspend fun insertCategory(category: Category) = categoryDao.insertCategory(category)
