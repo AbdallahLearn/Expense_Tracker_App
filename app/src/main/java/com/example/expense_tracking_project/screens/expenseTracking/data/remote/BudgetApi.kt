@@ -10,13 +10,10 @@ interface BudgetApi { // remote API interface ( how the app communicate with ser
 
     @POST("/budgets") // convert BudgetDto -> JSON
     suspend fun createBudget(
-        @Header("Authorization") token: String,
         @Body budget: BudgetDto
     ): Response<Unit>
 
     @GET("/budgets")
-    suspend fun getBudgets(
-        @Header("Authorization") token: String
-    ): Response<BudgetResponse>
+    suspend fun getBudgets(): Response<BudgetResponse>
 
 }

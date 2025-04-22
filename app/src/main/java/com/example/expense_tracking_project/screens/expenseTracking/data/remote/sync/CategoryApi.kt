@@ -11,7 +11,6 @@ interface CategoryApi {
 
     @POST("/categories")
     suspend fun createCategory(
-        @Header("Authorization") token: String,
         @Body category: CategoryDto
     ): Response<Unit>
 

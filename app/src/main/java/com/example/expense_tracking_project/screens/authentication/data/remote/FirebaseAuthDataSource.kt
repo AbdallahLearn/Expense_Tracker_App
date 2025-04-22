@@ -17,8 +17,10 @@ class FirebaseAuthDataSource @Inject constructor(
         )?.await()
     }
 
-    suspend fun login(email: String, password: String) {
+    suspend fun login(email: String, password: String): Boolean {
         firebaseAuth.signInWithEmailAndPassword(email, password).await()
+        val user = firebaseAuth.currentUser
+        return user != null
     }
 
     suspend fun sendPasswordResetEmail(email: String) {
