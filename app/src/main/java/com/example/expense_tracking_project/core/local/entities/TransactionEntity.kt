@@ -16,7 +16,7 @@ import java.util.Date
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("categoryId")]
+    indices = [Index(value = ["amount", "date"], unique = true)]
 )
 data class Transaction(
     @PrimaryKey(autoGenerate = true)

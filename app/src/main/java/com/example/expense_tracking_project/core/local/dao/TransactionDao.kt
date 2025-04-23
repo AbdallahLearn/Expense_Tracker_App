@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Update
-import com.example.expense_tracking_project.core.local.entities.Category
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
@@ -16,7 +16,7 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE isDeleted = 0 ORDER BY date DESC")
     fun getAllTransactions(): Flow<List<Transaction>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(transaction: Transaction)
 
     @Update
@@ -40,6 +40,10 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE transactionId = :transactionId")
     suspend fun getTransactionById(transactionId: Int): Transaction?
 
+    @Query("DELETE FROM transactions WHERE isDeleted = 0")
+    suspend fun clearTransactions()
+
+    @Query("SELECT COUNT(*) FROM transactions WHERE amount = :amount AND date = :date AND isDeleted = 0")
+    fun checkDuplicateTransaction(amount: Double, date: Date): Int
 
 }
-

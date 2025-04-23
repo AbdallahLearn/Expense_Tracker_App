@@ -16,4 +16,3 @@ class SignUpUseCase @Inject constructor(private val repository: AuthRepository) 
         return repository.signUp(name, email, password)
     }
 }
-

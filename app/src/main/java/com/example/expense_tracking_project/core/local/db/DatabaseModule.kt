@@ -5,6 +5,7 @@ import com.example.expense_tracking_project.core.connectivity.NetworkConnectivit
 import com.example.expense_tracking_project.core.local.dao.BudgetDao
 import com.example.expense_tracking_project.core.local.dao.CategoryDao
 import com.example.expense_tracking_project.core.local.dao.TransactionDao
+import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncCategoryRepository
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.BudgetDataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.DataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.RemoteBudgetDataSource
@@ -44,7 +45,13 @@ object DatabaseModule {
     fun provideTransactionDao(db: AppDatabase): TransactionDao = db.transactionDao()
 
     @Provides
-    fun provideTransactionRepository(transactionDao: TransactionDao): TransactionRepository {
+    fun provideTransactionRepository(
+//        networkConnectivityObserver: NetworkConnectivityObserver,
+//        localDataSource: TransactionDataSource,
+//        remoteDataSource: RemoteTransactionDataSource,
+//        syncTransactionRepository: SyncTransactionRepository
+        transactionDao: TransactionDao
+    ): TransactionRepository {
         return TransactionRepositoryImpl(transactionDao)
     }
 
@@ -63,7 +70,7 @@ object DatabaseModule {
         localDataSource: BudgetDataSource,
         remoteDataSource: RemoteBudgetDataSource
     ): BudgetRepository {
-        return BudgetRepositoryImpl(networkConnectivityObserver, localDataSource,remoteDataSource)
+        return BudgetRepositoryImpl(networkConnectivityObserver, localDataSource, remoteDataSource)
     }
 
     @Provides
@@ -80,6 +87,7 @@ object DatabaseModule {
     fun provideUpdateBudgetUseCase(budgetRepository: BudgetRepository): UpdateBudgetUseCase {
         return UpdateBudgetUseCase(budgetRepository)
     }
+
     @Provides
     fun provideInsertCategoryUseCase(categoryRepository: CategoryRepository): InsertCategoryUseCase {
         return InsertCategoryUseCase(categoryRepository)
@@ -89,8 +97,18 @@ object DatabaseModule {
     fun provideCategoryDao(db: AppDatabase): CategoryDao = db.CategoryDao()
 
     @Provides
-    fun provideCategoryRepository(networkConnectivityObserver: NetworkConnectivityObserver,localDataSource: DataSource,remoteDataSource: DataSource): CategoryRepository {
-        return CategoryRepositoryImpl(networkConnectivityObserver ,localDataSource,remoteDataSource)
+    fun provideCategoryRepository(
+        networkConnectivityObserver: NetworkConnectivityObserver,
+        localDataSource: DataSource,
+        remoteDataSource: DataSource,
+        syncCategoryRepository: SyncCategoryRepository
+    ): CategoryRepository {
+        return CategoryRepositoryImpl(
+            networkConnectivityObserver,
+            localDataSource,
+            remoteDataSource,
+            syncCategoryRepository
+        )
     }
 
     @Provides

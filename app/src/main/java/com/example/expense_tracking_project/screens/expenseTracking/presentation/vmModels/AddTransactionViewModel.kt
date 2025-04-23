@@ -3,6 +3,7 @@ package com.example.expense_tracking_project.screens.expenseTracking.presentatio
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -145,11 +146,19 @@ class AddTransactionViewModel @Inject constructor(
                 updatedAt = Date()
             )
 
+            // Log the transaction to ensure values are correct
+            Log.d("DEBUG", "Inserting transaction: $transaction")
+
+            val category = categoryList.value.firstOrNull { it.categoryId == transaction.categoryId }
+            Log.d("TRANSACTION", "Inserting transaction with localCategoryId = ${transaction.categoryId}, serverCategoryId = ${category?.categoryServerId}")
+
             if (editingTransactionId.value != null) {
                 updateTransactionUseCase(transaction)
             } else {
                 insertTransactionUseCase(transaction)
             }
+
+            syncTransactionUseCase.execute()
 
             resetForm()
             onSuccess()

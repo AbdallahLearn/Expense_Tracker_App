@@ -6,5 +6,4 @@ interface CategoryRepository {
     suspend fun insertCategory(category: Category)
     suspend fun getAllCategories(): List<Category>
     suspend fun softDeleteCategory(categoryId: Int)
-
 }

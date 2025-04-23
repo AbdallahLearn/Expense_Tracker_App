@@ -122,7 +122,10 @@ fun LoginScreen(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = stringResource(R.string.dont_have_account), color = MaterialTheme.colorScheme.onBackground)
+                    Text(
+                        text = stringResource(R.string.dont_have_account),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                     Spacer(Modifier.width(8.dp))
                     Text(
                         text = stringResource(R.string.signup),
@@ -136,6 +139,3 @@ fun LoginScreen(
         }
     }
 }
-
-
-

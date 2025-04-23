@@ -11,7 +11,15 @@ import java.util.TimeZone
 fun Transaction.toDto(): TransactionDto {
     return TransactionDto(
         amount = amount,
-        category_id = categoryId?.toString(),
+        category_id = null,
+        date = date.TransactiontoSimpleDate()
+    )
+}
+
+fun Transaction.toDto(categoryServerId: String?): TransactionDto {
+    return TransactionDto(
+        amount = amount,
+        category_id = categoryServerId,
         date = date.TransactiontoSimpleDate()
     )
 }
@@ -22,6 +30,23 @@ fun Date.TransactiontoSimpleDate(): String {
     sdf.timeZone = TimeZone.getTimeZone("UTC")
     return sdf.format(this)
 }
+
+// Mapping from API to Entity
+fun TransactionDto.toEntity(): Transaction {
+    val now = Date()
+    return Transaction(
+        transactionId = 0,
+        amount = amount,
+        date = date.toDate(),
+        note = "",
+        createdAt = now,
+        updatedAt = now,
+        isDeleted = false,
+        isSynced = true,
+        categoryId = null
+    )
+}
+
 
 // Helper: yyyy-MM-dd → Date
 fun String.TransactiontoDate(): Date {

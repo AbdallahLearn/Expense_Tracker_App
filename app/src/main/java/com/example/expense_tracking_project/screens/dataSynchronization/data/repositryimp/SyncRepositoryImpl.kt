@@ -33,7 +33,6 @@ class SyncRepositoryImpl @Inject constructor(
                     Log.e("SYNC", "Failed to sync '${budget.name}': ${response.code()}")
                 }
             } catch (e: Exception) {
-
                 e.printStackTrace()
             }
         }
@@ -67,6 +66,4 @@ class SyncRepositoryImpl @Inject constructor(
             }
         }
     }
-
-
 }

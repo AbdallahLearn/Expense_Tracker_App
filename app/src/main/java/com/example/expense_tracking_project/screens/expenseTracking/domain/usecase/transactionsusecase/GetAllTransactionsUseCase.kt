@@ -5,16 +5,19 @@ import com.example.expense_tracking_project.screens.expenseTracking.domain.repos
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetAllTransactionsUseCase @Inject constructor(private val repository: TransactionRepository) {
+class GetAllTransactionsUseCase @Inject constructor(
+    private val transactionRepository: TransactionRepository
+) {
     suspend operator fun invoke(): Flow<List<Transaction>> {
-        return repository.allTransactions()
+        return transactionRepository.allTransactions()
     }
+
 }
 
 class GetTransactionByIdUseCase @Inject constructor(
-    private val repository: TransactionRepository
+    private val transactionRepository: TransactionRepository
 ) {
     suspend operator fun invoke(transactionId: Int): Transaction? {
-        return repository.getTransactionById(transactionId)
+        return transactionRepository.getTransactionById(transactionId)
     }
 }

@@ -53,7 +53,7 @@ fun ResetPasswordScreen(navController: NavController) {
             .fillMaxSize()
             .padding(horizontal = 24.dp) // unified horizontal padding
             .padding(top = 100.dp, bottom = 100.dp)// vertical padding
-            ,
+        ,
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -111,9 +111,7 @@ fun ResetPasswordScreen(navController: NavController) {
             }
         }
     }
-
 }
-
 
 @Composable
 fun CheckEmailScreen(navController: NavController) {
@@ -168,5 +166,3 @@ fun CheckEmailScreen(navController: NavController) {
         }
     }
 }
-
-
