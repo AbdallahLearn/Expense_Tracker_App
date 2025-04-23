@@ -53,26 +53,23 @@ class SignUpViewModel @Inject constructor(
     }
 }
 
-    fun handleAuthStateSignUp(
-        authState: AuthState,
-        context: Context,
-        navController: NavController
-    ) {
-        when (authState) {
-            is AuthState.Authenticated -> {
-                Toast.makeText(context, "Sign-Up successfully", Toast.LENGTH_SHORT).show()
-                navController.navigate(Screen.Home) {
-                    popUpTo(Screen.Login) { inclusive = true }
-                }
+fun handleAuthStateSignUp(
+    authState: AuthState,
+    context: Context,
+    navController: NavController
+) {
+    when (authState) {
+        is AuthState.Authenticated -> {
+            Toast.makeText(context, "Sign-Up successfully", Toast.LENGTH_SHORT).show()
+            navController.navigate(Screen.Home) {
+                popUpTo(Screen.Login) { inclusive = true }
             }
-
-            is AuthState.Error -> {
-                Toast.makeText(context, authState.message, Toast.LENGTH_SHORT).show()
-            }
-
-            else -> Unit
         }
+
+        is AuthState.Error -> {
+            Toast.makeText(context, authState.message, Toast.LENGTH_SHORT).show()
+        }
+
+        else -> Unit
     }
-
-
-
+}

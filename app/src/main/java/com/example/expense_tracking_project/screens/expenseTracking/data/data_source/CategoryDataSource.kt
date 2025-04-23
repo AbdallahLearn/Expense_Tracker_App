@@ -8,6 +8,4 @@ interface DataSource {
     suspend fun getCategoryById(id: Int): Category?
     suspend fun updateCategory(category: Category)
     suspend fun clearAndInsert(categories: List<Category>)
-
 }
-

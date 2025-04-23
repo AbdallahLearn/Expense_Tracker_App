@@ -42,7 +42,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -50,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TransactionTypeFilter
 import androidx.core.graphics.toColorInt
-
 
 @Composable
 fun BackgroundLayout(
@@ -220,8 +218,7 @@ fun SelectTransaction(
                 .background(
                     Color(0xFF5C4DB7),
                     shape = RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp)
-                )
-            ,
+                ),
             contentAlignment = Alignment.TopCenter
         ) {
             if (showTabs && tabOptions.isNotEmpty()) {

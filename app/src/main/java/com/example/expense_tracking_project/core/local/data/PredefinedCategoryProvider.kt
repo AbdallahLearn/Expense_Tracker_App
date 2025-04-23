@@ -22,4 +22,4 @@ object PredefinedCategoryProvider {
             else -> expenseCategories
         }
     }
-    }
+}

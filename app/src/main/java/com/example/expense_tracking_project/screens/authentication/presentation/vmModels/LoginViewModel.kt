@@ -22,8 +22,9 @@ sealed class AuthState {
     data object Loading : AuthState()
     data class Error(val message: String) : AuthState()
 }
+
 @HiltViewModel
-class LoginViewModel @Inject constructor (private val loginUseCase: LoginUseCase) : ViewModel() {
+class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
 
     var email by mutableStateOf("")
     var password by mutableStateOf("")

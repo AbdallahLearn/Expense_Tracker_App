@@ -1,5 +1,6 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels
 
+import android.util.Log
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +17,8 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.combine
+import java.util.Calendar
+
 
 enum class TransactionTypeFilter {
     ALL, INCOME, EXPENSES
@@ -28,11 +31,12 @@ enum class TimeFilter {
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAllTransactionsUseCase: GetAllTransactionsUseCase,
-    private val updateTransactionUseCase: UpdateTransactionUseCase,
+    private val updateTransactionUseCase: UpdateTransactionUseCase
 ) : ViewModel() {
 
     // State to hold the list of transactions
     private val allTransactions = MutableStateFlow<List<Transaction>>(emptyList())
+
 
     val income = mutableDoubleStateOf(0.0)
     val expenses = mutableDoubleStateOf(0.0)
@@ -61,7 +65,6 @@ class HomeViewModel @Inject constructor(
         _timeFilter
     ) { transactions, search, filter, timeFilter ->
 
-        val now = Date()
         val calendar = java.util.Calendar.getInstance()
 
         val filteredByTime = transactions.filter { txn ->
@@ -69,44 +72,73 @@ class HomeViewModel @Inject constructor(
 
             when (timeFilter) {
                 TimeFilter.TODAY -> {
-                    calendar.time = now
-                    val todayYear = calendar.get(java.util.Calendar.YEAR)
-                    val todayDay = calendar.get(java.util.Calendar.DAY_OF_YEAR)
+                    // Get the current time
+                    val now = Date()
 
-                    calendar.time = txnDate
-                    todayYear == calendar.get(java.util.Calendar.YEAR) &&
-                            todayDay == calendar.get(java.util.Calendar.DAY_OF_YEAR)
+                    // Calculate the timestamp for 24 hours ago (past 24 hours)
+                    val calendar = Calendar.getInstance()
+                    calendar.time = now
+                    calendar.add(Calendar.HOUR_OF_DAY, -24)  // Subtract 24 hours
+                    val startOfPast24Hours = calendar.time
+
+                    // Check if txnDate is within the last 24 hours
+                    txnDate.after(startOfPast24Hours) && txnDate.before(now)
                 }
 
                 TimeFilter.WEEK -> {
-                    calendar.time = now
-                    val currentWeek = calendar.get(java.util.Calendar.WEEK_OF_YEAR)
-                    val currentYear = calendar.get(java.util.Calendar.YEAR)
+                    // Get the current time
+                    val now = Date()
 
-                    calendar.time = txnDate
-                    currentWeek == calendar.get(java.util.Calendar.WEEK_OF_YEAR) &&
-                            currentYear == calendar.get(java.util.Calendar.YEAR)
+                    // Calculate the start of the current week
+                    val calendar = Calendar.getInstance()
+                    calendar.time = now
+                    calendar.set(
+                        Calendar.DAY_OF_WEEK,
+                        calendar.firstDayOfWeek
+                    )  // Set to the first day of the current week
+                    val startOfWeek = calendar.time
+
+                    // Check if txnDate is within the current week
+                    txnDate.after(startOfWeek) && txnDate.before(now)
                 }
 
                 TimeFilter.MONTH -> {
-                    calendar.time = now
-                    val currentMonth = calendar.get(java.util.Calendar.MONTH)
-                    val currentYear = calendar.get(java.util.Calendar.YEAR)
+                    // Get the current time
+                    val now = Date()
 
-                    calendar.time = txnDate
-                    currentMonth == calendar.get(java.util.Calendar.MONTH) &&
-                            currentYear == calendar.get(java.util.Calendar.YEAR)
+                    // Calculate the start of the current month
+                    val calendar = Calendar.getInstance()
+                    calendar.time = now
+                    calendar.set(
+                        Calendar.DAY_OF_MONTH,
+                        1
+                    )  // Set to the first day of the current month
+                    val startOfMonth = calendar.time
+
+                    // Check if txnDate is within the current month
+                    txnDate.after(startOfMonth) && txnDate.before(now)
                 }
 
                 TimeFilter.YEAR -> {
-                    calendar.time = now
-                    val currentYear = calendar.get(java.util.Calendar.YEAR)
+                    // Get the current time
+                    val now = Date()
 
-                    calendar.time = txnDate
-                    currentYear == calendar.get(java.util.Calendar.YEAR)
+                    // Calculate the start of the current year
+                    val calendar = Calendar.getInstance()
+                    calendar.time = now
+                    calendar.set(Calendar.MONTH, Calendar.JANUARY)  // Set to January (first month)
+                    calendar.set(
+                        Calendar.DAY_OF_MONTH,
+                        1
+                    )  // Set to the first day of the current year
+                    val startOfYear = calendar.time
+
+                    // Check if txnDate is within the current year
+                    txnDate.after(startOfYear) && txnDate.before(now)
                 }
             }
         }
+
 
         val filteredByType = filteredByTime.filter { txn ->
             when (filter) {
@@ -116,6 +148,7 @@ class HomeViewModel @Inject constructor(
             }
         }
 
+
         val filteredBySearch = filteredByType.filter { txn ->
             search.isBlank() || txn.note.lowercase().contains(search.lowercase()) ||
                     txn.amount.toString().contains(search)
@@ -124,6 +157,7 @@ class HomeViewModel @Inject constructor(
         filteredBySearch.sortedByDescending { it.createdAt }
     }
 
+
     init {
         loadTransactions()
     }
@@ -131,7 +165,9 @@ class HomeViewModel @Inject constructor(
     private fun loadTransactions() {
         viewModelScope.launch {
             getAllTransactionsUseCase().collect { all ->
+                Log.d("DEBUG", "Transactions in DB: $all")
                 val filtered = all.filter { !it.isDeleted }
+                Log.d("DEBUG", "After filter (isDeleted=false): $filtered")
                 allTransactions.value = filtered
 
                 // Calculate income & expenses

@@ -14,10 +14,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.expense_tracking_project.core.TokenProvider
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
-//import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.LoginScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
-//import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.SignUpScreen
 import com.example.expense_tracking_project.screens.dataVisualization.presentation.screens.StatisticsScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.CustomBottomBar
@@ -31,7 +29,6 @@ import com.example.expense_tracking_project.screens.onBoardingScreen.presentatio
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -121,8 +118,6 @@ fun AppNavigation(
                 val categoryId = backStackEntry.arguments?.getInt("categoryId")
                 AddCategoryScreen(navController, categoryId = categoryId)
             }
-
-
             composable(
                 "add_expense?transactionId={transactionId}",
                 arguments = listOf(navArgument("transactionId") {
@@ -136,9 +131,6 @@ fun AppNavigation(
                     transactionId = if (transactionId == -1) null else transactionId
                 )
             }
-
-
-
             composable(
                 route = "add_budget?budgetData={budgetData}",
                 arguments = listOf(navArgument("budgetData") { type = NavType.StringType })
@@ -159,14 +151,6 @@ fun AppNavigation(
                 }
                 AddCategoryScreen(navController, categoryId = category?.categoryId)
             }
-
-
-
-
-
-
-
-
         }
     }
 }

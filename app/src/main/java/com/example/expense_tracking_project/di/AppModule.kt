@@ -21,7 +21,7 @@ import com.example.expense_tracking_project.screens.dataSynchronization.domain.r
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncRepository
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncTransactionRepository
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.DataSource
-import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.CategoryLocalDataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.local.CategoryLocalDataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.RemoteCategoryDataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.remote.RemoteCategoryDataSourceImpl
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.BudgetApi
@@ -100,9 +100,10 @@ object AppModule {
     @Provides
     fun provideSyncTransactionRepository(
         transactionDao: TransactionDao,
-        transactionApi: TransactionApi
+        transactionApi: TransactionApi,
+        categoryDao: CategoryDao
     ): SyncTransactionRepository {
-        return SyncTransactionRepositoryImpl(transactionDao, transactionApi)
+        return SyncTransactionRepositoryImpl(transactionDao, transactionApi, categoryDao)
     }
 
     @Provides
@@ -150,10 +151,10 @@ object AppModule {
     fun provideLocalDataSource(categoryDao: CategoryDao): DataSource {
         return CategoryLocalDataSource(categoryDao)
     }
+
     @Provides
     fun provideRemoteCategoryDataSource(categoryApi: CategoryApi): RemoteCategoryDataSource {
         return RemoteCategoryDataSourceImpl(categoryApi)
     }
-
 
 }
