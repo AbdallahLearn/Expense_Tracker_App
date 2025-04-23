@@ -44,7 +44,13 @@ class SyncCategoryRepositoryImpl @Inject constructor(
             try {
                 if (response.isSuccessful) {
                     remoteCategory.forEach { category ->
-                        categoryDao.insertCategory(category)
+                        val existing = categoryDao.getCategoryByName(category.categoryName)
+                        if (existing != null) {
+                            val updated = category.copy(categoryId = existing.categoryId)
+                            categoryDao.updateCategory(updated)
+                        } else {
+                            categoryDao.insertCategory(category)
+                        }
                     }
                     Log.d("SYNC", "Fetched ${remoteCategory.size} categories from server")
                     remoteCategory

@@ -17,13 +17,14 @@ import java.util.Date
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("budgetId")]
+    indices = [    Index("budgetId"),
+        Index(value = ["categoryName"], unique = true)]
 )
 data class Category(
     @PrimaryKey(autoGenerate = true)
     val categoryId: Int,
     val budgetId: Int?,
-    val categoryName: String,
+    val categoryName: String ,
     val type: String, // "income" or "expense"
     val color: String,
     val isDeleted: Boolean,

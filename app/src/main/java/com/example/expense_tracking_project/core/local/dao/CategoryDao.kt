@@ -27,6 +27,9 @@ interface CategoryDao {
     @Query("SELECT * FROM Categories WHERE categoryId = :id")
     suspend fun getCategoryById(id: Int): Category?
 
+    @Query("SELECT * FROM Categories WHERE categoryName = :name")
+    suspend fun getCategoryByName(name: String): Category?
+
     @Query("SELECT * FROM Categories WHERE isSynced = 0 AND isDeleted = 0") // sync new items
     suspend fun getUnsyncedCategories(): List<Category>
 
