@@ -106,20 +106,22 @@ fun EditScreen(
                         )
                     }
                 } else {
+                    // Sort categories to show the newest category first (assuming there's a createdAt or similar field)
+                    val sortedCategories = categories.sortedByDescending { it.createdAt }
+
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
                             .weight(1f)
                     ) {
-                        items(categories) { category ->
+                        items(sortedCategories) { category ->
                             var showDeleteDialog by remember { mutableStateOf(false) }
-
 
                             DataCard(
                                 title = " ${category.categoryName}",
                                 subtitleItems = listOf(
                                     "Type: ${category.type}",
-                                    "Budget ID: ${category.budgetId}", //it should budget ID
+                                    "Budget ID: ${category.budgetId}", // it should budget ID
                                 ),
                                 trailingContent = {
                                     Row {
@@ -162,10 +164,9 @@ fun EditScreen(
                             }
                         }
                     }
-
-
                 }
             }
+
             if (selectedTab == "Budget") {
                 if (budgetList.isNotEmpty()) {
                     DisplaySavedBudgets(budgetList, navController = navController)
