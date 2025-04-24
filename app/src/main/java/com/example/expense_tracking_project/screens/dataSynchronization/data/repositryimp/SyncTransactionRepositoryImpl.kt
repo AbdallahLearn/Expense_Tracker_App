@@ -25,22 +25,15 @@ class SyncTransactionRepositoryImpl @Inject constructor(
 
         unSyncedTransactions.forEach { transaction ->
             try {
-                // Check if the transaction already exists in the local DB (even after a sync attempt)
-                val existingTransactionCount = transactionDao.checkDuplicateTransaction(transaction.amount, transaction.date)
-                if (existingTransactionCount > 0) {
-                    Log.d("SYNC", "Duplicate transaction found locally: Skipping sync for ${transaction.amount} on ${transaction.date}")
-                    return@forEach // Skip syncing this transaction
-                }
-
-                // Sync the transaction to the server
-                Log.d("SYNC", "Preparing to sync transaction: ${transaction.amount} with category: ${transaction.categoryId}")
-
                 val category = transaction.categoryId?.let { categoryDao.getCategoryById(it) }
                 Log.d("SYNC", "🔗 Linked category = $category")
                 val serverId = category?.categoryServerId
 
                 if (serverId.isNullOrEmpty()) {
-                    Log.w("SYNC", "Skipping transaction ${transaction.transactionId} — missing categoryServerId")
+                    Log.w(
+                        "SYNC",
+                        "Skipping transaction ${transaction.transactionId} — missing categoryServerId"
+                    )
                     return@forEach
                 }
 
@@ -66,21 +59,20 @@ class SyncTransactionRepositoryImpl @Inject constructor(
                 val response = transactionApi.getTransaction()
                 if (response.isSuccessful) {
                     Log.d("SYNC", "API Response: ${response.body()}")
-                    val remoteTransactions: List<Transaction> = response.body()?.expenses?.map { it.toEntity() } ?: emptyList()
+                    val remoteTransactions: List<Transaction> =
+                        response.body()?.expenses?.map { it.toEntity() } ?: emptyList()
                     Log.d("SYNC", "Fetched transactions: $remoteTransactions")
 
                     remoteTransactions.forEach { transaction ->
-                        // Check if the transaction already exists in the database (based on amount and date)
-                        val existingTransactionCount = transactionDao.checkDuplicateTransaction(transaction.amount, transaction.date)
 
-                        if (existingTransactionCount == 0) {
-                            // If not found, insert the transaction
-                            transactionDao.insert(transaction)
-                            Log.d("SYNC", "Transaction inserted into local database")
+                        val existing = transactionDao.getTransactionByAmount(transaction.amount)
+                        if (existing != null) {
+                            val updated = transaction.copy(amount = existing.amount)
+                            transactionDao.update(updated)
                         } else {
-                            // If found, log it as a duplicate and skip insertion
-                            Log.d("SYNC", "Duplicate transaction found locally: Skipping insertion for ${transaction.amount} on ${transaction.date}")
+                            transactionDao.insert(transaction)
                         }
+
                     }
                     Log.d("SYNC", "Fetched ${remoteTransactions.size} transactions from server")
                     remoteTransactions
@@ -94,6 +86,5 @@ class SyncTransactionRepositoryImpl @Inject constructor(
             }
         }
     }
-
 
 }

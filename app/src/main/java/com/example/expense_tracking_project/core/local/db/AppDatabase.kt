@@ -16,7 +16,7 @@ import com.example.expense_tracking_project.core.local.dao.UserDao
 
 @Database(
     entities = [Transaction::class, BudgetEntity::class, Category::class, User::class],
-    version = 23,
+    version = 26,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class)

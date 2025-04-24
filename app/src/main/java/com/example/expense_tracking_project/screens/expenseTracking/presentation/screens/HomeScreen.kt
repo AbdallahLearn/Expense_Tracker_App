@@ -59,6 +59,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.HomeViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TimeFilter
+import java.util.Calendar
 
 @Composable
 fun HomeScreen(
@@ -442,7 +443,14 @@ fun TransactionItem(transaction: Transaction,
             "Transaction: $transactionType",
             "Category : ${transaction.categoryId}",
             "Note: ${transaction.note}",
-            "Date: ${viewModel.formatDate(transaction.date)}"
+            "Date: ${
+                viewModel.formatDate(
+                    Calendar.getInstance().apply {
+                        time = transaction.date
+                        add(Calendar.DAY_OF_MONTH, 1)
+                    }.time
+                )
+            }"
         ),
         trailingContent = {
             Row {

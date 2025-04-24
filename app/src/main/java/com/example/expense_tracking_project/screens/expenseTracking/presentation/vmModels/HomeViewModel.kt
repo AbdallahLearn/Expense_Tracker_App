@@ -72,17 +72,23 @@ class HomeViewModel @Inject constructor(
 
             when (timeFilter) {
                 TimeFilter.TODAY -> {
-                    // Get the current time
-                    val now = Date()
-
-                    // Calculate the timestamp for 24 hours ago (past 24 hours)
                     val calendar = Calendar.getInstance()
-                    calendar.time = now
-                    calendar.add(Calendar.HOUR_OF_DAY, -24)  // Subtract 24 hours
-                    val startOfPast24Hours = calendar.time
+                    calendar.set(Calendar.HOUR_OF_DAY, 0)
+                    calendar.set(Calendar.MINUTE, 0)
+                    calendar.set(Calendar.SECOND, 0)
+                    calendar.set(Calendar.MILLISECOND, 0)
+                    val startOfDay = calendar.time
 
-                    // Check if txnDate is within the last 24 hours
-                    txnDate.after(startOfPast24Hours) && txnDate.before(now)
+                    calendar.add(Calendar.DAY_OF_MONTH, 1)
+                    val startOfNextDay = calendar.time
+
+                    // Adjust transaction date by +1 day
+                    val adjustedTxnDate = Calendar.getInstance().apply {
+                        time = txnDate
+                        add(Calendar.DAY_OF_MONTH, 1)
+                    }.time
+
+                    adjustedTxnDate.after(startOfDay) && adjustedTxnDate.before(startOfNextDay)
                 }
 
                 TimeFilter.WEEK -> {

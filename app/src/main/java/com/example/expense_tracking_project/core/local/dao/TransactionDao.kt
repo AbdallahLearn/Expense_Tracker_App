@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
+import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
@@ -43,7 +44,11 @@ interface TransactionDao {
     @Query("DELETE FROM transactions WHERE isDeleted = 0")
     suspend fun clearTransactions()
 
-    @Query("SELECT COUNT(*) FROM transactions WHERE amount = :amount AND date = :date AND isDeleted = 0")
-    fun checkDuplicateTransaction(amount: Double, date: Date): Int
+    @Query("SELECT COUNT(*) FROM transactions WHERE amount = :amount AND date = :date AND categoryId = :categoryId AND isDeleted = 0")
+    suspend fun checkDuplicateTransaction(amount: Double, date: Date, categoryId: Int?): Int
+
+    @Query("SELECT * FROM transactions WHERE amount = :amount")
+    suspend fun getTransactionByAmount(amount: Double): Transaction?
+
 
 }
