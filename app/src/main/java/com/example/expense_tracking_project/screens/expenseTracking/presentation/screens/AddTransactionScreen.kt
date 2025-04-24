@@ -54,9 +54,7 @@ fun AddExpenseScreen(
     }
     LaunchedEffect(transactionId) {
         if (transactionId != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 viewModel.loadTransactionById(transactionId)
-            }
         } else {
             viewModel.resetForm()
         }

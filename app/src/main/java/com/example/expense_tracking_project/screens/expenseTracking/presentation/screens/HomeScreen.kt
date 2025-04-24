@@ -107,7 +107,7 @@ fun HomeScreen(
                         .padding(horizontal = 16.dp, vertical = 24.dp)
                 ) {
                     TopSection(
-                        name = "Abdullah",
+                        name = "",
                         isDarkTheme = isDarkTheme,
                         onToggleTheme = changeAppTheme,
                         onSearchClicked = { showSearchField = !showSearchField }
