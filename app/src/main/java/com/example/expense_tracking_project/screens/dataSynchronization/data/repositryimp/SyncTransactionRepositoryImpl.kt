@@ -65,7 +65,7 @@ class SyncTransactionRepositoryImpl @Inject constructor(
 
                     remoteTransactions.forEach { transaction ->
 
-                        val existing = transactionDao.getTransactionByAmount(transaction.amount)
+                        val existing = transactionDao.getTransactionByAmount(transaction.amount, transaction.date)
                         if (existing != null) {
                             val updated = transaction.copy(amount = existing.amount)
                             transactionDao.update(updated)
