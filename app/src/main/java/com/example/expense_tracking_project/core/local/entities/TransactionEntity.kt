@@ -18,7 +18,7 @@ import java.util.Date
     ],
     indices = [
         Index("categoryId"),
-        Index(value = ["amount"], unique = true)
+        Index(value = ["amount", "date"], unique = true)
     ]
 )
 data class Transaction(

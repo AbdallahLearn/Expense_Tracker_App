@@ -44,11 +44,8 @@ interface TransactionDao {
     @Query("DELETE FROM transactions WHERE isDeleted = 0")
     suspend fun clearTransactions()
 
-    @Query("SELECT COUNT(*) FROM transactions WHERE amount = :amount AND date = :date AND categoryId = :categoryId AND isDeleted = 0")
-    suspend fun checkDuplicateTransaction(amount: Double, date: Date, categoryId: Int?): Int
-
-    @Query("SELECT * FROM transactions WHERE amount = :amount")
-    suspend fun getTransactionByAmount(amount: Double): Transaction?
+    @Query("SELECT * FROM transactions WHERE amount = :amount AND date = :date")
+    suspend fun getTransactionByAmount(amount: Double, date: Date): Transaction?
 
 
 }
