@@ -39,7 +39,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
@@ -47,21 +46,18 @@ fun AppNavigation(
     changeAppTheme: () -> Unit,
     isDarkTheme: Boolean,
 ) {
-//    val tokenProvider = TokenProvider(FirebaseAuth.getInstance())
     var tokenState by remember { mutableStateOf<String?>(null) }
 
     // Load token after delay for splash simulation
     val context = LocalContext.current
     val authPreferences = remember { AuthPreferences(context) }
 
-// <<<<<<< SharedPreference-use-app-without-internet
     LaunchedEffect(Unit) {
         delay(1000) // Splash delay
         tokenState = authPreferences.getToken()
     }
 
     if (tokenState == null) {
-        // Splash Screen while token is loading
         SplashScreen()
     } else {
         val currentBackStackEntry = navController.currentBackStackEntryAsState().value
@@ -87,102 +83,6 @@ fun AppNavigation(
                         },
                         navController = navController
                     )
-// =======
-    Scaffold(
-        bottomBar = {
-            if (showBottomBar) {
-                CustomBottomBar(
-                    selectedIndex = bottomBarScreens.indexOfFirst { screen ->
-                        screen::class.qualifiedName == currentRoute
-                    },
-                    onItemSelected = { selectedIndex ->
-                        val selectedScreen = bottomBarScreens[selectedIndex]
-                        navController.navigate(selectedScreen) {
-                            popUpTo(Screen.Home) { inclusive = false }
-                            launchSingleTop = true
-                        }
-                    },
-                    navController = navController
-                )
-            }
-        }
-    ) { padding ->
-        val tokenProvider = TokenProvider(FirebaseAuth.getInstance())
-        val token = runBlocking {
-            tokenProvider.getToken()
-        }
-        NavHost(
-            navController = navController,
-            startDestination = if (token.isEmpty()) {
-                Screen.Onboarding
-            } else {
-                Screen.Home
-            },
-            modifier = Modifier.padding(padding)
-        ) {
-            composable<Screen.Onboarding> {
-                OnBoardingScreen(navController)
-            }
-            composable<Screen.Login> {
-                LoginScreen(navController)
-            }
-            composable<Screen.SignUp> {
-                SignUpScreen(navController)
-            }
-            composable<Screen.Home> {
-                HomeScreen(
-                    navController = navController,
-                    changeAppTheme = changeAppTheme,
-                    isDarkTheme = isDarkTheme
-                )
-            }
-            composable<Screen.AddExpense> {
-                AddExpenseScreen(navController)
-            }
-            composable<Screen.Edit> {
-                EditScreen(navController)
-            }
-            composable<Screen.Profile> {
-                ProfileScreen(navController)
-            }
-            composable<Screen.Statistics> {
-                StatisticsScreen(navController)
-            }
-            composable<Screen.CheckEmail> {
-                CheckEmailScreen(navController)
-            }
-            composable<Screen.ResetPassword> {
-                ResetPasswordScreen(navController)
-            }
-            composable<Screen.AddBudget> { backStackEntry ->
-                val budgetId = backStackEntry.arguments?.getInt("budgetId")
-                AddBudgetScreen(navController, budgetId = budgetId)
-            }
-            composable<Screen.AddCategory> { backStackEntry ->
-                val categoryId = backStackEntry.arguments?.getInt("categoryId")
-                AddCategoryScreen(navController, categoryId = categoryId)
-            }
-            composable(
-                "add_expense?transactionId={transactionId}",
-                arguments = listOf(navArgument("transactionId") {
-                    type = NavType.IntType
-                    defaultValue = -1
-                })
-            ) { backStackEntry ->
-                val transactionId = backStackEntry.arguments?.getInt("transactionId")
-                AddExpenseScreen(
-                    navController = navController,
-                    transactionId = if (transactionId == -1) null else transactionId
-                )
-            }
-            composable(
-                route = "add_budget?budgetData={budgetData}",
-                arguments = listOf(navArgument("budgetData") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val budgetData = backStackEntry.arguments?.getString("budgetData")
-                val budget = budgetData?.let {
-                    Json.decodeFromString<Screen.AddBudget>(it)
-// >>>>>>> dev
                 }
             }
         ) { padding ->
@@ -216,7 +116,6 @@ fun AppNavigation(
                     val budgetId = backStackEntry.arguments?.getInt("budgetId")
                     AddBudgetScreen(navController, budgetId = budgetId)
                 }
-// <<<<<<< SharedPreference-use-app-without-internet
 
                 composable<Screen.AddCategory> { backStackEntry ->
                     val categoryId = backStackEntry.arguments?.getInt("categoryId")
@@ -259,13 +158,9 @@ fun AppNavigation(
                     AddCategoryScreen(navController, categoryId = category?.categoryId)
                 }
 
-                // You can keep this route for deep linking or reusability
                 composable("splash") {
                     SplashScreen()
                 }
-// =======
-                AddCategoryScreen(navController, categoryId = category?.categoryId)
-// >>>>>>> dev
             }
         }
     }

@@ -34,7 +34,7 @@ class LoginViewModel @Inject constructor(
     private val preferenceManager: AuthPreferences
 ) : ViewModel() {
 // =======
-class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
+//class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
 // >>>>>>> dev
 
     var email by mutableStateOf("")

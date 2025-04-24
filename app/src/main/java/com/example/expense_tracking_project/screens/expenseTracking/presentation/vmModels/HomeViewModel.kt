@@ -18,6 +18,7 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.combine
 import java.util.Calendar
+import java.util.TimeZone
 
 
 enum class TransactionTypeFilter {
@@ -72,24 +73,28 @@ class HomeViewModel @Inject constructor(
 
             when (timeFilter) {
                 TimeFilter.TODAY -> {
-                    val calendar = Calendar.getInstance()
-                    calendar.set(Calendar.HOUR_OF_DAY, 0)
-                    calendar.set(Calendar.MINUTE, 0)
-                    calendar.set(Calendar.SECOND, 0)
-                    calendar.set(Calendar.MILLISECOND, 0)
+                    val tz = TimeZone.getDefault()
+
+                    val calendar = Calendar.getInstance(tz).apply {
+                        set(Calendar.HOUR_OF_DAY, 0)
+                        set(Calendar.MINUTE, 0)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
                     val startOfDay = calendar.time
 
                     calendar.add(Calendar.DAY_OF_MONTH, 1)
                     val startOfNextDay = calendar.time
 
-                    // Adjust transaction date by +1 day
-                    val adjustedTxnDate = Calendar.getInstance().apply {
-                        time = txnDate
-                        add(Calendar.DAY_OF_MONTH, 1)
-                    }.time
+                    // Make sure txnDate uses same timezone
+                    val txnCal = Calendar.getInstance(tz).apply {
+                        time = txn.date
+                    }
+                    val normalizedTxnDate = txnCal.time
 
-                    adjustedTxnDate.after(startOfDay) && adjustedTxnDate.before(startOfNextDay)
+                    !normalizedTxnDate.before(startOfDay) && normalizedTxnDate.before(startOfNextDay)
                 }
+
 
                 TimeFilter.WEEK -> {
                     // Get the current time
