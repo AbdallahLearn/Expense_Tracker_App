@@ -8,8 +8,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.expense_tracking_project.core.TokenProvider
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.domain.usecase.LoginUseCase
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.local.AuthPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,8 +24,14 @@ sealed class AuthState {
     data object Loading : AuthState()
     data class Error(val message: String) : AuthState()
 }
+
 @HiltViewModel
-class LoginViewModel @Inject constructor (private val loginUseCase: LoginUseCase) : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val loginUseCase: LoginUseCase,
+    private val tokenProvider: TokenProvider,
+//    private val preferenceManager: PreferenceManager,
+    private val preferenceManager: AuthPreferences
+) : ViewModel() {
 
     var email by mutableStateOf("")
     var password by mutableStateOf("")
@@ -48,11 +56,17 @@ class LoginViewModel @Inject constructor (private val loginUseCase: LoginUseCase
             val isLoginSuccessful = loginUseCase(email, password)
 
             _authState.value = isLoginSuccessful.fold(
-                onSuccess = { AuthState.Authenticated },
+                onSuccess = {
+                    // Get token and save locally
+                    val token = tokenProvider.getToken()
+                    preferenceManager.saveToken(token)
+                    AuthState.Authenticated
+                },
                 onFailure = { AuthState.Error(it.message ?: "Login failed.") }
             )
         }
     }
+
 }
 
 fun handleAuthStateLogin(
