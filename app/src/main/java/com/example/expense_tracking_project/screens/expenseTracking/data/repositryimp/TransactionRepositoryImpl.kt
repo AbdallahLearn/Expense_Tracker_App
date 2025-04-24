@@ -7,12 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import java.util.Date
 import javax.inject.Inject
 
-class TransactionRepositoryImpl @Inject constructor(private val transactionDao: TransactionDao) :
-    TransactionRepository {
-
-    override suspend fun allTransactions(): Flow<List<Transaction>> {
-        return transactionDao.getAllTransactions()
-    }
+class TransactionRepositoryImpl @Inject constructor(
+    private val transactionDao: TransactionDao
+) : TransactionRepository {
 
     override suspend fun insert(transaction: Transaction) {
         transactionDao.insert(transaction)
@@ -22,8 +19,12 @@ class TransactionRepositoryImpl @Inject constructor(private val transactionDao: 
         transactionDao.update(transaction)
     }
 
+    override suspend fun allTransactions(): Flow<List<Transaction>> {
+        return transactionDao.getAllTransactions()
+    }
+
     override suspend fun softDeleteTransaction(transactionId: Int) {
-        val transaction = transactionDao.geTransactionById(transactionId)
+        val transaction = transactionDao.getTransactionById(transactionId)
         if (transaction != null) {
             val updatedTransaction = transaction.copy(
                 isDeleted = true,
@@ -32,7 +33,9 @@ class TransactionRepositoryImpl @Inject constructor(private val transactionDao: 
             transactionDao.update(updatedTransaction)
         }
     }
+
     override suspend fun getTransactionById(transactionId: Int): Transaction? {
-        return transactionDao.geTransactionById(transactionId)
+        return transactionDao.getTransactionById(transactionId)
     }
+
 }

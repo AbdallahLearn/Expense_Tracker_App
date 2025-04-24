@@ -1,7 +1,8 @@
-package com.example.expense_tracking_project.screens.expenseTracking.data.data_source
+package com.example.expense_tracking_project.screens.expenseTracking.data.data_source.local
 
 import com.example.expense_tracking_project.core.local.dao.CategoryDao
 import com.example.expense_tracking_project.core.local.entities.Category
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.DataSource
 import javax.inject.Inject
 
 class CategoryLocalDataSource @Inject constructor(

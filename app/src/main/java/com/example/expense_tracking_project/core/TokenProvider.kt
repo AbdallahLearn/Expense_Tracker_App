@@ -10,7 +10,9 @@ class TokenProvider @Inject constructor(
     suspend fun getToken(): String {
         val user = firebaseAuth.currentUser
         return try {
-            user?.getIdToken(true)?.await()?.token ?: ""
+            val token = user?.getIdToken(true)?.await()?.token ?: ""
+            println("Token: $token")
+            token
         } catch (e: Exception) {
             e.printStackTrace()
             ""

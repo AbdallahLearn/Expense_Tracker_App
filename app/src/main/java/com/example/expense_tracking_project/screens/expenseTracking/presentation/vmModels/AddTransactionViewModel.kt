@@ -3,6 +3,7 @@ package com.example.expense_tracking_project.screens.expenseTracking.presentatio
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -22,6 +23,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.domain.useca
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetTransactionByIdUseCase
 import kotlinx.coroutines.launch
 import java.time.ZoneId
+import java.time.ZoneId.systemDefault
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -60,7 +62,6 @@ class AddTransactionViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     fun loadTransactionById(id: Int) {
         viewModelScope.launch {
             val transaction = getTransactionByIdUseCase(id)
@@ -68,7 +69,9 @@ class AddTransactionViewModel @Inject constructor(
                 editingTransactionId.value = id
                 amount.value = abs(it.amount).toString()
                 note.value = it.note ?: ""
-                date.value = LocalDate.ofInstant(it.date.toInstant(), ZoneId.systemDefault())
+                date.value = transaction.date.toInstant()
+                    .atZone(systemDefault())
+                    .toLocalDate()
                     .format(formatter)
                 selectedTab.value = if (it.amount >= 0) "Income" else "Expenses"
 
@@ -145,11 +148,19 @@ class AddTransactionViewModel @Inject constructor(
                 updatedAt = Date()
             )
 
+            // Log the transaction to ensure values are correct
+            Log.d("DEBUG", "Inserting transaction: $transaction")
+
+            val category = categoryList.value.firstOrNull { it.categoryId == transaction.categoryId }
+            Log.d("TRANSACTION", "Inserting transaction with localCategoryId = ${transaction.categoryId}, serverCategoryId = ${category?.categoryServerId}")
+
             if (editingTransactionId.value != null) {
                 updateTransactionUseCase(transaction)
             } else {
                 insertTransactionUseCase(transaction)
             }
+
+            syncTransactionUseCase.execute()
 
             resetForm()
             onSuccess()

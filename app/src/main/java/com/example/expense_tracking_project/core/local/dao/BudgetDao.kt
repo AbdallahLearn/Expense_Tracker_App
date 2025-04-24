@@ -22,6 +22,9 @@ interface BudgetDao {
     @Query("SELECT * FROM BudgetEntity WHERE budgetId = :id")
     suspend fun getBudgetById(id: Int): BudgetEntity?
 
+    @Query("SELECT * FROM BudgetEntity WHERE totalAmount = :totalAmountBudget")
+    suspend fun getBudgetByTotalAmount(totalAmountBudget: Double): BudgetEntity?
+
     @Query("SELECT * FROM BudgetEntity WHERE isSynced = 0 AND isDeleted = 0") // sync new items
     suspend fun getUnsyncedBudgets(): List<BudgetEntity>
 

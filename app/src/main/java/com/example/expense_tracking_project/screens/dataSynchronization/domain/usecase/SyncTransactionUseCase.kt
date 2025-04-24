@@ -8,5 +8,6 @@ class SyncTransactionUseCase @Inject constructor( // get unSynced transactions f
 ) {
     suspend fun execute() {
         syncTransactionRepository.syncTransactions()
+        syncTransactionRepository.getTransactionsFromApi()
     }
 }

@@ -92,7 +92,8 @@ fun SignUpScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                SimpleTextField( // password
+                SimpleTextField(
+                    // password
                     title = stringResource(R.string.password),
                     value = signUpViewModel.password,
                     onValueChange = { signUpViewModel.password = it },
@@ -100,7 +101,8 @@ fun SignUpScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                SimpleTextField( // confirm password
+                SimpleTextField(
+                    // confirm password
                     title = stringResource(R.string.confirm_password),
                     value = signUpViewModel.confirmPassword,
                     onValueChange = { signUpViewModel.confirmPassword = it },
@@ -123,7 +125,10 @@ fun SignUpScreen(navController: NavController) {
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = stringResource(R.string.already_have_account), color = MaterialTheme.colorScheme.onBackground)
+                    Text(
+                        text = stringResource(R.string.already_have_account),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                     Spacer(Modifier.width(8.dp))
                     Text(
                         text = stringResource(R.string.login),

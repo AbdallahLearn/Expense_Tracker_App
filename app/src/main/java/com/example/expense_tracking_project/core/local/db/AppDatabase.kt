@@ -14,13 +14,18 @@ import com.example.expense_tracking_project.core.local.dao.TransactionDao
 import com.example.expense_tracking_project.core.local.entities.User
 import com.example.expense_tracking_project.core.local.dao.UserDao
 
-@Database(entities = [Transaction::class, BudgetEntity::class, Category::class, User::class], version = 19, exportSchema = false)
+@Database(
+    entities = [Transaction::class, BudgetEntity::class, Category::class, User::class],
+    version = 28,
+    exportSchema = false
+)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun BudgetDao(): BudgetDao
     abstract fun CategoryDao(): CategoryDao
     abstract fun userDao(): UserDao
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null

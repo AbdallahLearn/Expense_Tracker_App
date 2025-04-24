@@ -46,11 +46,10 @@ fun EditScreen(
     val categories by categoryViewModel.categories
     val budgetList by budgetViewModel.budgetList
 
-    // Load categories when the tab is "Category"
     LaunchedEffect(selectedTab) {
         if (selectedTab == "Category") {
             categoryViewModel.loadCategories()
-        } else if (selectedTab == "Budget"){
+        } else if (selectedTab == "Budget") {
             budgetViewModel.loadBudgets()
         }
     }
@@ -59,7 +58,8 @@ fun EditScreen(
         SelectEditingTab(
             showTabs = true,
             tabOptions = listOf("Category", "Budget"),
-            onTabSelected = { viewModel.updateTab(it) })
+            onTabSelected = { viewModel.updateTab(it) }
+        )
 
         Column(
             modifier = Modifier
@@ -73,55 +73,56 @@ fun EditScreen(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Search bar
-            OutlinedTextField(
-                value = searchText,
-                onValueChange = { viewModel.updateSearch(it) },
-                placeholder = { Text("Search") },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.FilterList, contentDescription = "Filter"
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 30.dp)
-                    .clip(RoundedCornerShape(16.dp))
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Display category list or empty message
+            // Search bar for Category only
             if (selectedTab == "Category") {
-                if (categories.isEmpty()) {
+                OutlinedTextField(
+                    value = searchText,
+                    onValueChange = { viewModel.updateSearch(it) },
+                    placeholder = { Text("Search") },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.FilterList,
+                            contentDescription = "Filter"
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 30.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // CATEGORY TAB
+            if (selectedTab == "Category") {
+                val filteredCategories = categories
+                    .filter { it.categoryName.contains(searchText, ignoreCase = true) }
+                    .sortedByDescending { it.createdAt }
+
+                if (filteredCategories.isEmpty()) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "No data available",
-                            color = Color.Gray
-                        )
+                        Text("No data available", color = Color.Gray)
                     }
                 } else {
-                    // Sort categories to show the newest category first (assuming there's a createdAt or similar field)
-                    val sortedCategories = categories.sortedByDescending { it.createdAt }
-
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
                             .weight(1f)
                     ) {
-                        items(sortedCategories) { category ->
+                        items(filteredCategories) { category ->
                             var showDeleteDialog by remember { mutableStateOf(false) }
 
                             DataCard(
                                 title = " ${category.categoryName}",
                                 subtitleItems = listOf(
                                     "Type: ${category.type}",
-                                    "Budget ID: ${category.budgetId}", // it should budget ID
+                                    "Budget ID: ${category.budgetId}"
                                 ),
                                 trailingContent = {
                                     Row {
@@ -167,17 +168,17 @@ fun EditScreen(
                 }
             }
 
+            // BUDGET TAB
             if (selectedTab == "Budget") {
                 if (budgetList.isNotEmpty()) {
                     DisplaySavedBudgets(budgetList, navController = navController)
                 } else {
                     Text("No budgets available", color = Color.Gray)
                 }
-
             }
         }
 
-        // Floating Action Button
+        // FAB
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -186,16 +187,15 @@ fun EditScreen(
         ) {
             FloatingActionButton(
                 onClick = {
-
                     when (selectedTab) {
                         "Budget" -> {
-                            val budget = Screen.AddBudget(budgetId = 2)
+                            val budget = Screen.AddBudget()
                             val budgetData = Json.encodeToString(budget)
                             navController.navigate("add_budget?budgetData=$budgetData")
                         }
 
                         "Category" -> {
-                            val category = Screen.AddCategory(categoryId = 1)
+                            val category = Screen.AddCategory()
                             val categoryData = Json.encodeToString(category)
                             navController.navigate("add_category?categoryData=$categoryData")
                         }
@@ -205,7 +205,6 @@ fun EditScreen(
             ) {
                 Text("Add", color = Color.White, fontSize = 15.sp)
             }
-
         }
 
         LaunchedEffect(selectedTab) {
@@ -213,7 +212,5 @@ fun EditScreen(
                 budgetViewModel.loadBudgets()
             }
         }
-
     }
 }
-

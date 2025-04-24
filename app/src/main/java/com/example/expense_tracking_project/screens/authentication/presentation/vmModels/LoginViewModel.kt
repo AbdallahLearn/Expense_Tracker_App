@@ -26,12 +26,16 @@ sealed class AuthState {
 }
 
 @HiltViewModel
+// <<<<<<< SharedPreference-use-app-without-internet
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val tokenProvider: TokenProvider,
 //    private val preferenceManager: PreferenceManager,
     private val preferenceManager: AuthPreferences
 ) : ViewModel() {
+// =======
+class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
+// >>>>>>> dev
 
     var email by mutableStateOf("")
     var password by mutableStateOf("")

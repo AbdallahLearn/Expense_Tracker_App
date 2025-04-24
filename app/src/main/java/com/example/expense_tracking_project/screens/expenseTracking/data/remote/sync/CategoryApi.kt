@@ -11,7 +11,7 @@ interface CategoryApi {
     @POST("/categories")
     suspend fun createCategory(
         @Body category: CategoryDto
-    ): Response<Unit>
+    ): Response<CategoryDto>
 
     @GET("/categories")
     suspend fun getCategory(

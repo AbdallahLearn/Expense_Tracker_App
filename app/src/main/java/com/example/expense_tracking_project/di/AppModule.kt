@@ -20,8 +20,13 @@ import com.example.expense_tracking_project.screens.dataSynchronization.data.rep
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncCategoryRepository
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncRepository
 import com.example.expense_tracking_project.screens.dataSynchronization.domain.repository.SyncTransactionRepository
+// <<<<<<< SharedPreference-use-app-without-internet
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.CategoryLocalDataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.DataSource
+// =======
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.DataSource
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.local.CategoryLocalDataSource
+// >>>>>>> dev
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.RemoteCategoryDataSource
 import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.remote.RemoteCategoryDataSourceImpl
 import com.example.expense_tracking_project.screens.expenseTracking.data.remote.BudgetApi
@@ -101,8 +106,12 @@ object AppModule {
     fun provideSyncTransactionRepository(
         transactionDao: TransactionDao,
         transactionApi: TransactionApi,
+// <<<<<<< SharedPreference-use-app-without-internet
+// =======
+        categoryDao: CategoryDao
+// >>>>>>> dev
     ): SyncTransactionRepository {
-        return SyncTransactionRepositoryImpl(transactionDao, transactionApi)
+        return SyncTransactionRepositoryImpl(transactionDao, transactionApi, categoryDao)
     }
 
     @Provides

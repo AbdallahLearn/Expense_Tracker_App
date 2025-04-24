@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ForgotPasswordViewModel @Inject constructor (private val forgotPasswordUseCase: ForgotPasswordUseCase) : ViewModel() {
+class ForgotPasswordViewModel @Inject constructor(private val forgotPasswordUseCase: ForgotPasswordUseCase) :
+    ViewModel() {
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
     var email by mutableStateOf("")

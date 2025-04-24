@@ -1,6 +1,7 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +35,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,13 +53,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.core.local.entities.Transaction
-import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.dataSynchronization.presentation.SyncViewModel
 import com.example.expense_tracking_project.screens.authentication.presentation.component.DropdownFilter
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.HomeViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TimeFilter
+import java.util.Calendar
 
 @Composable
 fun HomeScreen(
@@ -71,6 +71,7 @@ fun HomeScreen(
 ) {
 
     val transactions by viewModel.transactions.collectAsState(initial = emptyList())
+    Log.d("DEBUG", "UI transactions: $transactions")
     val syncStatus by syncViewModel.syncStatus.collectAsState()
 
     var showSearchField by remember { mutableStateOf(false) }
@@ -106,7 +107,7 @@ fun HomeScreen(
                         .padding(horizontal = 16.dp, vertical = 24.dp)
                 ) {
                     TopSection(
-                        name = "Abdullah",
+                        name = "",
                         isDarkTheme = isDarkTheme,
                         onToggleTheme = changeAppTheme,
                         onSearchClicked = { showSearchField = !showSearchField }
@@ -193,9 +194,10 @@ fun TransactionsSection(
             )
         } else {
             transactions.forEach { transaction ->
+                Log.d("DEBUG", "Rendering transaction: $transaction")
                 TransactionItem(
                     transaction = transaction,
-                    navController = navController, // ✅ Add this
+                    navController = navController,
                     viewModel = viewModel
                 )
             }
@@ -414,6 +416,7 @@ fun RecentTransactions(
     } else {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(transactions) { transaction ->
+                Log.d("DEBUG", "Rendering transaction: $transaction")
                 TransactionItem(
                     transaction = transaction,
                     navController = navController,
@@ -440,7 +443,14 @@ fun TransactionItem(transaction: Transaction,
             "Transaction: $transactionType",
             "Category : ${transaction.categoryId}",
             "Note: ${transaction.note}",
-            "Date: ${viewModel.formatDate(transaction.date)}"
+            "Date: ${
+                viewModel.formatDate(
+                    Calendar.getInstance().apply {
+                        time = transaction.date
+                        add(Calendar.DAY_OF_MONTH, 1)
+                    }.time
+                )
+            }"
         ),
         trailingContent = {
             Row {
@@ -483,4 +493,3 @@ fun TransactionItem(transaction: Transaction,
         )
     }
 }
-

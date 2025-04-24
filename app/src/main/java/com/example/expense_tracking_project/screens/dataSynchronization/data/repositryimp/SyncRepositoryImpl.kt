@@ -33,7 +33,6 @@ class SyncRepositoryImpl @Inject constructor(
                     Log.e("SYNC", "Failed to sync '${budget.name}': ${response.code()}")
                 }
             } catch (e: Exception) {
-
                 e.printStackTrace()
             }
         }
@@ -47,7 +46,13 @@ class SyncRepositoryImpl @Inject constructor(
                     val remoteBudgets =
                         response.body()?.budgets?.map { it.toEntity() } ?: emptyList()
                     remoteBudgets.forEach { budget ->
-                        budgetDao.insertBudget(budget)
+                        val existing = budgetDao.getBudgetByTotalAmount(budget.totalAmount)
+                        if (existing != null) {
+                            val updated = budget.copy(totalAmount = existing.totalAmount)
+                            budgetDao.updateBudget(updated)
+                        } else {
+                            budgetDao.insertBudget(budget)
+                        }
                     }
                     Log.d("SYNC", "Fetched ${remoteBudgets.size} budgets from server")
                     remoteBudgets
@@ -61,6 +66,4 @@ class SyncRepositoryImpl @Inject constructor(
             }
         }
     }
-
-
 }
