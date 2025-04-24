@@ -133,7 +133,7 @@ fun AddCategoryScreen(
 
                 CustomDropdownMenu(
                     label = "Budget (Optional)",
-                    categoryOptions = budgets.map { "ID: ${it.budgetId} • ${it.totalAmount}" },
+                    categoryOptions = budgets.map { it.totalAmount.toString() },
                     selectedOption = viewModel.budget.value,
                     onOptionSelected = { selectedLabel ->
                         viewModel.budget.value = selectedLabel
