@@ -23,6 +23,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.domain.useca
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.transactionsusecase.GetTransactionByIdUseCase
 import kotlinx.coroutines.launch
 import java.time.ZoneId
+import java.time.ZoneId.systemDefault
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -61,7 +62,6 @@ class AddTransactionViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     fun loadTransactionById(id: Int) {
         viewModelScope.launch {
             val transaction = getTransactionByIdUseCase(id)
@@ -69,7 +69,9 @@ class AddTransactionViewModel @Inject constructor(
                 editingTransactionId.value = id
                 amount.value = abs(it.amount).toString()
                 note.value = it.note ?: ""
-                date.value = LocalDate.ofInstant(it.date.toInstant(), ZoneId.systemDefault())
+                date.value = transaction.date.toInstant()
+                    .atZone(systemDefault())
+                    .toLocalDate()
                     .format(formatter)
                 selectedTab.value = if (it.amount >= 0) "Income" else "Expenses"
 
