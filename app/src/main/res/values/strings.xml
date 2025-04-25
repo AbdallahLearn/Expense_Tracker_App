@@ -87,7 +87,48 @@
     <string name="incomeDate">INCOME DATE</string>
     <string name="incomeNote">INCOME NOTE</string>
 
-    <!-- Reset Password Screen -->
+    <!-- Edit Screen -->
+    <string name="recent_items">Recent %1$s(s)</string>
+    <string name="filter">Filter</string>
+    <string name="no_data">No data available</string>
+    <string name="edit_category">Edit Category</string>
+    <string name="delete_category">Delete Category</string>
+    <string name="confirm_deletion">Confirm Deletion</string>
+    <string name="delete_message">Are you sure you want to delete this category?</string>
+    <string name="no_budgets">No budgets available</string>
+
+    <!-- Add budget Screen -->
+    <string name="editBudget">EDIT BUDGET</string>
+    <string name="amountBudget">BUDGET AMOUNT</string>
+    <string name="startDate">START DATE</string>
+    <string name="Interval">INTERVAL</string>
+    <string name="fill_all_fields">Please fill all fields</string>
+    <string name="invalid_amount">Invalid amount</string>
+    <string name="error_saving_budget">Error saving budget</string>
+    <string name="budget_saved_successfully">Budget saved successfully</string>
+    <string name="one_month">1 Month</string>
+    <string name="two_months">2 Months</string>
+    <string name="three_months">3 Months</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="budget_id">Budget ID</string>
+    <string name="edit_budget">Edit Budget</string>
+    <string name="delete_budget">Delete Budget</string>
+    <string name="confirm_delete_message">Are you sure you want to delete this budget?</string>
+
+
+    <!-- Add category Screen -->
+    <string name="editCategory">EDIT CATEGORY</string>
+    <string name="categoryName">CATEGORY NAME</string>
+    <string name="categoryColor">CATEGORY COLOR</string>
+    <string name="categoryType">Category Type</string>
+    <string name="budgetOptional">BUDGET (OPTIONAL)</string>
+    <string name="Budgetsaved"> Budget saved successfully</string>
+    <string name="Income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="select">Select</string>
+
+  <!-- Reset Password Screen -->
 
 
     <string name="enter_your_gmail_to_reset_password">Enter your Gmail to reset the password</string>
@@ -116,9 +157,6 @@
     <string name="profile_picture">Profile Picture</string>
     <string name="sign_out">Sign Out</string>
     <string name="confirm_sign_out_message">Are you sure you want to sign out?</string>
-
-
-
 
 
 

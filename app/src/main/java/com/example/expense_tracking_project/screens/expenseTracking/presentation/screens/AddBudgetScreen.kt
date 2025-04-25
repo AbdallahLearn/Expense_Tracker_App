@@ -1,3 +1,5 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
 import android.os.Build
@@ -32,20 +34,20 @@ import com.example.expense_tracking_project.screens.authentication.presentation.
 import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenuBudget
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleButton
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SimpleTextField
-import com.example.expense_tracking_project.screens.dataSynchronization.presentation.SyncViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditBudgetViewModel
+import androidx.compose.ui.res.stringResource
+import com.example.expense_tracking_project.R
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
+
 fun AddBudgetScreen(
     navController: NavController,
     budgetId: Int? = null,
     viewModel: EditBudgetViewModel = hiltViewModel(),
-    syncViewModel: SyncViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val errorMessage = remember { mutableStateOf("") }
-
 
     LaunchedEffect(budgetId) {
         if (budgetId != null) {
@@ -57,7 +59,7 @@ fun AddBudgetScreen(
         }
     }
 
-    BackgroundLayout("Edit Budget")
+    BackgroundLayout(title = stringResource(R.string.editBudget))
 
     Column(
         modifier = Modifier
@@ -72,11 +74,7 @@ fun AddBudgetScreen(
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    color = Color.White,
-                    shape = RoundedCornerShape(30.dp)
-                )
+                .border(1.dp, Color.White, RoundedCornerShape(30.dp))
                 .weight(1f)
         ) {
             Column(
@@ -90,25 +88,31 @@ fun AddBudgetScreen(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 SimpleTextField(
-                    title = "Amount Budget",
+                    title = stringResource(R.string.amountBudget),
                     value = viewModel.budgetAmount.value,
-                    onValueChange = { viewModel.budgetAmount.value = it })
+                    onValueChange = { viewModel.budgetAmount.value = it }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SimpleTextField(
-                    title = "Start Date",
+                    title = stringResource(R.string.startDate),
                     value = viewModel.startDate.value,
                     onValueChange = {},
                     onIconClick = {
                         viewModel.getStartDatePicker(context).show()
-                    })
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 CustomDropdownMenuBudget(
-                    label = "Interval",
-                    BudgetOptions = listOf("1 Month", "2 Month", "3 Month"),
+                    label = stringResource(R.string.Interval),
+                    BudgetOptions = listOf(
+                        stringResource(R.string.one_month),
+                        stringResource(R.string.two_months),
+                        stringResource(R.string.three_months)
+                    ),
                     selectedOption = viewModel.selectedInterval.value,
                     onOptionSelected = { viewModel.selectedInterval.value = it }
                 )
@@ -124,13 +128,15 @@ fun AddBudgetScreen(
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-
+        val successMsg = stringResource(R.string.budget_saved_successfully)
+        val context = LocalContext.current
         SimpleButton(
-            title = "Save",
+            title = stringResource(R.string.add),
             onButtonClick = {
                 viewModel.saveBudget(
+                    context = context,
                     onSuccess = {
-                        Toast.makeText(context, "Budget saved successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, successMsg, Toast.LENGTH_SHORT).show()
                         viewModel.loadBudgets()
                         navController.popBackStack()
                     },
@@ -138,8 +144,8 @@ fun AddBudgetScreen(
                         errorMessage.value = it
                     }
                 )
+
             }
         )
-
-        }
     }
+}

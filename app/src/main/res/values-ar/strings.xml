@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">مصاريفي</string>
     <string name="change_language">تغيير اللغة</string>
 
@@ -89,6 +89,45 @@
     <string name="incomeNote">ملاحظة</string>
 
 
+    <!-- Edit Screen -->
+    <string name="recent_items">أحدث %1$s</string>
+    <string name="filter">تصفية</string>
+    <string name="no_data">لا توجد بيانات</string>
+    <string name="edit_category">تعديل الفئة</string>
+    <string name="delete_category">حذف الفئة</string>
+    <string name="confirm_deletion">تأكيد الحذف</string>
+    <string name="delete_message">هل أنت متأكد أنك تريد حذف هذه الفئة؟</string>
+    <string name="no_budgets">لا توجد ميزانيات</string>
+
+    <!-- Add budget Screen -->
+    <string name="editBudget">تعديل الميزانية</string>
+    <string name="amountBudget">قيمة الميزانية</string>
+    <string name="startDate">تاريخ البدء</string>
+    <string name="Interval">الفترة</string>
+    <string name="fill_all_fields">يرجى ملء جميع الحقول</string>
+    <string name="invalid_amount">المبلغ غير صالح</string>
+    <string name="error_saving_budget">حدث خطأ أثناء حفظ الميزانية</string>
+    <string name="budget_saved_successfully">تم حفظ الميزانية بنجاح</string>
+    <string name="one_month">1 شهر</string>
+    <string name="two_months">2 شهور</string>
+    <string name="three_months">3 شهور</string>
+    <string name="start">بداية</string>
+    <string name="end">نهاية</string>
+    <string name="budget_id">معرف الميزانية</string>
+    <string name="edit_budget">تعديل الميزانية</string>
+    <string name="delete_budget">حذف الميزانية</string>
+    <string name="confirm_delete_message">هل أنت متأكد أنك تريد حذف هذه الميزانية؟</string>
+
+    <!-- Add category Screen -->
+    <string name="editCategory">تعديل الفئة</string>
+    <string name="categoryName">اسم الفئة</string>
+    <string name="categoryColor">لون الفئة</string>
+    <string name="categoryType">نوع الفئة</string>
+    <string name="budgetOptional">الميزانية (اختياري)</string>
+    <string name="Budgetsaved"> تم حفظ الميزانية </string>
+    <string name="Income">دخل</string>
+    <string name="expense">صرف</string>
+    <string name="select">اختر</string>
     <string name="enter_your_gmail_to_reset_password">أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور</string>
     <string name="reset_link_sent_to">تم إرسال رابط إعادة التعيين إلى %1$s</string>
     <string name="failed_to_send_reset_email">فشل في إرسال بريد إعادة التعيين</string>
@@ -114,7 +153,6 @@
     <string name="profile_picture">صورة الملف الشخصي</string>
     <string name="sign_out">تسجيل الخروج</string>
     <string name="confirm_sign_out_message">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
-
 
 
 

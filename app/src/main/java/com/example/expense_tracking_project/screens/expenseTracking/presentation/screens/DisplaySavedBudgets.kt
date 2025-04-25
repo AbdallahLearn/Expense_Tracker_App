@@ -19,9 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
@@ -42,9 +44,9 @@ fun DisplaySavedBudgets(budgetList: List<BudgetEntity>, navController: NavContro
             DataCard(
                 title = " ${budget.totalAmount}",
                 subtitleItems = listOf(
-                    "Start: ${budget.startDate}",
-                    "End: ${budget.endDate}",
-                    "Budget ID: ${budget.budgetId}",
+                    "${stringResource(R.string.start)}: ${budget.startDate}",
+                    "${stringResource(R.string.end)}: ${budget.endDate}",
+                    "${stringResource(R.string.budget_id)}: ${budget.budgetId}",
                 ),
                 trailingContent = {
                     Row {
@@ -73,8 +75,8 @@ fun DisplaySavedBudgets(budgetList: List<BudgetEntity>, navController: NavContro
 
             if (showDeleteDialog) {
                 ConfirmationDialog(
-                    title = "Confirm Deletion",
-                    message = "Are you sure you want to delete this budget?",
+                    title = stringResource(R.string.confirm_deletion),
+                    message =stringResource(R.string.delete_message),
                     onConfirm = {
                         viewModel.softDeleteBudget(budget)
                         showDeleteDialog = false
