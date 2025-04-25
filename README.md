@@ -8,4 +8,12 @@ The Expense Tracker Mobile App is a comprehensive mobile application designed to
 - Category Management: Custom categories with color & limits.
 - Offline Support: Works without internet; syncs when online.
 - Dark Mode: Optional light/dark theme.
-- Language Support: Supports multiple languages.
+- Language Support: Supports Arabic and English languages.
+
+## Tools Used:
+
+
+## How To Work:
+
+
+## Screenshot Output:
