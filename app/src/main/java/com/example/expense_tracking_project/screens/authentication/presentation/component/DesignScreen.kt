@@ -315,7 +315,7 @@ fun CustomDropdownMenuBudget(
         onExpandedChange = { expanded = !expanded }
     ) {
         OutlinedTextField(
-            value = selectedOption.ifBlank { "Select" },
+            value = selectedOption.ifBlank { stringResource(R.string.select) },
             onValueChange = {},
             readOnly = true,
             label = { Text(label) },
