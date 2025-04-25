@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -26,7 +27,7 @@ fun ProfileScreen(
     signOutViewModel: SignOutViewModel = viewModel(),
     profileViewModel: EditProfileViewModel = viewModel(),
 ) {
-    BackgroundLayout("Profile")
+    BackgroundLayout(title = stringResource(R.string.profile))
 
     Column(
         modifier = Modifier
@@ -37,7 +38,7 @@ fun ProfileScreen(
 
         Image(
             painter = painterResource(id = R.drawable.unknown),
-            contentDescription = "Profile Picture",
+            contentDescription = stringResource(R.string.profile_picture),
             modifier = Modifier
                 .padding(top = 90.dp)
                 .size(100.dp)
@@ -55,13 +56,13 @@ fun ProfileScreen(
                 .padding(horizontal = 32.dp),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            Text("Sign Out")
+            Text(text = stringResource(R.string.sign_out))
         }
 
         if (profileViewModel.showSignOutDialog.value) {
             ConfirmationDialog(
-                title = "Sign Out",
-                message = "Are you sure you want to sign out?",
+                title = stringResource(R.string.sign_out),
+                message = stringResource(R.string.confirm_sign_out_message),
                 onConfirm = {
                     signOutViewModel.signout()
                     navController.navigate(Screen.Login) {

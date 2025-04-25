@@ -93,7 +93,10 @@ fun AddExpenseScreen(
 
     SelectTransaction(
         showTabs = true,
-        tabOptions = listOf("Expenses", "Income"),
+        tabOptions = listOf(
+            stringResource(R.string.expenses),
+            stringResource(R.string.income)
+        ),
         onTabSelected = { viewModel.selectedTab.value = it }
     )
 
@@ -159,12 +162,13 @@ fun AddExpenseScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                SimpleButton("Save") {
+                SimpleButton(stringResource(R.string.save)) {
                     if (viewModel.isTransactionValid()) {
                         viewModel.saveTransaction {
                             Toast.makeText(
                                 context,
-                                if (transactionId != null) "Updated successfully!" else "Added successfully!",
+                                if (transactionId != null) context.getString(R.string.updated_successfully)
+                                else context.getString(R.string.added_successfully),
                                 Toast.LENGTH_SHORT
                             ).show()
                             navigateToHome = true
@@ -173,13 +177,13 @@ fun AddExpenseScreen(
                         if (amount.value.isBlank() || amount.value.toDoubleOrNull() == null) {
                             Toast.makeText(
                                 context,
-                                "Please enter a valid amount",
+                                context.getString(R.string.please_enter_valid_amount),
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
                             Toast.makeText(
                                 context,
-                                "Please fill in all required fields",
+                                context.getString(R.string.please_fill_required_fields),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
