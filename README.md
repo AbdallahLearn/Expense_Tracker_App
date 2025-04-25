@@ -25,7 +25,23 @@ The Expense Tracker Mobile App is a comprehensive mobile application designed to
 
 ## How To Work:
 
+To set up and run the Expense Tracker Mobile App, follow these steps:
 
+### Prerequisites:
+Make sure you have the following tools and software installed on your system before getting started:
+
+- **Android Studio**
+- **JDK 17 or Above**
+- **Git**
+- **Physical Device or Emulator**
+
+### Setting Up The Project:
+
+1. **Clone the Repository**
+2. **Open the Project in Android Studio**:
+3. **Configure Firebase**:
+4. **Run the App**:
+   
 ## Core Screens: 
 
 ### Home Screen
