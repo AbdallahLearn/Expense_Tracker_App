@@ -198,7 +198,7 @@ fun TransactionsSection(
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { viewModel.updateSearch(it) },
-                placeholder = { Text("Search") },
+                placeholder = { Text(stringResource(R.string.search)) },
                 trailingIcon = {
                     IconButton(onClick = { showDropdown = !showDropdown }) {
                         Icon(Icons.Default.FilterList, contentDescription = "Filter")
@@ -527,8 +527,8 @@ fun TransactionItem(transaction: Transaction,
 
     if (showDeleteDialog) {
         ConfirmationDialog(
-            title = "Confirm Deletion",
-            message = "Are you sure you want to delete this transaction?",
+            title = stringResource(R.string.confirm_deletion),
+            message = stringResource(R.string.confirm_delete_transaction),
             onConfirm = {
                 viewModel.softDeleteTransaction(transaction)
                 showDeleteDialog = false
