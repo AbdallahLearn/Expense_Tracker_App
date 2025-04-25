@@ -11,18 +11,60 @@ The Expense Tracker Mobile App is a comprehensive mobile application designed to
 - Language Support: Supports Arabic and English languages.
 
 ## Tools Used:
-
+| Tools      | Purpose |
+|------------|---------|
+| **Kotlin** | Main programming language |
+| **Jetpack Compose** | Modern UI toolkit for building UI |
+| **Room Database** | Local data storage |
+| **Hilt** | Dependency Injection |
+| **MVVM Architecture** | Clean separation of concerns |
+| **Material Design 3** | Styling and theming |
+| **Compose Navigation** | Seamless screen transitions |
 
 ## How To Work:
 
 
 ## Core Screens: 
-- Home Screen : View, search, filter, edit, delete for transaction.
-- Add Expense: Input with validation (Amount, Date, Type of Category, Note).
-- Categories: Create, update, delete categories with color.
-- Add Category: Assign color, and optional budget limit.
-- Budgets : Create, update, delete budgets.
-- Add Budget : Add Amount , Start date , Interval for budget ( Month, Two Month , Three Month) 
 
+### Home Screen
+- Display all recorded transactions in a clean list.
+- Filter by **Daily**, **Weekly**, **Monthly**, or **Yearly**.
+- Built-in **search functionality** to quickly find any transaction.
+- Option to **edit** or **delete** individual transactions.
+
+### Add Transaction Screen
+- Add new transactions with the following fields:
+  - Amount
+  - Date
+  - Category
+  - Note
+- Includes **validation** to ensure all fields are filled properly.
+
+### Categories Screen
+- View all **user-created** categories.
+- Features:
+  - Color-coded categories for better visibility
+  - Edit and Delete options
+  - Search and filter functionality
+
+### Add Category Screen
+- Create new categories with:
+  - Category name
+  - Category type
+  - Color picker
+  - Budget limit setting (Optional)
+  - Note (Optional)
+
+### Budgets Screen
+- View all**user-created** budgets
+  - Total budget
+  - Option to edit or delete budget settings.
+  - Start and end date
+
+### Add Budgets Screen
+- View all**user-created** budgets
+  - Total budget amount
+  - Start and end date
+  - Notes (Optional)
 
 ## Screenshot Output:
