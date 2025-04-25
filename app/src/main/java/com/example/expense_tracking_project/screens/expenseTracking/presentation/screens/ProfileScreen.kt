@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.R
@@ -24,8 +25,8 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    signOutViewModel: SignOutViewModel = viewModel(),
-    profileViewModel: EditProfileViewModel = viewModel(),
+    signOutViewModel: SignOutViewModel = hiltViewModel(),
+    profileViewModel: EditProfileViewModel = hiltViewModel(),
 ) {
     BackgroundLayout(title = stringResource(R.string.profile))
 
@@ -64,11 +65,12 @@ fun ProfileScreen(
                 title = stringResource(R.string.sign_out),
                 message = stringResource(R.string.confirm_sign_out_message),
                 onConfirm = {
-                    signOutViewModel.signout()
-                    navController.navigate(Screen.Login) {
-                        popUpTo(0) // clears backstack
+                    signOutViewModel.signout {
+                        profileViewModel.closeSignOutDialog()
+                        navController.navigate(Screen.Login) {
+                            popUpTo(0)
+                        }
                     }
-                    profileViewModel.closeSignOutDialog()
                 },
                 onDismiss = {
                     profileViewModel.closeSignOutDialog()
