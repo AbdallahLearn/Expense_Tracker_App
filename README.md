@@ -56,13 +56,13 @@ The Expense Tracker Mobile App is a comprehensive mobile application designed to
   - Note (Optional)
 
 ### Budgets Screen
-- View all**user-created** budgets
+- View all **user-created** budgets
   - Total budget
   - Option to edit or delete budget settings.
   - Start and end date
 
 ### Add Budgets Screen
-- View all**user-created** budgets
+- View all **user-created** budgets
   - Total budget amount
   - Start and end date
   - Notes (Optional)
