@@ -1,5 +1,6 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
@@ -7,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.core.local.entities.BudgetEntity
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.GetAllbudgetsUseCase
 import com.example.expense_tracking_project.screens.expenseTracking.domain.usecase.budgetusecase.InsertBudgetUseCase
@@ -34,16 +36,20 @@ class EditBudgetViewModel @Inject constructor(
     val budgetAmount = mutableStateOf("")
     val startDate = mutableStateOf("")
     val selectedInterval = mutableStateOf("")
-
-    fun saveBudget(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    @SuppressLint("StringFormatInvalid")
+    fun saveBudget(
+        context: Context,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
         if (budgetAmount.value.isBlank() || selectedInterval.value.isBlank()) {
-            onFailure("Please fill all fields")
+            onFailure(context.getString(R.string.fill_all_fields))
             return
         }
 
         val amount = budgetAmount.value.toDoubleOrNull()
         if (amount == null || amount <= 0.0) {
-            onFailure("Invalid amount")
+            onFailure(context.getString(R.string.invalid_amount))
             return
         }
 
@@ -74,9 +80,11 @@ class EditBudgetViewModel @Inject constructor(
                 onSuccess()
             }
         } catch (e: Exception) {
-            onFailure("Error saving budget: ${e.localizedMessage}")
+            val errorMsg = context.getString(R.string.error_saving_budget, e.localizedMessage ?: "")
+            onFailure(errorMsg)
         }
     }
+
 
     fun loadBudgets() {
         viewModelScope.launch {

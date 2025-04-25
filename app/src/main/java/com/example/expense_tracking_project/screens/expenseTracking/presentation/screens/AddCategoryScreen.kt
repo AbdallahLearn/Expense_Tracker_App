@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.screens.authentication.presentation.component.BackgroundLayout
 import com.example.expense_tracking_project.screens.authentication.presentation.component.ColorPickerDialog
 import com.example.expense_tracking_project.screens.authentication.presentation.component.CustomDropdownMenu
@@ -42,11 +43,10 @@ fun AddCategoryScreen(
     categoryId: Int? = null,
     viewModel: EditCategoryViewModel = hiltViewModel(),
 ) {
-    BackgroundLayout("Edit Category")
+    BackgroundLayout(title = stringResource(R.string.editCategory))
 
     val errorMessage = remember { mutableStateOf("") }
     val budgets = viewModel.budgetList.value
-    val selectedBudgetLabel = remember { mutableStateOf("") }
     var showColorPicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -80,11 +80,7 @@ fun AddCategoryScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .border(
-                    width = 1.dp,
-                    color = Color.White,
-                    shape = RoundedCornerShape(30.dp)
-                )
+                .border(1.dp, Color.White, RoundedCornerShape(30.dp))
         ) {
             Column(
                 modifier = Modifier
@@ -97,15 +93,15 @@ fun AddCategoryScreen(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 SimpleTextField(
-                    title = "Category Name",
+                    title = stringResource(R.string.categoryName),
                     value = viewModel.categoryName.value,
                     onValueChange = { viewModel.categoryName.value = it }
                 )
 
                 SimpleTextField(
-                    title = "Category Color",
+                    title = stringResource(R.string.categoryColor),
                     value = viewModel.categoryColor.value,
-                    onValueChange = {}, // Read-only
+                    onValueChange = {},
                     onIconClick = { showColorPicker = true }
                 )
 
@@ -123,16 +119,21 @@ fun AddCategoryScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 CustomDropdownMenu(
-                    label = "Category Type",
-                    categoryOptions = listOf("Income", "Expense"),
+                    label = stringResource(R.string.categoryType),
+                    categoryOptions = listOf(
+                        stringResource(R.string.Income),
+                        stringResource(R.string.expense)
+                    ),
                     selectedOption = viewModel.categoryType.value,
-                    onOptionSelected = { viewModel.categoryType.value = it }
+                    onOptionSelected = { viewModel.categoryType.value = it },
+
                 )
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 CustomDropdownMenu(
-                    label = "Budget (Optional)",
+                    label = stringResource(R.string.budgetOptional),
                     categoryOptions = budgets.map { it.totalAmount.toString() },
                     selectedOption = viewModel.budget.value,
                     onOptionSelected = { selectedLabel ->
@@ -159,7 +160,7 @@ fun AddCategoryScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         SimpleButton(
-            title = "Save",
+            title = stringResource(R.string.add),
             onButtonClick = {
                 viewModel.saveCategory(
                     onSuccess = {

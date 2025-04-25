@@ -19,13 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SelectEditingTab
-import com.example.expense_tracking_project.screens.dataSynchronization.presentation.SyncViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditBudgetViewModel
@@ -33,6 +34,8 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditScreenViewModel
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import androidx.core.graphics.toColorInt
+
 @SuppressLint("WrongNavigateRouteType")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -68,7 +71,7 @@ fun EditScreen(
                 .padding(top = 200.dp, start = 16.dp, end = 16.dp)
         ) {
             Text(
-                text = "Recent $selectedTab(s)",
+                text = stringResource(R.string.recent_items, selectedTab),
                 fontSize = 18.sp,
                 color = Color(0xFF5C4DB7),
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -79,11 +82,11 @@ fun EditScreen(
                 OutlinedTextField(
                     value = searchText,
                     onValueChange = { viewModel.updateSearch(it) },
-                    placeholder = { Text("Search") },
+                    placeholder = { Text(stringResource(R.string.search)) },
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Default.FilterList,
-                            contentDescription = "Filter"
+                            contentDescription = stringResource(R.string.filter)
                         )
                     },
                     modifier = Modifier
@@ -108,7 +111,7 @@ fun EditScreen(
                             .weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("No data available", color = Color.Gray)
+                        Text(stringResource(R.string.no_data), color = Color.Gray)
                     }
                 } else {
                     LazyColumn(
@@ -129,7 +132,7 @@ fun EditScreen(
                                             .clip(CircleShape)
                                             .background(
                                                 try {
-                                                    Color(android.graphics.Color.parseColor(category.color ?: "#000000"))
+                                                    Color(category.color.toColorInt())
                                                 } catch (e: Exception) {
                                                     Color.Gray
                                                 }
@@ -143,7 +146,7 @@ fun EditScreen(
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Outlined.Edit,
-                                                contentDescription = "Edit Category",
+                                                contentDescription = stringResource(R.string.edit_category),
                                                 tint = Color.Gray
                                             )
                                         }
@@ -153,7 +156,7 @@ fun EditScreen(
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Outlined.Delete,
-                                                contentDescription = "Delete Category",
+                                                contentDescription = stringResource(R.string.delete_category),
                                                 tint = Color.Red
                                             )
                                         }
@@ -163,10 +166,10 @@ fun EditScreen(
 
                             if (showDeleteDialog) {
                                 ConfirmationDialog(
-                                    title = "Confirm Deletion",
-                                    message = "Are you sure you want to delete this category?",
+                                    title = stringResource(R.string.confirm_deletion),
+                                    message = stringResource(R.string.delete_message),
                                     onConfirm = {
-                                        categoryViewModel.softDeleteCategory(category.categoryId!!) {
+                                        categoryViewModel.softDeleteCategory(category.categoryId) {
                                             showDeleteDialog = false
                                         }
                                     },
@@ -185,7 +188,7 @@ fun EditScreen(
                 if (budgetList.isNotEmpty()) {
                     DisplaySavedBudgets(budgetList, navController = navController)
                 } else {
-                    Text("No budgets available", color = Color.Gray)
+                    Text(stringResource(R.string.no_budgets), color = Color.Gray)
                 }
             }
         }
@@ -215,7 +218,7 @@ fun EditScreen(
                 },
                 containerColor = Color(0xFF5C4DB7)
             ) {
-                Text("Add", color = Color.White, fontSize = 15.sp)
+                Text(stringResource(R.string.add), color = Color.White, fontSize = 15.sp)
             }
         }
 
