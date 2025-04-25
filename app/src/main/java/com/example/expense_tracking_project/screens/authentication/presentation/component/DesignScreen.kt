@@ -1,5 +1,6 @@
 package com.example.expense_tracking_project.screens.authentication.presentation.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +43,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -49,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TransactionTypeFilter
 import androidx.core.graphics.toColorInt
+import com.example.expense_tracking_project.R
 
 @Composable
 fun BackgroundLayout(
@@ -87,6 +92,7 @@ fun SimpleTextField(
     value: String,
     onValueChange: (String) -> Unit,
     onIconClick: (() -> Unit)? = null, // trigger for calendar icon
+    showDollarIcon: Boolean = false // 🔹 NEW: show $ icon at start
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -108,10 +114,24 @@ fun SimpleTextField(
             onValueChange = onValueChange,
             label = { Text("") },
             modifier = Modifier.fillMaxWidth(),
-            readOnly = onIconClick != null, // make it read-only if calendar is being used
+            readOnly = onIconClick != null,
             visualTransformation = if (isPassword && !passwordVisible)
                 PasswordVisualTransformation()
             else VisualTransformation.None,
+
+            // 🔹 Add leading $ icon if requested
+            leadingIcon = {
+                if (showDollarIcon) {
+                    Image(
+                        painter = painterResource(id = R.drawable.saudi_riyal_symbol),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        contentScale = ContentScale.Fit,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                    )
+                }
+            },
+
             trailingIcon = {
                 when {
                     isPassword -> {
@@ -136,6 +156,7 @@ fun SimpleTextField(
         )
     }
 }
+
 
 @Composable
 fun ColorPickerDialog(

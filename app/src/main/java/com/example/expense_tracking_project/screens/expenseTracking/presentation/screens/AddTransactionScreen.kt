@@ -123,11 +123,13 @@ fun AddExpenseScreen(
                 verticalArrangement = Arrangement.Top
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-
                 SimpleTextField(
-                    title = amountLabel,
+                    title = "Amount",
                     value = amount.value,
-                    onValueChange = { amount.value = it })
+                    onValueChange = { amount.value = it },
+                    showDollarIcon = true
+                )
+
 
                 Spacer(modifier = Modifier.height(20.dp))
 

@@ -1,6 +1,8 @@
 package com.example.expense_tracking_project.screens.expenseTracking.presentation.screens
 
 
+import android.app.Activity
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Delete
@@ -46,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -60,6 +64,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.HomeViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TimeFilter
 import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun HomeScreen(
@@ -75,6 +80,7 @@ fun HomeScreen(
     val syncStatus by syncViewModel.syncStatus.collectAsState()
 
     var showSearchField by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     syncStatus?.let {
         Text(
@@ -110,8 +116,10 @@ fun HomeScreen(
                         name = "",
                         isDarkTheme = isDarkTheme,
                         onToggleTheme = changeAppTheme,
-                        onSearchClicked = { showSearchField = !showSearchField }
+                        onSearchClicked = { showSearchField = !showSearchField },
+                        onToggleLanguage = { changeLanguage(context) }
                     )
+
                     Spacer(modifier = Modifier.height(16.dp))
                     BudgetCard(
                         income = viewModel.income.value,
@@ -137,6 +145,21 @@ fun HomeScreen(
         }
     }
 }
+
+fun changeLanguage(context: Context) {
+    val currentLocale = context.resources.configuration.locales[0]
+    val newLocale = if (currentLocale.language == "en") Locale("ar") else Locale("en")
+
+    val config = context.resources.configuration
+    config.setLocale(newLocale)
+    context.resources.updateConfiguration(config, context.resources.displayMetrics)
+
+    if (context is Activity) {
+        context.recreate() // Restart the activity to apply the new locale
+    }
+}
+
+
 
 @Composable
 fun TransactionsSection(
@@ -205,13 +228,13 @@ fun TransactionsSection(
     }
 }
 
-
 @Composable
 fun TopSection(
     name: String,
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
-    onSearchClicked: () -> Unit
+    onSearchClicked: () -> Unit,
+    onToggleLanguage: () -> Unit
 ) {
     val themeIcon = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode
 
@@ -247,9 +270,19 @@ fun TopSection(
                     tint = Color.White
                 )
             }
+            IconButton(onClick = onToggleLanguage) { // This calls your changeLanguage function
+                Icon(
+                    imageVector = Icons.Default.Language,
+                    contentDescription = stringResource(id = R.string.change_language),
+                    tint = Color.White
+                )
+            }
         }
     }
 }
+
+
+
 
 @Composable
 fun BudgetCard(income: Double, expenses: Double) {
@@ -322,7 +355,7 @@ fun BudgetCard(income: Double, expenses: Double) {
 
 @Composable
 fun TimeTabSection(viewModel: HomeViewModel = hiltViewModel()) {
-    var selectedTab by remember { mutableStateOf(TimeFilter.TODAY) }
+    val selectedTab by viewModel.timeFilter.collectAsState()
 
     val tabs = listOf(
         TimeFilter.TODAY to stringResource(id = R.string.today),
@@ -340,7 +373,6 @@ fun TimeTabSection(viewModel: HomeViewModel = hiltViewModel()) {
         tabs.forEach { (filter, label) ->
             TextButton(
                 onClick = {
-                    selectedTab = filter
                     viewModel.updateTimeFilter(filter)
                 },
                 colors = ButtonDefaults.textButtonColors(
@@ -352,6 +384,7 @@ fun TimeTabSection(viewModel: HomeViewModel = hiltViewModel()) {
         }
     }
 }
+
 
 @Composable
 fun RecentTransactions(
@@ -443,21 +476,12 @@ fun TransactionItem(transaction: Transaction,
             "Transaction: $transactionType",
             "Category : ${transaction.categoryId}",
             "Note: ${transaction.note}",
-            "Date: ${
-                viewModel.formatDate(
-                    Calendar.getInstance().apply {
-                        time = transaction.date
-                        add(Calendar.DAY_OF_MONTH, 1)
-                    }.time
-                )
-            }"
+            "Date: ${viewModel.formatDate(transaction.date)}"
         ),
         trailingContent = {
             Row {
                 IconButton(onClick = {
                     navController.navigate("add_expense?transactionId=${transaction.transactionId}")
-
-
                 }) {
                     Icon(
                         imageVector = Icons.Outlined.Edit,
@@ -476,8 +500,19 @@ fun TransactionItem(transaction: Transaction,
                     )
                 }
             }
+        },
+        // 🔹 Add this for Riyal symbol beside amount
+        titleLeadingContent = {
+            Image(
+                painter = painterResource(id = R.drawable.saudi_riyal_symbol),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                contentScale = ContentScale.Fit,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+            )
         }
     )
+
 
     if (showDeleteDialog) {
         ConfirmationDialog(

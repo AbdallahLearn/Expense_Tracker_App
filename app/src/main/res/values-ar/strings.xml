@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">مصاريفي</string>
+    <string name="change_language">تغيير اللغة</string>
 
     <!-- Onboarding Titles -->
     <string name="onboarding_title_1">تتبع ذكي للمصاريف</string>
