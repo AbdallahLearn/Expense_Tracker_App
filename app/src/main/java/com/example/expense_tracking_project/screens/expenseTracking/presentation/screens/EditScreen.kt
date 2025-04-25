@@ -121,10 +121,16 @@ fun EditScreen(
                     ) {
                         items(filteredCategories) { category ->
                             var showDeleteDialog by remember { mutableStateOf(false) }
+                            val typeLocalized = when (category.type) {
+                                "Income" -> stringResource(R.string.Income)
+                                "Expense" -> stringResource(R.string.expense)
+                                else -> category.type
+                            }
+                            val typeLabel = stringResource(R.string.type_label, typeLocalized)
 
                             DataCard(
                                 title = category.categoryName,
-                                subtitleItems = listOf("Type: ${category.type}"),
+                                subtitleItems = listOf(typeLabel),
                                 titleLeadingContent = {
                                     Box(
                                         modifier = Modifier

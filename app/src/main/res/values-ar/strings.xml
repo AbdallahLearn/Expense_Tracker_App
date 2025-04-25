@@ -97,6 +97,7 @@
     <string name="delete_category">حذف الفئة</string>
     <string name="delete_message">هل أنت متأكد أنك تريد حذف هذه الفئة؟</string>
     <string name="no_budgets">لا توجد ميزانيات</string>
+    <string name="type_label">النوع: %1$s</string>
 
     <!-- Add budget Screen -->
     <string name="editBudget">تعديل الميزانية</string>
@@ -152,6 +153,9 @@
     <string name="profile_picture">صورة الملف الشخصي</string>
     <string name="sign_out">تسجيل الخروج</string>
     <string name="confirm_sign_out_message">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
+
+    <string name="confirm_button_text">نعم</string>
+    <string name="dismiss_button_text">لا</string>
 
 
 

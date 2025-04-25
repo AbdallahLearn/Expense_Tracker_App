@@ -18,7 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.expense_tracking_project.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -67,14 +69,15 @@ fun DataCard(
                     Text(text = it, style = MaterialTheme.typography.bodySmall)
                 }
 
+
                 dateStart?.let {
                     val formatted = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH).format(it)
-                    Text("Start: $formatted", style = MaterialTheme.typography.bodySmall)
-                }
+                    val startLabel = stringResource(R.string.startDate, formatted)
+                    Text(startLabel, style = MaterialTheme.typography.bodySmall)                }
                 dateEnd?.let {
                     val formatted = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH).format(it)
-                    Text("End: $formatted", style = MaterialTheme.typography.bodySmall)
-                }
+                    val endLabel = stringResource(R.string.end, formatted)
+                    Text(endLabel, style = MaterialTheme.typography.bodySmall)                }
             }
 
             trailingContent?.invoke()

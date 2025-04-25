@@ -4,13 +4,16 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.example.expense_tracking_project.R
 
 @Composable
 fun ConfirmationDialog(
     title: String,
     message: String,
-    confirmButtonText: String = "Yes",
-    dismissButtonText: String = "No",
+     confirmButtonText:String = stringResource(R.string.confirm_button_text),
+    dismissButtonText: String = stringResource(R.string.dismiss_button_text),
+
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
