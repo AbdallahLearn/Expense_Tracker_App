@@ -19,13 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.expense_tracking_project.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SelectEditingTab
-import com.example.expense_tracking_project.screens.dataSynchronization.presentation.SyncViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditBudgetViewModel
@@ -33,6 +34,7 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditScreenViewModel
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+
 @SuppressLint("WrongNavigateRouteType")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
