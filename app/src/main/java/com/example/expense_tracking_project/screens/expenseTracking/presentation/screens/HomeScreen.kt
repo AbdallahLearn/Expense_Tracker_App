@@ -38,6 +38,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,8 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.DataCard
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.HomeViewModel
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.TimeFilter
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import java.util.Calendar
 import java.util.Locale
 
@@ -74,6 +77,14 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     syncViewModel: SyncViewModel = hiltViewModel()
 ) {
+    // Add user name state
+    var userName by remember { mutableStateOf("") }
+    val currentUser = Firebase.auth.currentUser
+
+    // Fetch user name when composable launches
+    LaunchedEffect(Unit) {
+        userName = currentUser?.displayName ?: ""
+    }
 
     val transactions by viewModel.transactions.collectAsState(initial = emptyList())
     Log.d("DEBUG", "UI transactions: $transactions")
@@ -113,7 +124,7 @@ fun HomeScreen(
                         .padding(horizontal = 16.dp, vertical = 24.dp)
                 ) {
                     TopSection(
-                        name = "",
+                        name = userName, // Pass the fetched user name here
                         isDarkTheme = isDarkTheme,
                         onToggleTheme = changeAppTheme,
                         onSearchClicked = { showSearchField = !showSearchField },
