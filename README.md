@@ -20,6 +20,8 @@ The Expense Tracker Mobile App is a comprehensive mobile application designed to
 | **MVVM Architecture** | Clean separation of concerns |
 | **Material Design 3** | Styling and theming |
 | **Compose Navigation** | Seamless screen transitions |
+| **Android Studio** | Develope the Expense App Tracker |
+| **Jira** | Management the work |
 
 ## How To Work:
 
