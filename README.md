@@ -17,7 +17,7 @@ The Expense Tracker Mobile App is a comprehensive mobile application designed to
 
 
 ## Core Screens: 
-- Expenses List: View, search, filter, edit, delete.
+- Home Screen : View, search, filter, edit, delete for transaction.
 - Add Expense: Input with validation (Amount, Date, Type of Category, Note).
 - Categories: Create, update, delete categories with color.
 - Add Category: Assign color, and optional budget limit.
