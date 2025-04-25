@@ -95,7 +95,6 @@
     <string name="no_data">لا توجد بيانات</string>
     <string name="edit_category">تعديل الفئة</string>
     <string name="delete_category">حذف الفئة</string>
-    <string name="confirm_deletion">تأكيد الحذف</string>
     <string name="delete_message">هل أنت متأكد أنك تريد حذف هذه الفئة؟</string>
     <string name="no_budgets">لا توجد ميزانيات</string>
 
