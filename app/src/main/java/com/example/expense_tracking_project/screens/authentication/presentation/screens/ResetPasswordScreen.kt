@@ -46,7 +46,8 @@ fun ResetPasswordScreen(navController: NavController) {
     val forgotPasswordViewModel: ForgotPasswordViewModel = hiltViewModel()
     val emailState = remember { mutableStateOf(forgotPasswordViewModel.email) }
 
-    BackgroundLayout(title = "Reset Password")
+    BackgroundLayout(title = stringResource(R.string.reset_password))
+
 
     Column(
         modifier = Modifier
@@ -78,31 +79,31 @@ fun ResetPasswordScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Enter your Gmail to reset the password",
+                    text = stringResource(R.string.enter_your_gmail_to_reset_password),
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
 
                 SimpleTextField(
-                    title = "Email",
+                    title = stringResource(R.string.email),
                     value = emailState.value,
                     onValueChange = { emailState.value = it }
                 )
 
                 SimpleButton(
-                    title = "Send verification",
+                    title = stringResource(R.string.send_verification),
                     onButtonClick = {
                         val email = emailState.value.trim()
                         if (email.isNotEmpty()) {
                             forgotPasswordViewModel.forgotPassword()
                             FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-                            Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_SHORT)
+                            Toast.makeText(context, context.getString(R.string.reset_link_sent_to, email), Toast.LENGTH_SHORT)
                                 .show()
                             navController.navigate(Screen.CheckEmail)
                         } else {
                             Toast.makeText(
                                 context,
-                                "Failed to send reset email",
+                                context.getString(R.string.failed_to_send_reset_email),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
