@@ -109,6 +109,7 @@ Make sure you have the following tools and software installed on your system bef
 ![Screenshot 2025-04-25 211001](https://github.com/user-attachments/assets/cafbafe0-42f4-4948-ba20-faf9d50c2366)
 ![image](https://github.com/user-attachments/assets/e99306eb-9b0b-4037-8aea-cb7e51b95659)
 ![Screenshot 2025-04-25 211109](https://github.com/user-attachments/assets/cf53b524-1bae-427f-8ddf-b25dcbb3a235)
+![image](https://github.com/user-attachments/assets/d2498a92-6c3e-4e9c-b657-8719ed70fb61)
 
 ### Transactions ( Expenses & Income )
 
