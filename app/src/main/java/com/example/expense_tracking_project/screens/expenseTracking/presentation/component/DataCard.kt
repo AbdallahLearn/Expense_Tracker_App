@@ -4,8 +4,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -19,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
 @Composable
 fun DataCard(
     title: String,
@@ -27,7 +29,8 @@ fun DataCard(
     dateStart: Date? = null,
     dateEnd: Date? = null,
     titleColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
-    trailingContent: @Composable (() -> Unit)? = null
+    trailingContent: @Composable (() -> Unit)? = null,
+    titleLeadingContent: @Composable (() -> Unit)? = null // Color Dot Slot
 ) {
     val backgroundColor = MaterialTheme.colorScheme.surface
     val borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f)
@@ -48,25 +51,35 @@ fun DataCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(title, style = MaterialTheme.typography.titleMedium, color = titleColor)
-                subtitleItems.forEach {
-                    Text(it, style = MaterialTheme.typography.bodySmall)
-                    dateStart?.let {
-                        val formatted = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH).format(it)
-                        Text("Selected: $formatted", style = MaterialTheme.typography.bodySmall)
-                    }
-                    dateEnd?.let {
-                        val formatted = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH).format(it)
-                        Text("Selected: $formatted", style = MaterialTheme.typography.bodySmall)
-                    }
 
+                // 🔹 Row for title + color dot
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    titleLeadingContent?.invoke() //
+                    if (titleLeadingContent != null) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Text(text = title, style = MaterialTheme.typography.titleMedium, color = titleColor)
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                subtitleItems.forEach {
+                    Text(text = it, style = MaterialTheme.typography.bodySmall)
+                }
+
+                dateStart?.let {
+                    val formatted = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH).format(it)
+                    Text("Start: $formatted", style = MaterialTheme.typography.bodySmall)
+                }
+                dateEnd?.let {
+                    val formatted = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH).format(it)
+                    Text("End: $formatted", style = MaterialTheme.typography.bodySmall)
                 }
             }
-            if (trailingContent != null) {
-                trailingContent()
+
+            trailingContent?.invoke()
             }
         }
-    }
 }
 
 

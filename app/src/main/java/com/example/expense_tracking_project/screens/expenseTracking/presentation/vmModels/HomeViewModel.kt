@@ -71,81 +71,52 @@ class HomeViewModel @Inject constructor(
         val filteredByTime = transactions.filter { txn ->
             val txnDate = txn.date
 
+            val calendar = Calendar.getInstance()
+            calendar.time = Date()
+
             when (timeFilter) {
                 TimeFilter.TODAY -> {
-                    val tz = TimeZone.getDefault()
-
-                    val calendar = Calendar.getInstance(tz).apply {
-                        set(Calendar.HOUR_OF_DAY, 0)
-                        set(Calendar.MINUTE, 0)
-                        set(Calendar.SECOND, 0)
-                        set(Calendar.MILLISECOND, 0)
-                    }
+                    calendar.set(Calendar.HOUR_OF_DAY, 0)
+                    calendar.set(Calendar.MINUTE, 0)
+                    calendar.set(Calendar.SECOND, 0)
+                    calendar.set(Calendar.MILLISECOND, 0)
                     val startOfDay = calendar.time
 
                     calendar.add(Calendar.DAY_OF_MONTH, 1)
-                    val startOfNextDay = calendar.time
+                    val endOfDay = calendar.time
 
-                    // Make sure txnDate uses same timezone
-                    val txnCal = Calendar.getInstance(tz).apply {
-                        time = txn.date
-                    }
-                    val normalizedTxnDate = txnCal.time
-
-                    !normalizedTxnDate.before(startOfDay) && normalizedTxnDate.before(startOfNextDay)
+                    txnDate >= startOfDay && txnDate < endOfDay
                 }
 
-
                 TimeFilter.WEEK -> {
-                    // Get the current time
-                    val now = Date()
-
-                    // Calculate the start of the current week
-                    val calendar = Calendar.getInstance()
-                    calendar.time = now
-                    calendar.set(
-                        Calendar.DAY_OF_WEEK,
-                        calendar.firstDayOfWeek
-                    )  // Set to the first day of the current week
+                    calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
                     val startOfWeek = calendar.time
 
-                    // Check if txnDate is within the current week
-                    txnDate.after(startOfWeek) && txnDate.before(now)
+                    calendar.add(Calendar.DAY_OF_WEEK, 7)
+                    val endOfWeek = calendar.time
+
+                    txnDate >= startOfWeek && txnDate < endOfWeek
                 }
 
                 TimeFilter.MONTH -> {
-                    // Get the current time
-                    val now = Date()
-
-                    // Calculate the start of the current month
-                    val calendar = Calendar.getInstance()
-                    calendar.time = now
-                    calendar.set(
-                        Calendar.DAY_OF_MONTH,
-                        1
-                    )  // Set to the first day of the current month
+                    calendar.set(Calendar.DAY_OF_MONTH, 1)
                     val startOfMonth = calendar.time
 
-                    // Check if txnDate is within the current month
-                    txnDate.after(startOfMonth) && txnDate.before(now)
+                    calendar.add(Calendar.MONTH, 1)
+                    val endOfMonth = calendar.time
+
+                    txnDate >= startOfMonth && txnDate < endOfMonth
                 }
 
                 TimeFilter.YEAR -> {
-                    // Get the current time
-                    val now = Date()
-
-                    // Calculate the start of the current year
-                    val calendar = Calendar.getInstance()
-                    calendar.time = now
-                    calendar.set(Calendar.MONTH, Calendar.JANUARY)  // Set to January (first month)
-                    calendar.set(
-                        Calendar.DAY_OF_MONTH,
-                        1
-                    )  // Set to the first day of the current year
+                    calendar.set(Calendar.MONTH, Calendar.JANUARY)
+                    calendar.set(Calendar.DAY_OF_MONTH, 1)
                     val startOfYear = calendar.time
 
-                    // Check if txnDate is within the current year
-                    txnDate.after(startOfYear) && txnDate.before(now)
+                    calendar.add(Calendar.YEAR, 1)
+                    val endOfYear = calendar.time
+
+                    txnDate >= startOfYear && txnDate < endOfYear
                 }
             }
         }
@@ -208,6 +179,7 @@ class HomeViewModel @Inject constructor(
         val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
         return sdf.format(date)
     }
+
 
     fun updateSearch(text: String) {
         _searchText.value = text

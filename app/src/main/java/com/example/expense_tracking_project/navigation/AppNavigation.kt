@@ -19,7 +19,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.expense_tracking_project.SplashScreen
-import com.example.expense_tracking_project.core.TokenProvider
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.CheckEmailScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.LoginScreen
 import com.example.expense_tracking_project.screens.authentication.presentation.screens.ResetPasswordScreen
@@ -34,11 +33,11 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.HomeScreen
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.screens.ProfileScreen
 import com.example.expense_tracking_project.screens.onBoardingScreen.presentation.screens.OnBoardingScreen
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
+
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
@@ -47,17 +46,18 @@ fun AppNavigation(
     isDarkTheme: Boolean,
 ) {
     var tokenState by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
 
-    // Load token after delay for splash simulation
     val context = LocalContext.current
     val authPreferences = remember { AuthPreferences(context) }
 
     LaunchedEffect(Unit) {
-        delay(1000) // Splash delay
+        delay(1000) // simulate splash delay
         tokenState = authPreferences.getToken()
+        isLoading = false
     }
 
-    if (tokenState == null) {
+    if (isLoading) {
         SplashScreen()
     } else {
         val currentBackStackEntry = navController.currentBackStackEntryAsState().value
@@ -165,6 +165,7 @@ fun AppNavigation(
         }
     }
 }
+
 
 val bottomBarScreens = listOf(
     Screen.Home,

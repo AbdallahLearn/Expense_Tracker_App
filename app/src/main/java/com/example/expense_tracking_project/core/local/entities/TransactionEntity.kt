@@ -1,9 +1,11 @@
 package com.example.expense_tracking_project.core.local.entities
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import java.util.Date
 
 @Entity(
@@ -35,4 +37,14 @@ data class Transaction(
     val isSynced: Boolean = false, // add flag
     val createdAt: Date,
     val updatedAt: Date
+)
+
+data class TransactionWithCategory(
+    @Embedded val transaction: Transaction,
+
+    @Relation(
+        parentColumn = "categoryId",
+        entityColumn = "categoryId"
+    )
+    val category: Category?
 )

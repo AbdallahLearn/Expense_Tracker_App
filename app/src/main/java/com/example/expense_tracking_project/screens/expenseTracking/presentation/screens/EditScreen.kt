@@ -3,9 +3,11 @@ package com.example.expense_tracking_project.screens.expenseTracking.presentatio
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
@@ -31,7 +33,6 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditScreenViewModel
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-
 @SuppressLint("WrongNavigateRouteType")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -119,11 +120,22 @@ fun EditScreen(
                             var showDeleteDialog by remember { mutableStateOf(false) }
 
                             DataCard(
-                                title = " ${category.categoryName}",
-                                subtitleItems = listOf(
-                                    "Type: ${category.type}",
-                                    "Budget ID: ${category.budgetId}"
-                                ),
+                                title = category.categoryName,
+                                subtitleItems = listOf("Type: ${category.type}"),
+                                titleLeadingContent = {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(12.dp)
+                                            .clip(CircleShape)
+                                            .background(
+                                                try {
+                                                    Color(android.graphics.Color.parseColor(category.color ?: "#000000"))
+                                                } catch (e: Exception) {
+                                                    Color.Gray
+                                                }
+                                            )
+                                    )
+                                },
                                 trailingContent = {
                                     Row {
                                         IconButton(onClick = {
@@ -211,6 +223,6 @@ fun EditScreen(
             if (selectedTab == "Budget") {
                 budgetViewModel.loadBudgets()
             }
+            }
         }
-    }
 }
