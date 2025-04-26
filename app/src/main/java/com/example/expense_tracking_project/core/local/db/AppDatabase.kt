@@ -26,6 +26,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun CategoryDao(): CategoryDao
     abstract fun userDao(): UserDao
 
+    suspend fun clearAllData() {
+        transactionDao().clearTransactions()
+        BudgetDao().clearBudgets()
+        CategoryDao().clearCategories()
+    }
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null

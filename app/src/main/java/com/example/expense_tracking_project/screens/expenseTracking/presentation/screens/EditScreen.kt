@@ -22,9 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.expense_tracking_project.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.expense_tracking_project.R
 import com.example.expense_tracking_project.navigation.Screen
 import com.example.expense_tracking_project.screens.authentication.presentation.component.SelectEditingTab
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.component.ConfirmationDialog
@@ -34,7 +34,6 @@ import com.example.expense_tracking_project.screens.expenseTracking.presentation
 import com.example.expense_tracking_project.screens.expenseTracking.presentation.vmModels.EditScreenViewModel
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import androidx.core.graphics.toColorInt
 
 @SuppressLint("WrongNavigateRouteType")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -71,7 +70,7 @@ fun EditScreen(
                 .padding(top = 200.dp, start = 16.dp, end = 16.dp)
         ) {
             Text(
-                text = stringResource(R.string.recent_items, selectedTab),
+                text = "Recent $selectedTab(s)",
                 fontSize = 18.sp,
                 color = Color(0xFF5C4DB7),
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -82,13 +81,7 @@ fun EditScreen(
                 OutlinedTextField(
                     value = searchText,
                     onValueChange = { viewModel.updateSearch(it) },
-                    placeholder = { Text(stringResource(R.string.search)) },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = stringResource(R.string.filter)
-                        )
-                    },
+                    placeholder = { Text("Search") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 30.dp)
@@ -111,7 +104,7 @@ fun EditScreen(
                             .weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(stringResource(R.string.no_data), color = Color.Gray)
+                        Text("No data available", color = Color.Gray)
                     }
                 } else {
                     LazyColumn(
@@ -121,16 +114,10 @@ fun EditScreen(
                     ) {
                         items(filteredCategories) { category ->
                             var showDeleteDialog by remember { mutableStateOf(false) }
-                            val typeLocalized = when (category.type) {
-                                "Income" -> stringResource(R.string.Income)
-                                "Expense" -> stringResource(R.string.expense)
-                                else -> category.type
-                            }
-                            val typeLabel = stringResource(R.string.type_label, typeLocalized)
 
                             DataCard(
                                 title = category.categoryName,
-                                subtitleItems = listOf(typeLabel),
+                                subtitleItems = listOf("Type: ${category.type}"),
                                 titleLeadingContent = {
                                     Box(
                                         modifier = Modifier
@@ -138,7 +125,7 @@ fun EditScreen(
                                             .clip(CircleShape)
                                             .background(
                                                 try {
-                                                    Color(category.color.toColorInt())
+                                                    Color(android.graphics.Color.parseColor(category.color ?: "#000000"))
                                                 } catch (e: Exception) {
                                                     Color.Gray
                                                 }
@@ -152,7 +139,7 @@ fun EditScreen(
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Outlined.Edit,
-                                                contentDescription = stringResource(R.string.edit_category),
+                                                contentDescription = "Edit Category",
                                                 tint = Color.Gray
                                             )
                                         }
@@ -162,7 +149,7 @@ fun EditScreen(
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Outlined.Delete,
-                                                contentDescription = stringResource(R.string.delete_category),
+                                                contentDescription = "Delete Category",
                                                 tint = Color.Red
                                             )
                                         }
@@ -172,10 +159,10 @@ fun EditScreen(
 
                             if (showDeleteDialog) {
                                 ConfirmationDialog(
-                                    title = stringResource(R.string.confirm_deletion),
-                                    message = stringResource(R.string.delete_message),
+                                    title = "Confirm Deletion",
+                                    message = "Are you sure you want to delete this category?",
                                     onConfirm = {
-                                        categoryViewModel.softDeleteCategory(category.categoryId) {
+                                        categoryViewModel.softDeleteCategory(category.categoryId!!) {
                                             showDeleteDialog = false
                                         }
                                     },
@@ -224,7 +211,7 @@ fun EditScreen(
                 },
                 containerColor = Color(0xFF5C4DB7)
             ) {
-                Text(stringResource(R.string.add), color = Color.White, fontSize = 15.sp)
+                Text("Add", color = Color.White, fontSize = 15.sp)
             }
         }
 

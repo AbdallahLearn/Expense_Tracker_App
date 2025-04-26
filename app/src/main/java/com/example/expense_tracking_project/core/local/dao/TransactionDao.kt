@@ -43,7 +43,7 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE transactionId = :transactionId")
     suspend fun getTransactionById(transactionId: Int): Transaction?
 
-    @Query("DELETE FROM transactions WHERE isDeleted = 0")
+    @Query("DELETE FROM transactions")
     suspend fun clearTransactions()
 
     @Query("SELECT * FROM transactions WHERE amount = :amount AND date = :date")

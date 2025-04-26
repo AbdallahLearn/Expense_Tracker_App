@@ -34,7 +34,7 @@ interface BudgetDao {
     @Query("UPDATE BudgetEntity SET isDeleted = 1, updatedAt = :updatedAt, isSynced = 0 WHERE budgetId = :budgetId") //so we can sync the delete request to server
     suspend fun softDeleteBudget(budgetId: Int, updatedAt: Date)
 
-    @Query("DELETE FROM BudgetEntity WHERE isDeleted = 0")
+    @Query("DELETE FROM BudgetEntity")
     suspend fun clearBudgets()
 
 }
