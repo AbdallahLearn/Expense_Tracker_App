@@ -60,7 +60,10 @@ class SyncTransactionRepositoryImpl @Inject constructor(
                 if (response.isSuccessful) {
                     Log.d("SYNC", "API Response: ${response.body()}")
                     val remoteTransactions: List<Transaction> =
-                        response.body()?.expenses?.map { it.toEntity() } ?: emptyList()
+                        response.body()?.expenses?.mapNotNull { dto ->
+                            val category = categoryDao.getCategoryByServerId(dto.category_id ?: return@mapNotNull null)
+                            dto.toEntity(category?.categoryId)
+                        } ?: emptyList()
                     Log.d("SYNC", "Fetched transactions: $remoteTransactions")
 
                     remoteTransactions.forEach { transaction ->

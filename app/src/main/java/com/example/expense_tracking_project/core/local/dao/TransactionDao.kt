@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
 import com.example.expense_tracking_project.core.local.entities.BudgetEntity
+import com.example.expense_tracking_project.core.local.entities.Category
 import com.example.expense_tracking_project.core.local.entities.Transaction
 import com.example.expense_tracking_project.core.local.entities.TransactionWithCategory
 import kotlinx.coroutines.flow.Flow
@@ -51,4 +52,8 @@ interface TransactionDao {
     
     @Query("SELECT * FROM transactions WHERE isDeleted = 0")
     fun getAllTransactionsWithCategory(): Flow<List<TransactionWithCategory>>
+
+    @Insert
+    suspend fun insertCategory(category: Category): Long
+
 }

@@ -398,80 +398,6 @@ fun TimeTabSection(viewModel: HomeViewModel = hiltViewModel()) {
 
 
 @Composable
-fun RecentTransactions(
-    navController: NavController,
-    transactions: List<Transaction>,
-    viewModel: HomeViewModel,
-    showSearchField: Boolean
-) {
-
-    val searchText by viewModel.searchText.collectAsState()
-    val typeFilter by viewModel.typeFilter.collectAsState()
-    var showDropdown by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                stringResource(R.string.recent_transactions),
-                style = MaterialTheme.typography.titleSmall
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (showSearchField) // if clicked appear
-            OutlinedTextField(
-                value = searchText,
-                onValueChange = { viewModel.updateSearch(it) },
-                placeholder = { Text("Search") },
-                trailingIcon = {
-                    IconButton(onClick = { showDropdown = !showDropdown }) {
-                        Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = "Filter"
-                        )
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-                    .clip(RoundedCornerShape(16.dp))
-            )
-
-        // Dropdown for filtering by transaction type
-        if (showDropdown) {
-            DropdownFilter(typeFilter = typeFilter) { newType ->
-                viewModel.updateTypeFilter(newType)
-                showDropdown = false
-            }
-        }
-    }
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    if (transactions.isEmpty()) {
-        Text(
-            stringResource(R.string.no_data_available),
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
-        )
-    } else {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(transactions) { transaction ->
-                Log.d("DEBUG", "Rendering transaction: $transaction")
-                TransactionItem(
-                    transaction = transaction,
-                    navController = navController,
-                    viewModel = viewModel
-                )
-            }
-        }
-    }
-}
-
-@Composable
 fun TransactionItem(transaction: Transaction,
                     navController: NavController,
                     viewModel: HomeViewModel = hiltViewModel()) {
@@ -483,12 +409,14 @@ fun TransactionItem(transaction: Transaction,
     DataCard(
         title = "${transaction.amount}",
         titleColor = typeColor,
-        subtitleItems = listOf(
-            "Transaction: $transactionType",
-            "Category : ${transaction.categoryId}",
-            "Note: ${transaction.note}",
-            "Date: ${viewModel.formatDate(transaction.date)}"
-        ),
+        subtitleItems = buildList {
+            add(stringResource(R.string.transaction) + ": $transactionType")
+            add(stringResource(R.string.category) + ": ${transaction.categoryId}")
+            if (!transaction.note.isNullOrBlank()) {
+                add(stringResource(R.string.note) + ": ${transaction.note}")
+            }
+            add(stringResource(R.string.date) + ": ${viewModel.formatDate(transaction.date)}")
+        },
         trailingContent = {
             Row {
                 IconButton(onClick = {

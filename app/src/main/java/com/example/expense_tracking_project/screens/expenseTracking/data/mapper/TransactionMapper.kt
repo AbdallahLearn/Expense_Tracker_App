@@ -32,7 +32,7 @@ fun Date.TransactiontoSimpleDate(): String {
 }
 
 // Mapping from API to Entity
-fun TransactionDto.toEntity(): Transaction {
+fun TransactionDto.toEntity(categoryId: Int?): Transaction {
     val now = Date()
     return Transaction(
         transactionId = 0,
@@ -43,7 +43,7 @@ fun TransactionDto.toEntity(): Transaction {
         updatedAt = now,
         isDeleted = false,
         isSynced = true,
-        categoryId = null
+        categoryId = categoryId
     )
 }
 

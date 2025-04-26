@@ -37,15 +37,13 @@ fun DisplaySavedBudgets(budgetList: List<BudgetEntity>, navController: NavContro
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp)
+            .padding(top = 20.dp)
     ) {
         items(budgetList) { budget ->
             var showDeleteDialog by remember { mutableStateOf(false) }
             DataCard(
                 title = " ${budget.totalAmount}",
                 subtitleItems = listOf(
-                    "${stringResource(R.string.start)}: ${budget.startDate}",
-                    "${stringResource(R.string.end)}: ${budget.endDate}",
                     "${stringResource(R.string.budget_id)}: ${budget.budgetId}",
                 ),
                 trailingContent = {

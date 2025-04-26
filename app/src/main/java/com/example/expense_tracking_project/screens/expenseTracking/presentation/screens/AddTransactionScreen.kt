@@ -94,8 +94,8 @@ fun AddExpenseScreen(
     SelectTransaction(
         showTabs = true,
         tabOptions = listOf(
-            stringResource(R.string.expenses),
-            stringResource(R.string.income)
+            "Expense",
+            "Income"
         ),
         onTabSelected = { viewModel.selectedTab.value = it }
     )

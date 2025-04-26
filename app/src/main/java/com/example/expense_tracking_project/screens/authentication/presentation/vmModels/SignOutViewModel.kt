@@ -26,5 +26,6 @@ class SignOutViewModel : ViewModel() {
 
     fun signout() {
         auth.signOut()
+
     }
 }
