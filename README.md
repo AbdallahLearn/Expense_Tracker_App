@@ -87,6 +87,12 @@ Make sure you have the following tools and software installed on your system bef
 
 ## Screenshot Output:
 
+### Onboarding Screen 
+
+![image](https://github.com/user-attachments/assets/383415b8-0e95-4d13-a3e3-de547271ff4f)
+![image](https://github.com/user-attachments/assets/964bab64-bcf9-4251-be91-2a7da8578b7a)
+![image](https://github.com/user-attachments/assets/44e7ed9c-c3ee-43fd-89c1-f5a9405ac937)
+
 ### Sign Up
 
 ![Screenshot 2025-04-25 205310](https://github.com/user-attachments/assets/3f710e92-038b-4979-a0ce-29b798d84588)
@@ -100,16 +106,24 @@ Make sure you have the following tools and software installed on your system bef
 ![Screenshot 2025-04-25 205449](https://github.com/user-attachments/assets/6f99c641-2556-44af-a953-63c11cd3f5f7)
 ![Screenshot 2025-04-25 211916](https://github.com/user-attachments/assets/0bd672dd-1659-494b-b511-d8cc4e1a6589)
 
+### Home Screen ( Light/Dark Mode, Switch Language )
+
+![image](https://github.com/user-attachments/assets/e1dc1b4f-cd4a-48c6-91c8-80c3ebd5fb76)
+![image](https://github.com/user-attachments/assets/83c05add-bfb8-4bc1-82ee-b03eb8ab8a07)
+![image](https://github.com/user-attachments/assets/c1897d70-3aea-43d5-b3a2-6369c7927019)
+![image](https://github.com/user-attachments/assets/43262539-890d-44d0-ae02-40e7d70b8f0e)
+
+
 ### Budgets & Categories
 
 ![Screenshot 2025-04-25 210900](https://github.com/user-attachments/assets/9ef140f6-fa1f-49be-b75d-05524da54d92)
 ![Screenshot 2025-04-25 210908](https://github.com/user-attachments/assets/36cf143a-ef1c-4db7-a825-6cb81dc57444)
 ![Screenshot 2025-04-25 210946](https://github.com/user-attachments/assets/65277131-1f66-4ca5-87ff-6d74d3ea2e82)
 
-![Screenshot 2025-04-25 211001](https://github.com/user-attachments/assets/cafbafe0-42f4-4948-ba20-faf9d50c2366)
-![image](https://github.com/user-attachments/assets/e99306eb-9b0b-4037-8aea-cb7e51b95659)
-![Screenshot 2025-04-25 211109](https://github.com/user-attachments/assets/cf53b524-1bae-427f-8ddf-b25dcbb3a235)
-![image](https://github.com/user-attachments/assets/d2498a92-6c3e-4e9c-b657-8719ed70fb61)
+![Screenshot 2025-04-26 051911](https://github.com/user-attachments/assets/735deda5-fdd8-4937-a002-bc295f16dc2c)
+![Screenshot 2025-04-26 052016](https://github.com/user-attachments/assets/d3b207fb-ec5f-469b-95a9-256d6adebb14)
+![Screenshot 2025-04-26 051946](https://github.com/user-attachments/assets/b8b06451-67d0-4d1a-a0aa-1f618d212cb6)
+![Screenshot 2025-04-26 051952](https://github.com/user-attachments/assets/263d0902-0057-44b6-8da7-f80d001819a1)
 
 ### Transactions ( Expenses & Income )
 
