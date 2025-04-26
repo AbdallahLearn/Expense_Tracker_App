@@ -21,8 +21,3 @@ class AuthPreferences @Inject constructor(@ApplicationContext context: Context) 
         sharedPrefs.edit() { remove("auth_token") }
     }
 }
-
-
-
-
-

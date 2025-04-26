@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.example.expense_tracking_project.screens.expenseTracking.data.data_source.local.AuthPreferences
 
 @HiltViewModel
 class SignOutViewModel @Inject constructor(
-    private val appDatabase: AppDatabase
+    private val appDatabase: AppDatabase,
+    private val sharedPreferences: AuthPreferences
 ) : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -36,6 +38,7 @@ class SignOutViewModel @Inject constructor(
     fun signout(onComplete: () -> Unit) {
         viewModelScope.launch {
             appDatabase.clearAllData()
+            sharedPreferences.clearToken()
             FirebaseAuth.getInstance().signOut()
             onComplete()
         }
