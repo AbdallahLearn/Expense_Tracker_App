@@ -82,12 +82,6 @@ fun EditScreen(
                     value = searchText,
                     onValueChange = { viewModel.updateSearch(it) },
                     placeholder = { Text("Search") },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = "Filter"
-                        )
-                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 30.dp)
