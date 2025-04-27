@@ -46,10 +46,6 @@ object DatabaseModule {
 
     @Provides
     fun provideTransactionRepository(
-//        networkConnectivityObserver: NetworkConnectivityObserver,
-//        localDataSource: TransactionDataSource,
-//        remoteDataSource: RemoteTransactionDataSource,
-//        syncTransactionRepository: SyncTransactionRepository
         transactionDao: TransactionDao
     ): TransactionRepository {
         return TransactionRepositoryImpl(transactionDao)
